@@ -1,0 +1,7 @@
+{
+  "name": "textoavoz",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
