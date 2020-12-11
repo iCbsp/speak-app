@@ -24,6 +24,9 @@ export class TabsPage {
   //asistente: string;
   asistente = "Ninguno"; // cambiar si hay persistencia
 
+  preguntadaAccesibilidad = false;
+  preguntadoUsoDeDatos = false;
+
   // Var TTS
   texto: string;
   // Var STT
@@ -35,7 +38,10 @@ export class TabsPage {
                 private tts: TextToSpeech, // TTS
                 public alertController: AlertController, // Alertas - Prompt
                 private plt: Platform, private speechRecognition: SpeechRecognition, private cd: ChangeDetectorRef // Si el STT no va: public navCtrl: NavController
-              ){}
+              ){
+                this.ventanaPoliticas();
+                this.ventanaAccesibilidad();
+              }
 
 
   // Metodos TTS
@@ -106,7 +112,7 @@ export class TabsPage {
 
   async ventanaTextoManual() {
     const alert = await this.alertController.create({
-      cssClass: 'my-custom-class',
+      cssClass: 'ventanaTextoManual',
       header: 'Acción manual',
       inputs: [
         {
@@ -131,6 +137,83 @@ export class TabsPage {
             console.log('Confirm Ok');
             this.texto =  data.textoSTT;
             this.diTTS();
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
+  async ventanaAccesibilidad() {
+    const alert = await this.alertController.create({
+      cssClass: 'ventanaAccesibilidad',
+      header: 'Accesibilidad',
+      //subHeader: 'subHeader',
+      message: 'Seleccione los perfiles que se adecúen a su situación. Estos ajustes se podrán cambiar en cualquier momento.',
+      backdropDismiss: false,
+      inputs: [
+        {
+          name: 'checkbox1',
+          type: 'checkbox',
+          label: 'Dislexia',
+          value: 'value1'
+          //checked: true
+        },
+        {
+          name: 'checkbox2',
+          type: 'checkbox',
+          label: 'Daltonismo',
+          value: 'value2'
+        },
+        {
+          name: 'checkbox3',
+          type: 'checkbox',
+          label: 'Visión reducida',
+          value: 'value3'
+        }
+      ],
+      buttons: [
+        {
+          text: 'Aceptar',
+          role: 'aceptar',
+          handler: () => {
+            console.log('Confirm Ok');
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+  async ventanaPoliticas() {
+    const alert = await this.alertController.create({
+      cssClass: 'ventanaPoliticas',
+      header: 'Uso de los datos',
+      message: 'Los datos se guardan de forma local. Para más información acceda a nuestra página web.',
+      backdropDismiss: false,
+      // inputs: [
+      //   {
+      //     name: 'textoSTT',
+      //     type: 'text',
+      //     //placeholder: 'Acción a realizar',
+      //     value: this.asistente + ", "
+      //   }
+      // ],
+      buttons: [
+        // {
+        //   text: 'Salir',
+        //   role: 'salir',
+        //   cssClass: 'secondary',
+        //   handler: () => {
+        //     console.log('Confirm Cancel');
+        //   }
+        // }, 
+        {
+          text: 'Aceptar',
+          role: 'aceptar',
+          handler: () => {
+            console.log('Confirm Ok');
           }
         }
       ]
