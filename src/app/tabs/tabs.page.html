@@ -12,21 +12,22 @@
   <ion-toolbar>
     <ion-grid>
       <ion-row>
-        <ion-col size="5">
 
+        <ion-col size="5">
           <ion-select [interfaceOptions]="customPopoverOptions" interface="popover" value="ninguno">
             <ion-select-option value="ninguno">Ninguno</ion-select-option>
             <ion-select-option value="alexa">Alexa</ion-select-option>
             <ion-select-option value="google">Ok Google</ion-select-option>
           </ion-select>
         </ion-col>
+
         <ion-col size="3">
           <ion-tab-button>
             <ion-icon name="chatbox-ellipses-outline"></ion-icon>
             <ion-label>Manual</ion-label>
           </ion-tab-button>
-
         </ion-col>
+
         <ion-col size="4">
           <!-- <ion-button>
             <ion-icon slot="start" name="ellipse"></ion-icon>
@@ -36,9 +37,25 @@
             <ion-icon name="mic-outline"></ion-icon>
             <ion-label>Escuchar</ion-label>
           </ion-tab-button>
-
         </ion-col>
+
       </ion-row>
+
+        <ion-button (click)="pidePermisoMicrofono()">Pedir permiso</ion-button>
+        <ion-button (click)="iniciaSTT()">Escuchar</ion-button>
+        <ion-button (click)="paraSTT()" *ngIf="esIOS()">Parar</ion-button>
+
+        <ion-card>
+          <ion-card-header>Esto es lo que he entendido</ion-card-header>
+          <ion-card-content>
+            <ion-list>
+              <ion-item *ngFor="let coincidencia of coincidencias">
+                {{ coincidencia }}
+              </ion-item>
+            </ion-list>
+          </ion-card-content>
+        </ion-card>
+
     </ion-grid>
     <!-- <ion-input placeholder="Enter Input" style="margin: 0px 8px;"></ion-input> -->
   </ion-toolbar>
