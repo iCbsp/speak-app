@@ -21,6 +21,9 @@ import { ChangeDetectorRef } from '@angular/core'; // Si no se usa no actualiza 
 })
 export class TabsPage {
 
+  //asistente: string;
+  asistente = "Ninguno"; // cambiar si hay persistencia
+
   // Var TTS
   texto: string;
   // Var STT
@@ -107,9 +110,10 @@ export class TabsPage {
       header: 'Acción manual',
       inputs: [
         {
-          name: 'nombre',
+          name: 'textoSTT',
           type: 'text',
-          placeholder: 'Acción a realizar'
+          //placeholder: 'Acción a realizar',
+          value: this.asistente + ", "
         }
       ],
       buttons: [
@@ -125,7 +129,7 @@ export class TabsPage {
           role: 'enviar',
           handler: data => {
             console.log('Confirm Ok');
-            this.texto = data.nombre;
+            this.texto =  data.textoSTT;
             this.diTTS();
           }
         }
