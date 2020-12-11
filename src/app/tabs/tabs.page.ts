@@ -23,6 +23,7 @@ export class TabsPage {
   // Var STT
   coincidencias: String[];
   estaGrabando = false;
+  permisoSTT = false;
 
   constructor(  private menu: MenuController,
                 private tts: TextToSpeech, // TTS
@@ -49,6 +50,10 @@ export class TabsPage {
     return this.plt.is('ios');
   }
 
+  tienePermisoSTT(){
+    return this.permisoSTT;
+  }
+
   iniciaSTT(){
     let options = {
       language: 'en-US'
@@ -66,12 +71,15 @@ export class TabsPage {
     });
   }
 
-  pidePermisoMicrofono() {
+  pidePermisoSTT() {
     this.speechRecognition.hasPermission()
     .then((hasPermission: boolean) => {
-      if(!hasPermission){
+      if(hasPermission){
+        this.iniciaSTT();
+      } else {
         this.speechRecognition.requestPermission();
       }
+      this.permisoSTT = hasPermission;
     });
   }
 
