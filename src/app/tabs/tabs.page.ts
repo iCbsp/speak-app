@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { MenuController } from '@ionic/angular';
 
+// Alertas - Prompt
+import { AlertController } from '@ionic/angular';
+
 // Para saber si es iOS
 import { Platform } from '@ionic/angular';
 
@@ -27,6 +30,7 @@ export class TabsPage {
 
   constructor(  private menu: MenuController,
                 private tts: TextToSpeech, // TTS
+                public alertController: AlertController, // Alertas - Prompt
                 private plt: Platform, private speechRecognition: SpeechRecognition, private cd: ChangeDetectorRef // Si el STT no va: public navCtrl: NavController
               ){}
 
@@ -96,6 +100,40 @@ export class TabsPage {
   //   this.menu.enable(true, 'custom');
   //   this.menu.open('custom');
   // }
+
+  async ventanaTextoManual() {
+    const alert = await this.alertController.create({
+      cssClass: 'my-custom-class',
+      header: 'Acción manual',
+      inputs: [
+        {
+          name: 'nombre',
+          type: 'text',
+          placeholder: 'Acción a realizar'
+        }
+      ],
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancelar',
+          cssClass: 'secondary',
+          handler: () => {
+            console.log('Confirm Cancel');
+          }
+        }, {
+          text: 'Enviar',
+          role: 'enviar',
+          handler: data => {
+            console.log('Confirm Ok');
+            this.texto = data.nombre;
+            this.diTTS();
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
 
   customPopoverOptions: any = {
     //header: 'Asistente'
