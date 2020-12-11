@@ -1,17 +1,28 @@
-<ion-header [translucent]="true">
+<!-- <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
       Tab 1
     </ion-title>
   </ion-toolbar>
-</ion-header>
+</ion-header> -->
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
+<!-- <ion-content [fullscreen]="true"> -->
+<ion-content>
+  <div style="margin-top: 150px;"></div>
+  <!-- <ion-header collapse="condense"> -->
+  <!-- <ion-header>
     <ion-toolbar>
-      <ion-title size="large">Tab 1</ion-title>
+      <ion-title size="small">Tab 1</ion-title>
     </ion-toolbar>
-  </ion-header>
-
-  <app-explore-container name="Tab 1 page"></app-explore-container>
+  </ion-header> -->
+  <ion-grid>
+    <ion-row>
+      <ion-col size="4" *ngFor="let c of [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]; let i = index;">
+        <div style="text-align: center; background-color:steelblue; padding: 3px 0px;">
+          <ion-icon style="font-size: 80px" name="cloud-outline"></ion-icon>
+          <p>Básica {{i+1}}</p>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>

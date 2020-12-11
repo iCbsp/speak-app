@@ -1,0 +1,28 @@
+<ion-menu side="start" menuId="menuPrincipal" contentId="principal">
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-title>Start Menu</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+    <ion-list>
+        <ion-item>
+          <ion-icon slot="start" name="settings-outline"></ion-icon>
+          <ion-label>Modo simple</ion-label>
+          <ion-toggle unchecked></ion-toggle>
+        </ion-item>
+      <ion-menu-toggle>
+        <ion-item [routerLink]="['/configuracion']">
+          <ion-icon slot="start" name="settings-outline"></ion-icon>
+          <ion-label>Configuración</ion-label>
+        </ion-item>
+      </ion-menu-toggle>
+      <ion-menu-toggle>
+        <ion-item [routerLink]="['/configuracion']">
+          <ion-icon slot="start" name="settings-outline"></ion-icon>
+          <ion-label>Sobre nosotros</ion-label>
+        </ion-item>
+      </ion-menu-toggle>
+    </ion-list>
+  </ion-content>
+</ion-menu>
