@@ -11,6 +11,12 @@ import { AppComponent } from './app.component';
 
 import { MenuComponent } from './components/menu/menu.component';
 
+// STT
+import { SpeechRecognition } from '@ionic-native/speech-recognition/ngx';
+
+// TTS
+//import { TextToSpeech } from '@ionic-native/text-to-speech/ngx';
+
 @NgModule({
   declarations: [AppComponent, MenuComponent],
   entryComponents: [],
@@ -19,6 +25,8 @@ import { MenuComponent } from './components/menu/menu.component';
   providers: [
     StatusBar,
     SplashScreen,
+    SpeechRecognition,
+    //TextToSpeech,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]
