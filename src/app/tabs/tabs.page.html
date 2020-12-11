@@ -40,21 +40,26 @@
         </ion-col>
 
       </ion-row>
+      
+      <ion-item>
+        <ion-textarea placeholder="¿Qué tiempo hace hoy?" [(ngModel)]="texto"></ion-textarea>
+      </ion-item>
+      <ion-button (click)="diTTS()">Acción</ion-button>
 
-        <ion-button (click)="pidePermisoMicrofono()">Pedir permiso</ion-button>
-        <ion-button (click)="iniciaSTT()">Escuchar</ion-button>
-        <ion-button (click)="paraSTT()" *ngIf="esIOS()">Parar</ion-button>
+      <ion-button (click)="pidePermisoMicrofono()">Pedir permiso</ion-button>
+      <ion-button (click)="iniciaSTT()">Escuchar</ion-button>
+      <ion-button (click)="paraSTT()" *ngIf="esIOS()">Parar</ion-button>
 
-        <ion-card>
-          <ion-card-header>Esto es lo que he entendido</ion-card-header>
-          <ion-card-content>
-            <ion-list>
-              <ion-item *ngFor="let coincidencia of coincidencias">
-                {{ coincidencia }}
-              </ion-item>
-            </ion-list>
-          </ion-card-content>
-        </ion-card>
+      <ion-card>
+        <ion-card-header>Esto es lo que he entendido</ion-card-header>
+        <ion-card-content>
+          <ion-list>
+            <ion-item *ngFor="let coincidencia of coincidencias">
+              {{ coincidencia }}
+            </ion-item>
+          </ion-list>
+        </ion-card-content>
+      </ion-card>
 
     </ion-grid>
     <!-- <ion-input placeholder="Enter Input" style="margin: 0px 8px;"></ion-input> -->

@@ -5,11 +5,11 @@ import { MenuController } from '@ionic/angular';
 import { Platform } from '@ionic/angular';
 
 // TTS
-//import { TextToSpeech } from '@ionic-native/text-to-speech/ngx';
+import { TextToSpeech } from '@ionic-native/text-to-speech/ngx';
 
 // STT
 import { SpeechRecognition } from '@ionic-native/speech-recognition/ngx'
-// import { ChangeDetectorRef } from '@angular/core'; // Algo de actualizar la vista (?)
+import { ChangeDetectorRef } from '@angular/core'; // Si no se usa no actualiza el input
 
 @Component({
   selector: 'app-tabs',
@@ -25,12 +25,24 @@ export class TabsPage {
   estaGrabando = false;
 
   constructor(  private menu: MenuController,
-                //private tts: TextToSpeech, // TTS
-                private plt: Platform, private speechRecognition: SpeechRecognition // Si el STT no va: public navCtrl: NavController, private cd: ChangeDetectorRef
-              ){
-                  //, private cd: ChangeDetectorRef // Si el STT no va
-  }
+                private tts: TextToSpeech, // TTS
+                private plt: Platform, private speechRecognition: SpeechRecognition, private cd: ChangeDetectorRef // Si el STT no va: public navCtrl: NavController
+              ){}
 
+
+  // Metodos TTS
+  async diTTS():Promise<any>{
+    try{
+      await this.tts.speak({
+        text: this.texto,
+        locale: 'es-ES'
+      });
+      console.log("Successfully said " + this.texto);
+    }
+    catch(e){
+      console.log(e);
+    }
+  }
 
   // Metodos STT
   esIOS() {
@@ -43,7 +55,7 @@ export class TabsPage {
     }
     this.speechRecognition.startListening().subscribe(coincidencias => {
       this.coincidencias = coincidencias;
-      //this.cd.detectChanges(); // Para actualizar la vista (?)
+      this.cd.detectChanges(); // Para actualizar la vista
     });
     this.estaGrabando = true;
   }
