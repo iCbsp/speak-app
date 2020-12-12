@@ -52,6 +52,7 @@ export class TabsPage {
         locale: 'es-ES'
       });
       console.log("Successfully said " + this.texto);
+      //this.ventanaAccesibilidad();
     }
     catch(e){
       console.log(e);
