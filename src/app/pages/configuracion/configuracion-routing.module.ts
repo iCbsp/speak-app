@@ -11,7 +11,11 @@ const routes: Routes = [
   {
     path: 'perfiles',
     loadChildren: () => import('./perfiles/perfiles.module').then( m => m.PerfilesPageModule)
+  },  {
+    path: 'accesibilidad',
+    loadChildren: () => import('./accesibilidad/accesibilidad.module').then( m => m.AccesibilidadPageModule)
   }
+
 ];
 
 @NgModule({
