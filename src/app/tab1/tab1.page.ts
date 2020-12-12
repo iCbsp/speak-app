@@ -6,6 +6,10 @@ import { AlertController } from '@ionic/angular';
 // TTS
 import { TextToSpeech } from '@ionic-native/text-to-speech/ngx';
 
+// NavController (push, pop)
+//import { NavController } from '@ionic/angular';
+import { Router } from '@angular/router';
+
 @Component({
   selector: 'app-tab1',
   templateUrl: 'tab1.page.html',
@@ -15,7 +19,9 @@ export class Tab1Page {
 
   constructor(
     public alertController: AlertController, // Alertas - Prompt
-    private tts: TextToSpeech // TTS
+    private tts: TextToSpeech, // TTS
+    //public navCtrl: NavController // Push y pop
+    private router: Router // Push y pop
     ){}
 
   async ventanaAccion() {
@@ -62,6 +68,8 @@ export class Tab1Page {
                 text: 'Alexa, pon una alarma a las ' + data.texto3,
                 locale: 'es-ES'
               });
+              //this.navCtrl.navigateForward(['configuracion'], true);
+              this.router.navigate(['configuracion', {id: "hehehe"}]);
             }
             catch(e){
               console.log(e);
