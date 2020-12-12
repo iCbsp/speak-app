@@ -24,8 +24,8 @@ export class TabsPage {
   //asistente: string;
   asistente = "Alexa"; // cambiar si hay persistencia
 
-  preguntadaAccesibilidad = false;
-  preguntadoUsoDeDatos = false;
+  preguntadaAccesibilidad = true;
+  preguntadoUsoDeDatos = true;
 
   // Var TTS
   texto: string;

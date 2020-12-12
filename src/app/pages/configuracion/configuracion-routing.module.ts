@@ -7,6 +7,10 @@ const routes: Routes = [
   {
     path: '',
     component: ConfiguracionPage
+  },
+  {
+    path: 'perfiles',
+    loadChildren: () => import('./perfiles/perfiles.module').then( m => m.PerfilesPageModule)
   }
 ];
 
