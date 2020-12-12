@@ -14,6 +14,10 @@ const routes: Routes = [
   },  {
     path: 'accesibilidad',
     loadChildren: () => import('./accesibilidad/accesibilidad.module').then( m => m.AccesibilidadPageModule)
+  },
+  {
+    path: 'organizacion',
+    loadChildren: () => import('./organizacion/organizacion.module').then( m => m.OrganizacionPageModule)
   }
 
 ];
