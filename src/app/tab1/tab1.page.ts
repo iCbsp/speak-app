@@ -3,11 +3,7 @@ import { Component } from '@angular/core';
 // Alertas - Prompt
 import { AlertController } from '@ionic/angular';
 
-// TTS
-import { TextToSpeech } from '@ionic-native/text-to-speech/ngx';
-
-// NavController (push, pop)
-//import { NavController } from '@ionic/angular';
+// Router, para pasar parametros
 import { Router } from '@angular/router';
 
 @Component({
@@ -19,9 +15,7 @@ export class Tab1Page {
 
   constructor(
     public alertController: AlertController, // Alertas - Prompt
-    private tts: TextToSpeech, // TTS
-    //public navCtrl: NavController // Push y pop
-    private router: Router // Push y pop
+    private router: Router // Para pasar parametros
     ){}
 
   async ventanaAccion() {
@@ -63,13 +57,8 @@ export class Tab1Page {
           role: 'aceptar',
           handler: data => {
             try{
-              //await this.tts.speak({
-              this.tts.speak({
-                text: 'Alexa, pon una alarma a las ' + data.texto3,
-                locale: 'es-ES'
-              });
               //this.navCtrl.navigateForward(['configuracion'], true);
-              this.router.navigate(['configuracion', {id: "hehehe"}]);
+              this.router.navigate(['reproduccion', {textoAReproducir: 'Alexa, pon una alarma a las ' + data.texto3}]);
             }
             catch(e){
               console.log(e);
