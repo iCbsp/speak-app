@@ -9,6 +9,12 @@ export class MenuComponent implements OnInit {
 
   constructor() { }
 
+  modoSimpleActivado = false;
+  
+  cambiaModoSimple(){
+    this.modoSimpleActivado = !this.modoSimpleActivado;
+  }
+
   ngOnInit() {}
 
 }

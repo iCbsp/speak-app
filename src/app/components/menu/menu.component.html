@@ -7,10 +7,10 @@
   <ion-content>
     <ion-list>
       <br>
-        <ion-item>
+        <ion-item (click)="cambiaModoSimple()" class="ion-activated">
           <ion-icon slot="start" name="happy-outline"></ion-icon>
           <ion-label>Modo simple</ion-label>
-          <ion-toggle unchecked></ion-toggle>
+          <ion-toggle checked={{modoSimpleActivado}}></ion-toggle>
         </ion-item>
       <ion-menu-toggle>
         <ion-item [routerLink]="['/configuracion']">
