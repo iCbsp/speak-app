@@ -41,7 +41,7 @@ export class ReproduccionPage implements OnInit {
         locale: 'es-ES'
       });
       console.log("Successfully said " + this.textoAReproducir);
-      //this.ventanaAccesibilidad();
+      alert("El TTS ha terminado");
     }
     catch(e){
       console.log(e);
@@ -50,7 +50,6 @@ export class ReproduccionPage implements OnInit {
 
   pararTTS(){
     console.log("parando TTS");
-
   }
 
   ngOnInit() {

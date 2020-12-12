@@ -7,8 +7,8 @@ import { AlertController } from '@ionic/angular';
 // Para saber si es iOS
 import { Platform } from '@ionic/angular';
 
-// TTS
-import { TextToSpeech } from '@ionic-native/text-to-speech/ngx';
+// Router, para pasar parametros
+import { Router } from '@angular/router';
 
 // STT
 import { SpeechRecognition } from '@ionic-native/speech-recognition/ngx'
@@ -27,37 +27,20 @@ export class TabsPage {
   preguntadaAccesibilidad = true;
   preguntadoUsoDeDatos = true;
 
-  // Var TTS
-  texto: string;
   // Var STT
   coincidencias: String[];
   estaGrabando = false;
   permisoSTT = false;
 
-  constructor(  private menu: MenuController,
-                private tts: TextToSpeech, // TTS
+  constructor(  
+                private menu: MenuController, // Menu desplegable
+                private router: Router, // Para pasar parametros
                 public alertController: AlertController, // Alertas - Prompt
                 private plt: Platform, private speechRecognition: SpeechRecognition, private cd: ChangeDetectorRef // Si el STT no va: public navCtrl: NavController
               ){
                 if(!this.preguntadoUsoDeDatos) this.ventanaPoliticas();
                 if(!this.preguntadaAccesibilidad) this.ventanaAccesibilidad();
               }
-
-
-  // Metodos TTS
-  async diTTS():Promise<any>{
-    try{
-      await this.tts.speak({
-        text: this.texto,
-        locale: 'es-ES'
-      });
-      console.log("Successfully said " + this.texto);
-      //this.ventanaAccesibilidad();
-    }
-    catch(e){
-      console.log(e);
-    }
-  }
 
   // Metodos STT
   esIOS() {
@@ -141,8 +124,9 @@ export class TabsPage {
           role: 'enviar',
           handler: data => {
             console.log('Confirm Ok');
-            this.texto =  data.textoSTT;
-            this.diTTS();
+            //this.texto =  data.textoSTT;
+            //this.diTTS();
+            this.router.navigate(['reproduccion', {textoAReproducir: data.textoSTT}]);
           }
         }
       ]
