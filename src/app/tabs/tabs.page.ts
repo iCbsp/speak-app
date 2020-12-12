@@ -22,7 +22,7 @@ import { ChangeDetectorRef } from '@angular/core'; // Si no se usa no actualiza 
 export class TabsPage {
 
   //asistente: string;
-  asistente = "Ninguno"; // cambiar si hay persistencia
+  asistente = "Alexa"; // cambiar si hay persistencia
 
   preguntadaAccesibilidad = false;
   preguntadoUsoDeDatos = false;
@@ -39,8 +39,8 @@ export class TabsPage {
                 public alertController: AlertController, // Alertas - Prompt
                 private plt: Platform, private speechRecognition: SpeechRecognition, private cd: ChangeDetectorRef // Si el STT no va: public navCtrl: NavController
               ){
-                this.ventanaPoliticas();
-                this.ventanaAccesibilidad();
+                if(!this.preguntadoUsoDeDatos) this.ventanaPoliticas();
+                if(!this.preguntadaAccesibilidad) this.ventanaAccesibilidad();
               }
 
 
@@ -111,6 +111,11 @@ export class TabsPage {
   // }
 
   async ventanaTextoManual() {
+
+    // Comprobación asistente
+    var textoAsistente = "";
+    if(this.asistente != "Ninguno") textoAsistente = this.asistente + ", ";
+
     const alert = await this.alertController.create({
       cssClass: 'ventanaTextoManual',
       header: 'Acción manual',
@@ -119,7 +124,7 @@ export class TabsPage {
           name: 'textoSTT',
           type: 'text',
           //placeholder: 'Acción a realizar',
-          value: this.asistente + ", "
+          value: textoAsistente
         }
       ],
       buttons: [
@@ -179,6 +184,7 @@ export class TabsPage {
           role: 'aceptar',
           handler: () => {
             console.log('Confirm Ok');
+            this.preguntadaAccesibilidad = true;
           }
         }
       ]
@@ -190,7 +196,7 @@ export class TabsPage {
     const alert = await this.alertController.create({
       cssClass: 'ventanaPoliticas',
       header: 'Uso de los datos',
-      message: 'Los datos se guardan de forma local. Para más información acceda a nuestra página web.',
+      message: 'Los datos se guardan de forma local. Para más información acceda a nuestra <a href="https://carlosbsp.com/Action-Speech/">página web</a>.',
       backdropDismiss: false,
       // inputs: [
       //   {
@@ -214,6 +220,7 @@ export class TabsPage {
           role: 'aceptar',
           handler: () => {
             console.log('Confirm Ok');
+            this.preguntadoUsoDeDatos = true;
           }
         }
       ]
