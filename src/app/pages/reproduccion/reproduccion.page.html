@@ -3,10 +3,11 @@
     <ion-buttons (click)="pararTTS()" slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
-    <ion-title>Reproducción</ion-title>
+    <ion-title>SpeechApp</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-button (click)="diTTS()">aasdasd</ion-button>
+  <ion-title *ngIf="estaReproduciendo()">Reproduciendo</ion-title>
+  <ion-title *ngIf="!estaReproduciendo()">Escuchando</ion-title>
 </ion-content>
