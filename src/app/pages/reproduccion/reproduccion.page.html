@@ -7,10 +7,12 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <ion-title *ngIf="estaReproduciendo()">Reproduciendo</ion-title>
-  <ion-title *ngIf="!estaReproduciendo()">Escuchando</ion-title>
+<ion-content style="text-align: center;">
 
+  <ion-title style="margin: 20px;" *ngIf="estaReproduciendo()">Reproduciendo</ion-title>
+  <ion-title style="margin: 20px;" *ngIf="estaGrabando()">Escuchando</ion-title>
+
+  <ion-spinner style="width: 80px; height: 80px; margin: 20px;" *ngIf="estaReproduciendo() || estaGrabando()" name="crescent"></ion-spinner>
   <ion-card>
     <ion-card-header>Esto es lo que he entendido</ion-card-header>
     <ion-card-content>

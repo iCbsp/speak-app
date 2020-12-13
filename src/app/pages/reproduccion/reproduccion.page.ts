@@ -26,7 +26,7 @@ export class ReproduccionPage implements OnInit {
   // Variables STT
   coincidencias: String[];
   primeraCoincidencia = new String("");
-  estaGrabando = false;
+  grabando = false;
   permisoSTT = false;
   STTActivado = false;
   STTCancelado = false;
@@ -68,7 +68,7 @@ export class ReproduccionPage implements OnInit {
     }
     catch(e){
       if(e == "cordova_not_available") console.log(e);
-      else alert("diTTS: Ha surgido un error relacionado con el Text To Speech");
+      //else alert("diTTS: Ha surgido un error relacionado con el Text To Speech");
     }
   }
 
@@ -99,23 +99,38 @@ export class ReproduccionPage implements OnInit {
     return this.permisoSTT;
   }
 
+  estaGrabando(){
+    return this.grabando;
+  }
+
   iniciaSTT(){
+    this.grabando = true;
     let options = {
       // language: 'en-US'
       language: 'es-ES'
     }
-    this.speechRecognition.startListening().subscribe(coincidencias => {
-      this.coincidencias = coincidencias;
-    });
-    this.primeraCoincidencia = this.coincidencias[0];
-    this.cd.detectChanges(); // Para actualizar la vista
-    this.estaGrabando = true;
-    //alert("Ha parado");
+    this.speechRecognition.startListening().subscribe(coincidenciasTemp => {
+      this.coincidencias = coincidenciasTemp;
+
+      if(this.coincidencias.length > 0 && this.coincidencias[0] != "") this.primeraCoincidencia = this.coincidencias[0];
+      else this.primeraCoincidencia = "No ha habido respuesta";
+
+      this.grabando = false;
+      this.cd.detectChanges(); // Para actualizar la vista
+
+    }, (error) => {
+      this.grabando = false;
+      this.primeraCoincidencia = "No ha habido respuesta";
+      this.cd.detectChanges(); // Para actualizar la vista
+    }
+    );
+    // this.grabando = true;
+    //alert("Ha parado" + this.reproduciendo + this.grabando);
   }
 
   paraSTT(){
     this.speechRecognition.stopListening().then(() => {
-      this.estaGrabando = false;
+      this.grabando = false;
     });
   }
 
