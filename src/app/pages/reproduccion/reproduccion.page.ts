@@ -5,6 +5,13 @@ import { ActivatedRoute } from '@angular/router';
 // TTS
 import { TextToSpeech } from '@ionic-native/text-to-speech/ngx';
 
+// STT
+import { SpeechRecognition } from '@ionic-native/speech-recognition/ngx'
+import { ChangeDetectorRef } from '@angular/core'; // Si no se usa no actualiza el input
+
+// Para saber si es iOS
+import { Platform } from '@ionic/angular';
+
 @Component({
   selector: 'app-reproduccion',
   templateUrl: './reproduccion.page.html',
@@ -12,27 +19,38 @@ import { TextToSpeech } from '@ionic-native/text-to-speech/ngx';
 })
 export class ReproduccionPage implements OnInit {
   
+  // Variables TTS
   textoAReproducir = "";
   reproduciendo = true;
+
+  // Variables STT
+  coincidencias: String[];
+  estaGrabando = false;
+  permisoSTT = false;
+  STTActivado = false;
+  STTCancelado = false;
 
   constructor(
     private route: ActivatedRoute, // Para recibir los parametros del Router
     private tts: TextToSpeech, // TTS
-    ) {
+    private plt: Platform, private speechRecognition: SpeechRecognition, private cd: ChangeDetectorRef // Si el STT no va: public navCtrl: NavController
+    ){
 
+    // Recogida del texto
     this.route.params.subscribe(params => {
       this.textoAReproducir = params['textoAReproducir'];
+      this.STTActivado = params['STTActivado'];
       console.log(params['textoAReproducir']);
     });
 
-    this.diElTextoTrasEsperar();
+    //this.diElTextoTrasEsperar();
   }
 
-  diElTextoTrasEsperar(){
-    setTimeout(() => {
-      this.diTTS()
-    }, 1000);
-  }
+  // diElTextoTrasEsperar(){
+  //   setTimeout(() => {
+  //     this.diTTS()
+  //   }, 1000);
+  // }
 
   // Metodos TTS
   async diTTS():Promise<any>{
@@ -45,6 +63,7 @@ export class ReproduccionPage implements OnInit {
       console.log("Successfully said " + this.textoAReproducir);
       //alert("El TTS ha terminado");
       this.reproduciendo = false;
+      if(this.STTActivado && !this.STTCancelado) this.iniciaSTT();
     }
     catch(e){
       if(e == "cordova_not_available") console.log(e);
@@ -58,6 +77,7 @@ export class ReproduccionPage implements OnInit {
 
   async pararTTS(){
     console.log("parando TTS");
+    this.STTCancelado = true;
     try{
       await this.tts.speak("");
       this.reproduciendo = false;
@@ -68,7 +88,49 @@ export class ReproduccionPage implements OnInit {
     }
   }
 
+
+  // Metodos STT
+  esIOS() {
+    return this.plt.is('ios');
+  }
+
+  tienePermisoSTT(){
+    return this.permisoSTT;
+  }
+
+  iniciaSTT(){
+    let options = {
+      // language: 'en-US'
+      language: 'es-ES'
+    }
+    this.speechRecognition.startListening().subscribe(coincidencias => {
+      this.coincidencias = coincidencias;
+      this.cd.detectChanges(); // Para actualizar la vista
+    });
+    this.estaGrabando = true;
+  }
+
+  paraSTT(){
+    this.speechRecognition.stopListening().then(() => {
+      this.estaGrabando = false;
+    });
+  }
+
+  pidePermisoSTT() {
+    this.speechRecognition.hasPermission()
+    .then((hasPermission: boolean) => {
+      if(hasPermission){
+        this.iniciaSTT();
+      } else {
+        this.speechRecognition.requestPermission();
+      }
+      this.permisoSTT = hasPermission;
+    });
+  }
+
+  // Al iniciar la pagina
   ngOnInit() {
+    this.diTTS();
   }
 
 }

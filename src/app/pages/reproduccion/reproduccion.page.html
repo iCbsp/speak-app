@@ -10,4 +10,16 @@
 <ion-content>
   <ion-title *ngIf="estaReproduciendo()">Reproduciendo</ion-title>
   <ion-title *ngIf="!estaReproduciendo()">Escuchando</ion-title>
+
+  <ion-card>
+    <ion-card-header>Esto es lo que he entendido</ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item *ngFor="let coincidencia of coincidencias">
+          {{ coincidencia }}
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
 </ion-content>
