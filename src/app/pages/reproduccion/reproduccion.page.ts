@@ -39,7 +39,8 @@ export class ReproduccionPage implements OnInit {
     try{
       await this.tts.speak({
         text: this.textoAReproducir,
-        locale: 'es-ES'
+        locale: 'es-ES',
+        rate: 0.8
       });
       console.log("Successfully said " + this.textoAReproducir);
       //alert("El TTS ha terminado");
@@ -55,8 +56,16 @@ export class ReproduccionPage implements OnInit {
     return this.reproduciendo;
   }
 
-  pararTTS(){
+  async pararTTS(){
     console.log("parando TTS");
+    try{
+      await this.tts.speak("");
+      this.reproduciendo = false;
+    }
+    catch(e){
+      if(e == "cordova_not_available") console.log(e);
+      else alert("Ha surgido un error relacionado con el Text To Speech");
+    }
   }
 
   ngOnInit() {
