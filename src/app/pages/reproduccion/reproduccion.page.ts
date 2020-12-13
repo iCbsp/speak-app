@@ -30,6 +30,7 @@ export class ReproduccionPage implements OnInit {
   permisoSTT = false;
   STTActivado = false;
   STTCancelado = false;
+  resultado = '';
 
   constructor(
     private route: ActivatedRoute, // Para recibir los parametros del Router
@@ -72,10 +73,6 @@ export class ReproduccionPage implements OnInit {
     }
   }
 
-  estaReproduciendo(){
-    return this.reproduciendo;
-  }
-
   async pararTTS(){
     console.log("parando TTS");
     this.STTCancelado = true;
@@ -99,10 +96,6 @@ export class ReproduccionPage implements OnInit {
     return this.permisoSTT;
   }
 
-  estaGrabando(){
-    return this.grabando;
-  }
-
   iniciaSTT(){
     this.grabando = true;
     let options = {
@@ -113,14 +106,16 @@ export class ReproduccionPage implements OnInit {
       this.coincidencias = coincidenciasTemp;
 
       if(this.coincidencias.length > 0 && this.coincidencias[0] != "") this.primeraCoincidencia = this.coincidencias[0];
-      else this.primeraCoincidencia = "No ha habido respuesta";
+      else this.primeraCoincidencia = "(No ha habido respuesta)";
 
       this.grabando = false;
+      this.resultado = 'bien';
       this.cd.detectChanges(); // Para actualizar la vista
 
     }, (error) => {
       this.grabando = false;
-      this.primeraCoincidencia = "No ha habido respuesta";
+      this.resultado = 'mal';
+      this.primeraCoincidencia = "(No ha habido respuesta)";
       this.cd.detectChanges(); // Para actualizar la vista
     }
     );
@@ -144,6 +139,19 @@ export class ReproduccionPage implements OnInit {
       }
       this.permisoSTT = hasPermission;
     });
+  }
+
+  // Interfaz
+  estaGrabando(){
+    return this.grabando;
+  }
+
+  estaReproduciendo(){
+    return this.reproduciendo;
+  }
+
+  iconoResultado(){
+    if(!this.reproduciendo && !this.grabando) return this.resultado;
   }
 
   // Al iniciar la pagina
