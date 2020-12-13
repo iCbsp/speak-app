@@ -16,8 +16,8 @@
   <ion-title size="small">{{ textoAReproducir }}</ion-title>
 
   <ion-spinner style="width: 80px; height: 80px; margin: 20px;" *ngIf="estaReproduciendo() || estaGrabando()" name="crescent"></ion-spinner>
-  <ion-icon style="width: 80px; height: 80px; margin: 20px;" *ngIf="iconoResultado() == 'bien'" name="checkmark-circle-outline"></ion-icon>
-  <ion-icon style="width: 80px; height: 80px; margin: 20px;" *ngIf="iconoResultado() == 'mal'" name="close-circle-outline"></ion-icon>
+  <ion-icon style="width: 80px; height: 80px; margin: 20px;" *ngIf="iconoResultado() == 'bien'" name="checkmark-circle-outline" color="success"></ion-icon>
+  <ion-icon style="width: 80px; height: 80px; margin: 20px;" *ngIf="iconoResultado() == 'mal'" name="close-circle-outline" color="danger"></ion-icon>
   <ion-card *ngIf="!estaGrabando() && !estaReproduciendo()">
     <ion-card-header>Respuesta</ion-card-header>
     <ion-card-content>
