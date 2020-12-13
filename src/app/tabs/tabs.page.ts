@@ -53,7 +53,8 @@ export class TabsPage {
 
   iniciaSTT(){
     let options = {
-      language: 'en-US'
+      // language: 'en-US'
+      language: 'es-ES'
     }
     this.speechRecognition.startListening().subscribe(coincidencias => {
       this.coincidencias = coincidencias;

@@ -7,11 +7,16 @@
   <ion-content>
     <ion-list>
       <br>
-        <ion-item (click)="cambiaModoSimple()">
-          <ion-icon slot="start" name="happy-outline"></ion-icon>
-          <ion-label>Modo simple</ion-label>
-          <ion-toggle checked={{modoSimpleActivado}}></ion-toggle>
-        </ion-item>
+      <ion-item (click)="cambiaModoSimple()">
+        <ion-icon slot="start" name="happy-outline"></ion-icon>
+        <ion-label>Modo simple</ion-label>
+        <ion-toggle checked={{modoSimpleActivado}}></ion-toggle>
+      </ion-item>
+      <ion-item (click)="cambiaSTT()">
+        <ion-icon slot="start" name="mic-outline"></ion-icon>
+        <ion-label>Respuesta</ion-label>
+        <ion-toggle checked={{STTActivado}}></ion-toggle>
+      </ion-item>
       <ion-menu-toggle>
         <ion-item [routerLink]="['/configuracion']">
           <ion-icon slot="start" name="settings-outline"></ion-icon>

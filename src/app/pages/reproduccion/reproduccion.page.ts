@@ -25,6 +25,7 @@ export class ReproduccionPage implements OnInit {
 
   // Variables STT
   coincidencias: String[];
+  primeraCoincidencia = new String("");
   estaGrabando = false;
   permisoSTT = false;
   STTActivado = false;
@@ -67,7 +68,7 @@ export class ReproduccionPage implements OnInit {
     }
     catch(e){
       if(e == "cordova_not_available") console.log(e);
-      else alert("Ha surgido un error relacionado con el Text To Speech");
+      else alert("diTTS: Ha surgido un error relacionado con el Text To Speech");
     }
   }
 
@@ -84,7 +85,7 @@ export class ReproduccionPage implements OnInit {
     }
     catch(e){
       if(e == "cordova_not_available") console.log(e);
-      else alert("Ha surgido un error relacionado con el Text To Speech");
+      else alert("pararTTS: Ha surgido un error relacionado con el Text To Speech");
     }
   }
 
@@ -105,9 +106,11 @@ export class ReproduccionPage implements OnInit {
     }
     this.speechRecognition.startListening().subscribe(coincidencias => {
       this.coincidencias = coincidencias;
-      this.cd.detectChanges(); // Para actualizar la vista
     });
+    this.primeraCoincidencia = this.coincidencias[0];
+    this.cd.detectChanges(); // Para actualizar la vista
     this.estaGrabando = true;
+    //alert("Ha parado");
   }
 
   paraSTT(){

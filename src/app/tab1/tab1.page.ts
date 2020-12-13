@@ -58,7 +58,11 @@ export class Tab1Page {
           handler: data => {
             try{
               //this.navCtrl.navigateForward(['configuracion'], true);
-              this.router.navigate(['reproduccion', {textoAReproducir: 'Alexa, pon una alarma a las ' + data.texto3}]);
+              this.router.navigate(['reproduccion', 
+              {
+                textoAReproducir: 'Alexa, pon una alarma a las ' + data.texto3,
+                STTActivado: true
+              }]);
             }
             catch(e){
               console.log(e);

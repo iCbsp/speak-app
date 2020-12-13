@@ -15,6 +15,12 @@ export class MenuComponent implements OnInit {
     this.modoSimpleActivado = !this.modoSimpleActivado;
   }
 
+  STTActivado = false;
+  
+  cambiaSTT(){
+    this.STTActivado = !this.STTActivado;
+  }
+
   ngOnInit() {}
 
 }
