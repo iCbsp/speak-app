@@ -32,4 +32,32 @@
     </ion-card-content>
   </ion-card>
 
+  <!-- <section *ngIf="!estaGrabando() && !estaReproduciendo()"> -->
+  <section>
+    <ion-button size="small" color="secondary" (click)="reiniciaAccion()">Repetir</ion-button>
+    <ion-button size="small" color="primary" [routerLink]="['/tabs']">Aceptar</ion-button>
+  </section>
+  <section *ngIf="!estaGrabando() && !estaReproduciendo()" style="margin: 20px 5px;">
+    <header>Acciones predictivas</header>
+    <ion-row>
+      <ion-col size="4">
+        <div style="text-align: center; background-color:steelblue; padding: 3px 0px;">
+          <ion-icon style="font-size: 80px" name="alarm-outline"></ion-icon>
+          <p>Alarma</p>
+        </div>
+      </ion-col>
+      <ion-col size="4">
+        <div style="text-align: center; background-color:steelblue; padding: 3px 0px;">
+          <ion-icon style="font-size: 80px" name="alarm-outline"></ion-icon>
+          <p>Alarma</p>
+        </div>
+      </ion-col>
+      <ion-col size="4">
+        <div style="text-align: center; background-color:steelblue; padding: 3px 0px;">
+          <ion-icon style="font-size: 80px" name="alarm-outline"></ion-icon>
+          <p>Alarma</p>
+        </div>
+      </ion-col>
+    </ion-row>
+  </section>
 </ion-content>

@@ -154,6 +154,22 @@ export class ReproduccionPage implements OnInit {
     if(!this.reproduciendo && !this.grabando) return this.resultado;
   }
 
+  reiniciaAccion(){
+    // Variables TTS
+    this.reproduciendo = true;
+
+    // Variables STT
+    this.coincidencias = [];
+    this.primeraCoincidencia = new String("");
+    this.grabando = false;
+    this.permisoSTT = false;
+    this.STTCancelado = false;
+    this.resultado = '';
+
+    // Lo mismo que al iniciar la pagina
+    this.diTTS();
+  }
+
   // Al iniciar la pagina
   ngOnInit() {
     this.diTTS();
