@@ -32,8 +32,8 @@
     </ion-card-content>
   </ion-card>
 
-  <!-- <section *ngIf="!estaGrabando() && !estaReproduciendo()"> -->
-  <section>
+  <section *ngIf="!estaGrabando() && !estaReproduciendo()">
+  <!-- <section> -->
     <ion-button size="small" color="secondary" (click)="reiniciaAccion()">Repetir</ion-button>
     <ion-button size="small" color="primary" [routerLink]="['/tabs']">Aceptar</ion-button>
   </section>
