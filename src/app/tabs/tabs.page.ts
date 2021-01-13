@@ -8,11 +8,15 @@ import { AlertController } from '@ionic/angular';
 import { Platform } from '@ionic/angular';
 
 // Router, para pasar parametros
-import { Router } from '@angular/router';
+import { Data, Router } from '@angular/router';
 
 // STT
-import { SpeechRecognition } from '@ionic-native/speech-recognition/ngx'
+import { SpeechRecognition } from '@ionic-native/speech-recognition/ngx';
 import { ChangeDetectorRef } from '@angular/core'; // Si no se usa no actualiza el input
+
+// SQLite
+import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
+// import { DatabaseService } from '../services/database-service';
 
 @Component({
   selector: 'app-tabs',
@@ -32,15 +36,122 @@ export class TabsPage {
   estaGrabando = false;
   permisoSTT = false;
 
+  database: SQLiteObject;
+  message = '';
+
   constructor(  
-                private menu: MenuController, // Menu desplegable
-                private router: Router, // Para pasar parametros
-                public alertController: AlertController, // Alertas - Prompt
-                private plt: Platform, private speechRecognition: SpeechRecognition, private cd: ChangeDetectorRef // Si el STT no va: public navCtrl: NavController
-              ){
-                if(!this.preguntadoUsoDeDatos) this.ventanaPoliticas();
-                if(!this.preguntadaAccesibilidad) this.ventanaAccesibilidad();
-              }
+    private menu: MenuController, // Menu desplegable
+    private router: Router, // Para pasar parametros
+    public alertController: AlertController, // Alertas - Prompt
+    private plt: Platform, private speechRecognition: SpeechRecognition, private cd: ChangeDetectorRef, // Si el STT no va: public navCtrl: NavController
+    private sqlite: SQLite, // SQLite
+    // private database:DatabaseService
+  ){
+    if(!this.preguntadoUsoDeDatos) this.ventanaPoliticas();
+    if(!this.preguntadaAccesibilidad) this.ventanaAccesibilidad();
+
+
+
+    // console.log("Hola1");
+    // let connection = this.sqlite.create({
+    //   name: 'data.db',
+    //   location: 'default'
+    // });
+    // if(connection) {
+    //   connection.then((db: SQLiteObject) => {
+    //     alert("Hola");
+    //     this.database = db;
+    //     this.database.executeSql('CREATE TABLE IF NOT EXISTS prueba(name TEXT)')
+    //     .then(() => alert('Executed SQL'))
+    //     .catch(e => alert('error1'));
+    //   })
+    //   .catch(e => alert('error2'));
+      
+    //   // this.database.executeSql(`INSERT INTO danceMoves(name) VALUES ('aaaa');`).then((result)=>{
+    //   //   if(result.insertId){
+    //   //     alert(result.insertId);
+    //   //   }
+    //   // })
+    // } else alert("Error en la base de datos");
+
+    this.plt.ready().then(() => {
+      this.sqlite.create({
+        name: 'todos.db',
+        location: 'default'
+      })
+        .then((db: SQLiteObject) => {
+          this.message = JSON.stringify(db);
+          this.database = db;
+        });
+    });
+
+    // this.database.executeSql("SELECT * from danceMoves", [])
+    //   .then((data)=>{
+    //   let lists = [];
+    //   for(let i=0; i<data.rows.length; i++){
+    //     //  lists.push(data.rows.item(i));
+    //   alert(i);
+    //   }
+    // }
+
+      // .then((db: SQLiteObject) => {
+      //   alert("Hola");
+      //   this.database = db;
+      //   db.executeSql('create table danceMoves(name VARCHAR(32))', [])
+      //     .then(() => console.log('Executed SQL'))
+      //     .catch(e => console.log(e));
+      // })
+      // .catch(e => console.log(e));
+
+  }
+
+  public createTables() {
+    this.database.executeSql(
+      `CREATE TABLE IF NOT EXISTS list (
+        name TEXT
+      );`, [])
+      .then(() => this.message = 'OK')
+      .catch((err) => this.message = "error detected creating tables -> " + JSON.stringify(err));
+  }
+
+  public insert() {
+    this.database.executeSql(
+      `INSERT INTO list(name) VALUES ('BBBB');`, [])
+      .then(() => this.message = 'OK')
+      .catch((err) => this.message = "error detected inserting tables -> " + JSON.stringify(err));
+  }
+
+  public select() {
+    this.database.executeSql(
+      `SELECT * FROM list;`, [])
+      .then((data)=>{
+        if(data.rows.length){
+          this.message = data.rows.item(0).name;
+          //alert(data.rows.item(0));
+          alert("Hay " + data.rows.length + "resultados");
+        } else alert("Vacío");
+      })
+      .catch((err) => this.message = "error detected selecting tables -> " + JSON.stringify(err));
+  }
+
+  // addList(name:string){
+  //   return this.database.executeSql(`INSERT INTO list(name) VALUES ('${name}');`, []).then((result)=>{
+  //     if(result.insertId){
+  //       alert("addList True");
+  //       return this.getList(result.insertId);
+  //     } else alert("addList False");
+  //   })
+  // }
+
+  // getList(id:number){
+  //   return this.database.executeSql(`SELECT * FROM list WHERE id = ${id}`, [])
+  //   .then((data)=>{
+  //     if(data.rows.length){
+  //       return data.rows.item(0);
+  //     }
+  //     return null;
+  //   })
+  // }
 
   // Metodos STT
   esIOS() {
@@ -96,7 +207,7 @@ export class TabsPage {
   // }
 
   async ventanaTextoManual() {
-
+// this.addList("aaa");
     // Comprobación asistente
     var textoAsistente = "";
     if(this.asistente != "Ninguno") textoAsistente = this.asistente + ", ";
