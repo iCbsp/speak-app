@@ -67,7 +67,8 @@
 </ion-header>
 
 <ion-tabs>
-  <p>{{ databaseService.message }}</p>
+  <ion-button (click)="databaseService.alertDatabaseInfo()">Info</ion-button>
+  <ion-button (click)="databaseService.borraBDD()">Borrar</ion-button>
   <ion-tab-bar slot="bottom">
     <ion-tab-button tab="tab1">
       <ion-icon name="triangle"></ion-icon>

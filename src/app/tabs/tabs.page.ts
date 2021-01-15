@@ -46,6 +46,10 @@ export class TabsPage {
     if(!this.preguntadaAccesibilidad) this.ventanaAccesibilidad();
   }
 
+  actualizaVista(){
+    this.cd.detectChanges();
+  }
+
   // Metodos STT
   esIOS() {
     return this.plt.is('ios');
