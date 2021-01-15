@@ -21,7 +21,7 @@ import { TextToSpeech } from '@ionic-native/text-to-speech/ngx';
 // SQLite
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
 //import { SQLite } from '@ionic-native/sqlite/ngx';
-// import { DatabaseService } from './services/database-service';
+import { DatabaseService } from './services/databaseService';
 
 @NgModule({
   declarations: [AppComponent, MenuComponent],
@@ -32,7 +32,7 @@ import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
     StatusBar,
     SplashScreen,
     SpeechRecognition, TextToSpeech, // TTS y SST
-    // DatabaseService, // SQLite
+    DatabaseService, // SQLite
     SQLite, //SQLiteObject,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
