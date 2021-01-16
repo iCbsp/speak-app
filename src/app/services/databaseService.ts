@@ -8,7 +8,8 @@ export class DatabaseService {
 
     private database: SQLiteObject;
     public messages = [];
-    public lista = new BehaviorSubject<boolean>(false);;
+    public lista = new BehaviorSubject<boolean>(false);
+    private usuarioActual = 0;
 
     constructor(
         private plt:Platform, 
@@ -81,10 +82,11 @@ export class DatabaseService {
         `INSERT INTO usuario(nombre, color) VALUES ('usuario', '#000000');`, [])
         .then((usuario) => {
             alert("Usuario creado: " + usuario.insertId);
+            this.usuarioActual = usuario.insertId;
             if(usuario.insertId){
                 // Configuracion
                 this.database.executeSql(
-                `INSERT INTO configuracion(usuario, modo_simple) VALUES (${usuario.insertId}, 1);`, [])
+                `INSERT INTO configuracion(usuario, modo_simple) VALUES (${usuario.insertId}, 0);`, [])
                 .then(() => alert("Configuracion creada"))
                 .catch((err) => alert("Error insertando configuracion -> " + JSON.stringify(err)));
             }
@@ -100,7 +102,7 @@ export class DatabaseService {
             if(!data.rows.length){
                 alert("Base de datos vacía, insertando datos iniciales");
                 this.insercionesIniciales();
-            }
+            } else this.usuarioActual = data.rows.item(0).id;
         })
         .catch((err) => {
             alert("Error contando usuarios -> " + JSON.stringify(err));
@@ -114,9 +116,9 @@ export class DatabaseService {
         });
     }
 
-    public obtenConfiguracion(usuario: number){
+    public async obtenConfiguracion(usuario: number){
         let configuracion: any;
-        this.database.executeSql(
+        await this.database.executeSql(
             `SELECT * FROM configuracion`, [])
         .then((configuraciones)=>{
             alert("configuraciones.rows.length: " + configuraciones.rows.length);
@@ -131,6 +133,17 @@ export class DatabaseService {
             alert("Error contando usuarios -> " + JSON.stringify(err));
         });
         return configuracion;
+    }
+
+    public cambiaModoSimple(modoSimpleBool: boolean){
+        let modoSimpleInt = 0;
+        if(modoSimpleBool) modoSimpleInt = 1;
+        this.database.executeSql(
+            `UPDATE configuracion SET modo_simple = ${modoSimpleInt} WHERE usuario = ${this.usuarioActual} `, [])
+        .then(()=>{})
+        .catch((err) => {
+            alert("Error contando usuarios -> " + JSON.stringify(err));
+        });
     }
     
     private borraTablas() {

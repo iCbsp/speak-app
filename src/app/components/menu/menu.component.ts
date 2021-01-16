@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { SQLiteObject } from '@ionic-native/sqlite/ngx';
 
 // Para conocer el dispositivo
 import { Platform } from '@ionic/angular';
@@ -20,14 +21,18 @@ export class MenuComponent implements OnInit {
     private databaseService:DatabaseService
   ) {
     databaseService.lista.subscribe((ready)=>{
-      if(ready){ 
+      if(ready){
         // Investigar algo que lo haga esperar, el tutorial original tenia el boolean
         alert("Antes de obtenConfiguracion");
-        let configuracion = databaseService.obtenConfiguracion(1);
+        let respuesta = databaseService.obtenConfiguracion(1);
         alert("Despues de obtenConfiguracion");
         // if(configuracion) alert("Modo_Simple: " + configuracion.modo_simple);
         // else alert("Modo_Simple: Nada");
-        alert("Modo_Simple: " + configuracion.modo_simple);
+        respuesta.then((configuracion)=>{
+          if(configuracion.modo_simple) this.modoSimpleActivado = true;
+          else this.modoSimpleActivado = false;
+          alert("Modo simple: " + this.modoSimpleActivado);
+        });
       }
     });
   }
@@ -35,6 +40,7 @@ export class MenuComponent implements OnInit {
   
   cambiaModoSimple(){
     this.modoSimpleActivado = !this.modoSimpleActivado;
+    this.databaseService.cambiaModoSimple(this.modoSimpleActivado);
   }
 
   STTActivado = false;
