@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Platform } from '@ionic/angular';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable()
 export class DatabaseService {
 
     private database: SQLiteObject;
     public messages = [];
+    public lista = new BehaviorSubject<boolean>(false);;
 
     constructor(
         private plt:Platform, 
@@ -26,12 +28,14 @@ export class DatabaseService {
                 this.database = db;
                 this.creaTablas();
                 this.comprobacionDatos();
+                this.lista.next(true);
             });
             else alert("Error creando la base de datos");
         });
     }
 
     public alertDatabaseInfo(){
+        alert("Base de datos: " + this.lista.value);
         this.database.executeSql(`SELECT * FROM usuario;`, [])
             .then((usuarios)=>{
                 alert("Usuarios: " + usuarios.rows.length);
@@ -70,7 +74,7 @@ export class DatabaseService {
     }
         
     private insercionesIniciales() {
-        let idUsuario = 0;
+        // Igual esto deberia de ser una transaccion (??????)
 
         // Usuario
         this.database.executeSql(
@@ -110,6 +114,25 @@ export class DatabaseService {
         });
     }
 
+    public obtenConfiguracion(usuario: number){
+        let configuracion: any;
+        this.database.executeSql(
+            `SELECT * FROM configuracion`, [])
+        .then((configuraciones)=>{
+            alert("configuraciones.rows.length: " + configuraciones.rows.length);
+            if(configuraciones.rows.length){
+                // for (let i = 0; i < configuraciones.rows.length; i++) 
+                //     if(i == 1) 
+                //         configuraciones.rows.item(i);
+                configuracion = configuraciones.rows.item(0);
+            } else alert("No hay configuracion");
+        })
+        .catch((err) => {
+            alert("Error contando usuarios -> " + JSON.stringify(err));
+        });
+        return configuracion;
+    }
+    
     private borraTablas() {
         // Usuario
         this.database.executeSql(
