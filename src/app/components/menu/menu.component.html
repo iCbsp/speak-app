@@ -12,10 +12,10 @@
         <ion-label>Modo simple</ion-label>
         <ion-toggle checked={{modoSimpleActivado}}></ion-toggle>
       </ion-item>
-      <ion-item (click)="cambiaSTT()">
+      <ion-item (click)="cambiaRespuesta()">
         <ion-icon slot="start" name="mic-outline"></ion-icon>
         <ion-label>Respuesta</ion-label>
-        <ion-toggle checked={{STTActivado}}></ion-toggle>
+        <ion-toggle checked={{respuestaActivada}}></ion-toggle>
       </ion-item>
       <ion-menu-toggle>
         <ion-item [routerLink]="['/configuracion']">

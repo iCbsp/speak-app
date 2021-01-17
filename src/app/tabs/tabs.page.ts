@@ -35,6 +35,8 @@ export class TabsPage {
   estaGrabando = false;
   permisoSTT = false;
 
+  usuarios = [];
+
   constructor(  
     private menu: MenuController, // Menu desplegable
     private router: Router, // Para pasar parametros
@@ -44,6 +46,21 @@ export class TabsPage {
   ){
     if(!this.preguntadoUsoDeDatos) this.ventanaPoliticas();
     if(!this.preguntadaAccesibilidad) this.ventanaAccesibilidad();
+
+    databaseService.lista.subscribe((ready)=>{
+      if(ready){
+        databaseService.obtenUsuarios().then((usuariosBDD)=>{
+          for(let i = 0; i < usuariosBDD.length; i++){
+            this.usuarios.push(usuariosBDD.item(i).nombre);
+            // alert(usuariosBDD.item(i).nombre);
+          }
+        });
+      }
+    });
+  }
+
+  cambiaUsuario(){
+    alert("hehe");
   }
 
   actualizaVista(){

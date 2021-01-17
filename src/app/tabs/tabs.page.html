@@ -1,13 +1,20 @@
 <!-- <ion-header [translucent]="true"> -->
 <ion-header>
   <ion-toolbar>
-    <ion-buttons slot="start">
-      <!-- <ion-button (click)="toggleMenu()">
-        <ion-icon slot="icon-only" name="menu"></ion-icon>
-      </ion-button> -->
-      <ion-menu-button color="primary" menu="menuPrincipal"></ion-menu-button>
-    </ion-buttons>
-    <ion-title>SpeechApp</ion-title>
+        <!-- <ion-buttons> -->
+        <ion-buttons slot="start">
+          <!-- <ion-button (click)="toggleMenu()">
+            <ion-icon slot="icon-only" name="menu"></ion-icon>
+          </ion-button> -->
+          <ion-menu-button color="primary" menu="menuPrincipal"></ion-menu-button>
+        </ion-buttons>
+        <ion-title>SpeechApp</ion-title>
+        <ion-select [interfaceOptions]="customPopoverOptions" interface="popover" value="{{ usuarios[0] }}" (click)="cambiaUsuario()">
+          <ion-select-option *ngFor="let usuario of usuarios; let i = index" value="{{ usuario }}">{{ usuario }}</ion-select-option>
+        </ion-select>
+        <!-- <div >
+          <p *ngFor="let usuario of usuarios; let i = index">{{ usuario }}</p>
+        </div> -->
   </ion-toolbar>
   <ion-toolbar>
     <ion-grid>

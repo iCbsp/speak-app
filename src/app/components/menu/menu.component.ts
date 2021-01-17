@@ -15,6 +15,7 @@ import { DatabaseService } from 'src/app/services/databaseService';
 export class MenuComponent implements OnInit {
 
   modoSimpleActivado = false;
+  respuestaActivada = false;
   
   constructor(
     private plt: Platform,
@@ -22,16 +23,9 @@ export class MenuComponent implements OnInit {
   ) {
     databaseService.lista.subscribe((ready)=>{
       if(ready){
-        // Investigar algo que lo haga esperar, el tutorial original tenia el boolean
-        alert("Antes de obtenConfiguracion");
-        let respuesta = databaseService.obtenConfiguracion(1);
-        alert("Despues de obtenConfiguracion");
-        // if(configuracion) alert("Modo_Simple: " + configuracion.modo_simple);
-        // else alert("Modo_Simple: Nada");
-        respuesta.then((configuracion)=>{
+        databaseService.obtenConfiguracion().then((configuracion)=>{
           if(configuracion.modo_simple) this.modoSimpleActivado = true;
-          else this.modoSimpleActivado = false;
-          alert("Modo simple: " + this.modoSimpleActivado);
+          if(configuracion.respuesta) this.respuestaActivada = true;
         });
       }
     });
@@ -43,10 +37,10 @@ export class MenuComponent implements OnInit {
     this.databaseService.cambiaModoSimple(this.modoSimpleActivado);
   }
 
-  STTActivado = false;
   
-  cambiaSTT(){
-    this.STTActivado = !this.STTActivado;
+  cambiaRespuesta(){
+    this.respuestaActivada = !this.respuestaActivada;
+    this.databaseService.cambiaRespuesta(this.respuestaActivada);
   }
 
   ngOnInit() {}
