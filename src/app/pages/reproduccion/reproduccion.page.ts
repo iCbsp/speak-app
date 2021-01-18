@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
+// Para recibir los parametros
 import { ActivatedRoute } from '@angular/router';
 
 // TTS

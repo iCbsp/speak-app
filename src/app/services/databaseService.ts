@@ -92,7 +92,7 @@ export class DatabaseService {
                 .catch((err) => alert("Error insertando configuracion -> " + JSON.stringify(err)));
             }
         })
-        .catch((err) => alert("Error insertando usuario -> " + JSON.stringify(err)));
+        .catch((err) => alert("Error insertando usuario1 -> " + JSON.stringify(err)));
 
         // Usuario2
         this.database.executeSql(
@@ -108,7 +108,7 @@ export class DatabaseService {
                 .catch((err) => alert("Error insertando configuracion -> " + JSON.stringify(err)));
             }
         })
-        .catch((err) => alert("Error insertando usuario -> " + JSON.stringify(err)));
+        .catch((err) => alert("Error insertando usuario2 -> " + JSON.stringify(err)));
 
     }
 
@@ -120,14 +120,14 @@ export class DatabaseService {
                 alert("Base de datos vacía, insertando datos iniciales");
                 this.insercionesIniciales();
             } else {
-                alert("Hay base de datos, iniciada la sesion del usuario " + data.rows.item(0).id);
+                //alert("Hay base de datos, iniciada la sesion del usuario " + data.rows.item(0).id);
                 this.usuarioActual = data.rows.item(0).id;
                 this.lista.next(true);
             }
             // alert("idUsuario: " + this.usuarioActual);
         })
         .catch((err) => {
-            alert("Error contando usuarios -> " + JSON.stringify(err));
+            alert("Error contando usuarios (comprobacionDatos) -> " + JSON.stringify(err));
         })
     }
 
@@ -161,6 +161,16 @@ export class DatabaseService {
         })
         .catch((err) => alert("Error obteniendo los usuarios -> " + JSON.stringify(err)));
         return listaUsuarios;
+    }
+
+    public async obtenUsuario(usuarioID : number){
+        let usuario: any;
+        await this.database.executeSql(`SELECT * FROM usuario WHERE id = ${usuarioID}`, []).then((usuarios)=>{
+            if(usuarios.rows.length) usuario = usuarios.rows.item(0);
+            else alert("obtenUsuario: No existe ese usuario");
+        })
+        .catch((err) => alert("Error en obtenUsuario -> " + JSON.stringify(err)));
+        return usuario;
     }
     
     public cambiaModoSimple(modoSimpleBool: boolean){
