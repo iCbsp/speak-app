@@ -123,7 +123,7 @@ export class DatabaseService {
                 this.usuarioActual = data.rows.item(0).id;
                 this.lista.next(true);
             }
-            alert("idUsuario: " + this.usuarioActual);
+            // alert("idUsuario: " + this.usuarioActual);
         })
         .catch((err) => {
             alert("Error contando usuarios -> " + JSON.stringify(err));
@@ -159,13 +159,10 @@ export class DatabaseService {
     public async obtenUsuarios(){
         let listaUsuarios: any;
         await this.database.executeSql(`SELECT * FROM usuario`, []).then((usuarios)=>{
-            if(usuarios.rows.length){
-                listaUsuarios = usuarios.rows;
-            } else alert("obtenUsuarios: No hay usuarios");
+            if(usuarios.rows.length) listaUsuarios = usuarios.rows;
+            else alert("obtenUsuarios: No hay usuarios");
         })
-        .catch((err) => {
-            alert("Error obteniendo los usuarios -> " + JSON.stringify(err));
-        });
+        .catch((err) => alert("Error obteniendo los usuarios -> " + JSON.stringify(err)));
         return listaUsuarios;
     }
     

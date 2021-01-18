@@ -36,6 +36,7 @@ export class TabsPage {
   permisoSTT = false;
 
   usuarios = [];
+  usuarioSeleccionado = 0;
 
   constructor(  
     private menu: MenuController, // Menu desplegable
@@ -50,21 +51,20 @@ export class TabsPage {
     databaseService.lista.subscribe((ready)=>{
       if(ready){
         databaseService.obtenUsuarios().then((usuariosBDD)=>{
-          for(let i = 0; i < usuariosBDD.length; i++){
-            this.usuarios.push(usuariosBDD.item(i).nombre);
-            // alert(usuariosBDD.item(i).nombre);
-          }
+          for(let i = 0; i < usuariosBDD.length; i++)
+            this.usuarios.push(usuariosBDD.item(i));
+          this.usuarioSeleccionado = this.usuarios[0].id;
         });
       }
     });
   }
 
-  cambiaUsuario(){
-    alert("hehe");
-  }
-
   actualizaVista(){
     this.cd.detectChanges();
+  }
+
+  cambiaUsuario(){
+    alert(this.usuarioSeleccionado);
   }
 
   // Metodos STT

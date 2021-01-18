@@ -9,9 +9,12 @@
           <ion-menu-button color="primary" menu="menuPrincipal"></ion-menu-button>
         </ion-buttons>
         <ion-title>SpeechApp</ion-title>
-        <ion-select [interfaceOptions]="customPopoverOptions" interface="popover" value="{{ usuarios[0] }}" (click)="cambiaUsuario()">
-          <ion-select-option *ngFor="let usuario of usuarios; let i = index" value="{{ usuario }}">{{ usuario }}</ion-select-option>
+        <ion-select [interfaceOptions]="customPopoverOptions" interface="popover" [(ngModel)]="usuarioSeleccionado" (ngModelChange)="cambiaUsuario()"> <!-- value="{{ usuarios.item(0).id }}" -->
+          <!-- <ion-select-option *ngFor="let usuario of usuarios; let i = index" value="{{ usuario.id }}">{{ usuario.nombre }}</ion-select-option> -->
+          <!-- <ion-select-option *ngFor="let k of [].constructor(usuarios.length); let i = index" value="{{ usuarios[i].id }}">{{ usuarios[i].nombre }}</ion-select-option> -->
+          <ion-select-option *ngFor="let usuario of usuarios" value="{{ usuario.id }}">{{ usuario.nombre }}</ion-select-option>
         </ion-select>
+        <!-- <p *ngFor="let k of [].constructor(usuarios.length); let i = index">{{ i }}</p> -->
         <!-- <div >
           <p *ngFor="let usuario of usuarios; let i = index">{{ usuario }}</p>
         </div> -->
@@ -19,7 +22,6 @@
   <ion-toolbar>
     <ion-grid>
       <ion-row>
-
         <ion-col size="5">
           <ion-select [interfaceOptions]="customPopoverOptions" [(ngModel)]="asistente" interface="popover" value="ninguno">
             <ion-select-option value="Ninguno">(Ninguno)</ion-select-option>
