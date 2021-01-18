@@ -56,7 +56,8 @@ export class DatabaseService {
         `CREATE TABLE IF NOT EXISTS usuario (
             id INTEGER primary key,
             nombre TEXT,
-            color TEXT
+            color TEXT,
+            fecha_ultimo_inicio TEXT
         );`, [])
         .then(() => this.messages.push("Tabla de usuario creada"))
         .catch((err) => alert("Error creando la tabla -> " + JSON.stringify(err)));
@@ -79,7 +80,7 @@ export class DatabaseService {
 
         // Usuario
         this.database.executeSql(
-        `INSERT INTO usuario(nombre, color) VALUES ('usuario', '#000000');`, [])
+        `INSERT INTO usuario(nombre, color, fecha_ultimo_inicio) VALUES ('usuario', '#000000', datetime('now'));`, [])
         .then((usuario) => {
             alert("Usuario creado: " + usuario.insertId);
             this.usuarioActual = usuario.insertId;
@@ -95,7 +96,7 @@ export class DatabaseService {
 
         // Usuario2
         this.database.executeSql(
-        `INSERT INTO usuario(nombre, color) VALUES ('usuario2', '#000000');`, [])
+        `INSERT INTO usuario(nombre, color, fecha_ultimo_inicio) VALUES ('usuario2', '#000000', datetime('now'));`, [])
         .then((usuario) => {
             alert("Usuario creado: " + usuario.insertId);
             // this.usuarioActual = usuario.insertId;
@@ -113,7 +114,7 @@ export class DatabaseService {
 
     private comprobacionDatos(){
         this.database.executeSql(
-        `SELECT * FROM usuario;`, [])
+        `SELECT * FROM usuario ORDER BY fecha_ultimo_inicio DESC;`, [])
         .then((data)=>{
             if(!data.rows.length){
                 alert("Base de datos vacía, insertando datos iniciales");
@@ -142,11 +143,7 @@ export class DatabaseService {
         await this.database.executeSql(
             `SELECT * FROM configuracion WHERE usuario = ${this.usuarioActual}`, [])
         .then((configuraciones)=>{
-            // alert("configuraciones.rows.length: " + configuraciones.rows.length);
             if(configuraciones.rows.length){
-                // for (let i = 0; i < configuraciones.rows.length; i++) 
-                //     if(i == 1) 
-                //         configuraciones.rows.item(i);
                 configuracion = configuraciones.rows.item(0);
             } else alert("obtenConfiguracion: No hay configuracion");
         })
@@ -185,6 +182,17 @@ export class DatabaseService {
         .then(()=>{})
         .catch((err) => {
             alert("Error actualizando respuesta -> " + JSON.stringify(err));
+        });
+    }
+
+    public cambiaUsuarioActual(nuevoUsuario : number){
+        // Se deberian de hacer comprobaciones antes?
+        this.usuarioActual = nuevoUsuario;
+        this.database.executeSql(
+            `UPDATE usuario SET fecha_ultimo_inicio = datetime('now') WHERE id = ${this.usuarioActual} `, [])
+        .then(()=>{})
+        .catch((err) => {
+            alert("Error actualizando usuario -> " + JSON.stringify(err));
         });
     }
     

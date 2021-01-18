@@ -64,7 +64,9 @@ export class TabsPage {
   }
 
   cambiaUsuario(){
-    alert(this.usuarioSeleccionado);
+    // alert(this.usuarioSeleccionado);
+    this.databaseService.cambiaUsuarioActual(this.usuarioSeleccionado);
+    window.location.reload();
   }
 
   // Metodos STT
