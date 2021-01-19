@@ -8,11 +8,11 @@
 </ion-header>
 
 <ion-content>
-  <ion-button (click)="veAlPerfil(1)"> HAHAHAHAHAHAHA </ion-button>
+  <ion-button [routerLink]="['crear-perfil']">Crear perfil</ion-button>
   <ion-card *ngFor="let usuario of usuarios">
     <ion-item class="ion-activated" (click)="veAlPerfil(usuario.id)">
       <ion-icon name="person-outline" slot="start"></ion-icon>
-      <ion-label>{{ usuario.nombre }}, {{ usuario.id }} </ion-label>
+      <ion-label> {{ usuario.nombre }} </ion-label>
     </ion-item>
   </ion-card>
 </ion-content>

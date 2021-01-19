@@ -3,10 +3,11 @@
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
-    <ion-title>{{usuario.nombre}}</ion-title>
+    <ion-title>Editar perfil</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  
+  <p>Nombre: {{usuario.nombre}}</p>
+  <p *ngIf="usuario">Color: {{ usuario.color }}</p>
 </ion-content>

@@ -205,6 +205,24 @@ export class DatabaseService {
             alert("Error actualizando usuario -> " + JSON.stringify(err));
         });
     }
+
+    public publicaUsuario(nombre : string, color : string){
+        // Usuario
+        if(nombre && color){
+            this.database.executeSql(
+                `INSERT INTO usuario(nombre, color, fecha_ultimo_inicio) VALUES ('${nombre}', '${color}', datetime('now'));`, [])
+            .then((usuario)=>{
+                // Configuracion
+                this.database.executeSql(
+                    `INSERT INTO configuracion(usuario, modo_simple, respuesta) VALUES (${usuario.insertId}, 0, 0);`, [])
+                .then(() => {})
+                .catch((err) => alert("Error insertando configuracion -> " + JSON.stringify(err)));
+            })
+            .catch((err) => {
+                alert("Error insertando usuario -> " + JSON.stringify(err));
+            });
+        } else alert("publicaUsuario: Nombre o color no válido");
+    }
     
     private borraTablas() {
         // Usuario
