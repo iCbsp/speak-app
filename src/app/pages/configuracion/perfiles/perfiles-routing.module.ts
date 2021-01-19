@@ -9,10 +9,9 @@ const routes: Routes = [
     component: PerfilesPage
   },
   {
-    path: 'editar',
-    loadChildren: () => import('./editar/editar.module').then( m => m.EditarPageModule)
+    path: 'editar-perfil',
+    loadChildren: () => import('./editar-perfil/editar-perfil.module').then( m => m.EditarPerfilPageModule)
   }
-
 ];
 
 @NgModule({

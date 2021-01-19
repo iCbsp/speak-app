@@ -32,7 +32,7 @@ export class PerfilesPage implements OnInit {
 
   veAlPerfil(usuarioID : number){
     try{
-      this.router.navigate(['editar', {
+      this.router.navigate(['editar-perfil', {
         usuarioAEditar: usuarioID
       }], { relativeTo: this.route });
     }
