@@ -36,7 +36,7 @@ export class ReproduccionPage implements OnInit {
   constructor(
     private route: ActivatedRoute, // Para recibir los parametros del Router
     private tts: TextToSpeech, // TTS
-    private plt: Platform, private speechRecognition: SpeechRecognition, private cd: ChangeDetectorRef // Si el STT no va: public navCtrl: NavController
+    private plt: Platform, private speechRecognition: SpeechRecognition, private changeDetector: ChangeDetectorRef // Si el STT no va: public navCtrl: NavController
     ){
 
     // Recogida del texto
@@ -111,13 +111,13 @@ export class ReproduccionPage implements OnInit {
 
       this.grabando = false;
       this.resultado = 'bien';
-      this.cd.detectChanges(); // Para actualizar la vista
+      this.changeDetector.detectChanges(); // Para actualizar la vista
 
     }, (error) => {
       this.grabando = false;
       this.resultado = 'mal';
       this.primeraCoincidencia = "(No ha habido respuesta)";
-      this.cd.detectChanges(); // Para actualizar la vista
+      this.changeDetector.detectChanges(); // Para actualizar la vista
     }
     );
     // this.grabando = true;

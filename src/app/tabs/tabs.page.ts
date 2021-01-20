@@ -17,6 +17,9 @@ import { ChangeDetectorRef } from '@angular/core'; // Si no se usa no actualiza 
 // Base de datos
 import { DatabaseService } from '../services/databaseService';
 
+// Para detectar cambios en la URL
+import { Location } from '@angular/common';
+
 @Component({
   selector: 'app-tabs',
   templateUrl: 'tabs.page.html',
@@ -42,25 +45,43 @@ export class TabsPage {
     private menu: MenuController, // Menu desplegable
     private router: Router, // Para pasar parametros
     public alertController: AlertController, // Alertas - Prompt
-    private plt: Platform, private speechRecognition: SpeechRecognition, private cd: ChangeDetectorRef, // Si el STT no va: public navCtrl: NavController
-    private databaseService:DatabaseService
+    private plt: Platform, private speechRecognition: SpeechRecognition, private changeDetector: ChangeDetectorRef, // Si el STT no va: public navCtrl: NavController
+    private databaseService:DatabaseService,
+    private location: Location
   ){
     if(!this.preguntadoUsoDeDatos) this.ventanaPoliticas();
     if(!this.preguntadaAccesibilidad) this.ventanaAccesibilidad();
 
-    databaseService.lista.subscribe((ready)=>{
+    this.consigueUsuarios();
+
+    this.location.onUrlChange((url) => {
+      // alert(url.toString());
+      // if(url.toString() == "/configuracion/perfiles") this.consigueUsuarios();
+      if(url.toString() == "/tabs/tab1") this.consigueUsuarios();
+      else if(url.toString() == "/tabs/tab2") {
+        alert(url.toString());
+        this.consigueUsuarios();
+      }
+      else if(url.toString() == "/tabs/tab3") this.consigueUsuarios();
+    });
+  }
+
+  consigueUsuarios(){
+    this.databaseService.lista.subscribe((ready)=>{
       if(ready){
-        databaseService.obtenUsuarios().then((usuariosBDD)=>{
+        this.databaseService.obtenUsuarios().then((usuariosBDD)=>{
+          this.usuarios = [];
           for(let i = 0; i < usuariosBDD.length; i++)
             this.usuarios.push(usuariosBDD.item(i));
           this.usuarioSeleccionado = this.usuarios[0].id;
+          this.changeDetector.detectChanges(); // Para actualizar la vista
         });
       }
     });
   }
 
   actualizaVista(){
-    this.cd.detectChanges();
+    this.changeDetector.detectChanges();
   }
 
   cambiaUsuario(){
@@ -85,7 +106,7 @@ export class TabsPage {
     }
     this.speechRecognition.startListening().subscribe(coincidencias => {
       this.coincidencias = coincidencias;
-      this.cd.detectChanges(); // Para actualizar la vista
+      this.changeDetector.detectChanges(); // Para actualizar la vista
     });
     this.estaGrabando = true;
   }

@@ -206,24 +206,45 @@ export class DatabaseService {
         });
     }
 
-    public publicaUsuario(nombre : string, color : string){
+    public publicaUsuario(nombre : string, color : string) : any{
         // Usuario
+        // if(nombre && color){
+        //     this.database.executeSql(
+        //         `INSERT INTO usuario(nombre, color, fecha_ultimo_inicio) VALUES ('${nombre}', '${color}', datetime('now'));`, [])
+        //     .then((usuario)=>{
+        //         // Configuracion
+        //         this.database.executeSql(
+        //             `INSERT INTO configuracion(usuario, modo_simple, respuesta) VALUES (${usuario.insertId}, 0, 0);`, [])
+        //         .then(() => {})
+        //         .catch((err) => alert("Error insertando configuracion -> " + JSON.stringify(err)));
+        //     })
+        //     .catch((err) => {
+        //         alert("Error insertando usuario -> " + JSON.stringify(err));
+        //     });
+        // } else alert("publicaUsuario: Nombre o color no válido");
+        return this.insertaUsuario(nombre, color).then((usuario) => {
+            return this.insertaConfiguracion(usuario.insertId);
+        });
+    }
+    
+    private insertaUsuario(nombre : string, color : string){
         if(nombre && color){
-            this.database.executeSql(
+            return this.database.executeSql(
                 `INSERT INTO usuario(nombre, color, fecha_ultimo_inicio) VALUES ('${nombre}', '${color}', datetime('now'));`, [])
-            .then((usuario)=>{
-                // Configuracion
-                this.database.executeSql(
-                    `INSERT INTO configuracion(usuario, modo_simple, respuesta) VALUES (${usuario.insertId}, 0, 0);`, [])
-                .then(() => {})
-                .catch((err) => alert("Error insertando configuracion -> " + JSON.stringify(err)));
-            })
             .catch((err) => {
                 alert("Error insertando usuario -> " + JSON.stringify(err));
             });
-        } else alert("publicaUsuario: Nombre o color no válido");
+        } else alert("insertaUsuario: Nombre o color no válido");
     }
-    
+
+    private insertaConfiguracion(usuario : number){
+        if(usuario){
+            return this.database.executeSql(
+                `INSERT INTO configuracion(usuario, modo_simple, respuesta) VALUES (${usuario}, 0, 0);`, [])
+                .catch((err) => alert("Error insertando configuracion -> " + JSON.stringify(err)));
+        } else alert("insertaConfiguracion: Usuario no valido");
+    }
+
     private borraTablas() {
         // Usuario
         this.database.executeSql(

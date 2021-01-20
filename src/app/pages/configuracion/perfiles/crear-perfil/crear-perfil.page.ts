@@ -26,8 +26,7 @@ export class CrearPerfilPage implements OnInit {
     // Envio del usuario a la base de datos
     this.databaseService.lista.subscribe((ready)=>{
       if(ready){
-        this.databaseService.publicaUsuario(this.nombre, this.color);
-        this.location.back();
+        this.databaseService.publicaUsuario(this.nombre, this.color).then(() => {this.location.back();});
       }
     });
   }
