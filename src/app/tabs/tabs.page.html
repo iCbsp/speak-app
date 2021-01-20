@@ -4,9 +4,9 @@
           <ion-menu-button color="primary" menu="menuPrincipal"></ion-menu-button>
         </ion-buttons>
         <ion-title>SpeechApp</ion-title>
-        <ion-select [interfaceOptions]="customPopoverOptions" interface="popover" [(ngModel)]="usuarioSeleccionado" (ngModelChange)="cambiaUsuario()"> <!-- value="{{ usuarios.item(0).id }}" -->
-          <ion-select-option *ngFor="let usuario of usuarios" value="{{ usuario.id }}">{{ usuario.nombre }}</ion-select-option>
-        </ion-select>
+        <ion-button slot="end" (click)="createPopover()">
+          <ion-icon name="person-outline" slot="start"></ion-icon>
+        </ion-button>
   </ion-toolbar>
   <ion-toolbar>
     <ion-grid>
@@ -44,8 +44,9 @@
 </ion-header>
 
 <ion-tabs>
-  <ion-button (click)="databaseService.alertDatabaseInfo()">Info</ion-button>
-  <ion-button (click)="databaseService.borraBDD()">Borrar</ion-button>
+  <ion-button (click)="databaseService.alertDatabaseInfo()">Info BDD</ion-button>
+  <ion-button (click)="databaseService.borraBDD()">Borrar BDD</ion-button>
+  <!-- <ion-button color="danger" (click)="createPopover()">Open Popover</ion-button> -->
   <ion-tab-bar slot="bottom">
     <ion-tab-button tab="tab1">
       <ion-icon name="triangle"></ion-icon>

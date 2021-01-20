@@ -16,6 +16,10 @@ const routes: Routes = [
   },  {
     path: 'reproduccion',
     loadChildren: () => import('./pages/reproduccion/reproduccion.module').then( m => m.ReproduccionPageModule)
+  },
+  {
+    path: 'usuario-popover',
+    loadChildren: () => import('./components/usuario-popover/usuario-popover.module').then( m => m.UsuarioPopoverPageModule)
   }
 
 ];

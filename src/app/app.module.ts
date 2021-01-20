@@ -20,13 +20,15 @@ import { TextToSpeech } from '@ionic-native/text-to-speech/ngx';
 
 // SQLite
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
-//import { SQLite } from '@ionic-native/sqlite/ngx';
 import { DatabaseService } from './services/databaseService';
+
+// Popover
+import { UsuarioPopoverPageModule } from 'src/app/components/usuario-popover/usuario-popover.module';
 
 @NgModule({
   declarations: [AppComponent, MenuComponent],
   entryComponents: [],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule],
+  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, UsuarioPopoverPageModule],
   exports: [MenuComponent],
   providers: [
     StatusBar,

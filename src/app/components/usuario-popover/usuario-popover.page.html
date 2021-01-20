@@ -1,6 +1,15 @@
-<ion-content padding>
+<!-- <ion-content padding>
   <ion-grid>
     <ion-row><ion-col>This is an ionic popover example.</ion-col></ion-row>
     <ion-row><ion-col><ion-button color="success" expand="block" (click)="closePopover()">Ok</ion-button></ion-col></ion-row>
   </ion-grid>
+</ion-content> -->
+<ion-content>
+  <ion-button expand="block" (click)="closePopover()" [routerLink]="['configuracion/perfiles/crear-perfil']">Crear perfil</ion-button>
+  <ion-card *ngFor="let usuario of usuarios">
+    <ion-item class="ion-activated" (click)="cambiaUsuario(usuario.id)">
+      <ion-icon name="person-outline" slot="start"></ion-icon>
+      <ion-label> {{ usuario.nombre }} </ion-label>
+    </ion-item>
+  </ion-card>
 </ion-content>

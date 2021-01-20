@@ -12,12 +12,12 @@ export class DatabaseService {
     private usuarioActual = 0;
 
     constructor(
-        private plt:Platform, 
+        private platform:Platform, 
         private sqlite:SQLite
         ) {
 
         // Creacion de la base de datos
-        if(!plt.is('desktop')) this.plt.ready().then(() => {
+        if(!platform.is('desktop')) this.platform.ready().then(() => {
             let conexion = this.sqlite.create({
                 name: 'database.db',
                 location: 'default'

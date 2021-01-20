@@ -20,6 +20,10 @@ import { DatabaseService } from '../services/databaseService';
 // Para detectar cambios en la URL
 import { Location } from '@angular/common';
 
+// Popover
+import { PopoverController } from '@ionic/angular';
+import { UsuarioPopoverPage } from 'src/app/components/usuario-popover/usuario-popover.page';
+
 @Component({
   selector: 'app-tabs',
   templateUrl: 'tabs.page.html',
@@ -45,25 +49,36 @@ export class TabsPage {
     private menu: MenuController, // Menu desplegable
     private router: Router, // Para pasar parametros
     public alertController: AlertController, // Alertas - Prompt
-    private plt: Platform, private speechRecognition: SpeechRecognition, private changeDetector: ChangeDetectorRef, // Si el STT no va: public navCtrl: NavController
+    private platform: Platform, private speechRecognition: SpeechRecognition, private changeDetector: ChangeDetectorRef, // Si el STT no va: public navCtrl: NavController
     private databaseService:DatabaseService,
-    private location: Location
+    private location: Location,
+    private popover:PopoverController
   ){
     if(!this.preguntadoUsoDeDatos) this.ventanaPoliticas();
     if(!this.preguntadaAccesibilidad) this.ventanaAccesibilidad();
 
-    this.consigueUsuarios();
+    if(!platform.is('desktop')){
+      this.consigueUsuarios();
+  
+      this.location.onUrlChange((url) => {
+        // alert(url.toString());
+        // if(url.toString() == "/configuracion/perfiles") this.consigueUsuarios();
+        if(url.toString() == "/tabs/tab1") this.consigueUsuarios();
+        else if(url.toString() == "/tabs/tab2") this.consigueUsuarios();
+        else if(url.toString() == "/tabs/tab3") this.consigueUsuarios();
+      });
+    }
+  }
 
-    this.location.onUrlChange((url) => {
-      // alert(url.toString());
-      // if(url.toString() == "/configuracion/perfiles") this.consigueUsuarios();
-      if(url.toString() == "/tabs/tab1") this.consigueUsuarios();
-      else if(url.toString() == "/tabs/tab2") {
-        alert(url.toString());
-        this.consigueUsuarios();
-      }
-      else if(url.toString() == "/tabs/tab3") this.consigueUsuarios();
-    });
+  createPopover(){
+    if(!this.platform.is('desktop')){
+      this.popover.create({
+      component:UsuarioPopoverPage,
+      showBackdrop:false
+      }).then((popoverElement)=>{
+        popoverElement.present();
+      })
+    }
   }
 
   consigueUsuarios(){
@@ -78,21 +93,6 @@ export class TabsPage {
         });
       }
     });
-  }
-
-  actualizaVista(){
-    this.changeDetector.detectChanges();
-  }
-
-  cambiaUsuario(){
-    // alert(this.usuarioSeleccionado);
-    this.databaseService.cambiaUsuarioActual(this.usuarioSeleccionado);
-    window.location.reload();
-  }
-
-  // Metodos STT
-  esIOS() {
-    return this.plt.is('ios');
   }
 
   tienePermisoSTT(){
