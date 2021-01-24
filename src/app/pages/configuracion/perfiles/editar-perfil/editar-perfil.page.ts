@@ -6,6 +6,12 @@ import { DatabaseService } from 'src/app/services/databaseService';
 // Para recibir los parametros
 import { ActivatedRoute } from '@angular/router';
 
+// Para ir hacia atras
+import { Location } from '@angular/common';
+
+// Para actualizar el HTML
+import { ChangeDetectorRef } from '@angular/core';
+
 @Component({
   selector: 'app-editar-perfil',
   templateUrl: './editar-perfil.page.html',
@@ -13,11 +19,13 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class EditarPerfilPage implements OnInit {
 
-  usuario = {nombre: "Usuario no encontrado", color: "#FFFFFF"};
+  usuario = { id: 0, nombre: "Usuario no encontrado", color: "#FFFFFF"};
 
   constructor(
     private databaseService:DatabaseService,
     private route: ActivatedRoute, // Para recibir los parametros del Router
+    private location: Location,
+    private changeDetector: ChangeDetectorRef,
   ) {
     let usuarioAEditar : number;
 
@@ -29,6 +37,7 @@ export class EditarPerfilPage implements OnInit {
           if(usuarioAEditar){
             databaseService.obtenUsuario(usuarioAEditar).then((usuarioBDD)=>{
               if(usuarioBDD) this.usuario = usuarioBDD;
+              changeDetector.detectChanges();
             });
           } else alert("No se ha recibido un usuario a editar");
         }
@@ -37,12 +46,13 @@ export class EditarPerfilPage implements OnInit {
   }
 
   editaUsuario(){
-    // Envio del usuario a la base de datos
-    this.databaseService.lista.subscribe((ready)=>{
-      if(ready){
-        //this.databaseService.publicaUsuario(this.usuario.nombre, this.usuario.color).then(() => {this.location.back();});
-      }
-    });
+    if(this.usuario.id && this.usuario.nombre && this.usuario.color){
+      this.databaseService.lista.subscribe((ready)=>{
+        if(ready){
+          this.databaseService.editaUsuario(this.usuario.id, this.usuario.nombre, this.usuario.color).then(() => {this.location.back();});
+        }
+      });
+    } else alert("Usuario no válido");
   }
 
   ngOnInit() {

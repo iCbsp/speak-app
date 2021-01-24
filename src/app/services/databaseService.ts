@@ -257,6 +257,14 @@ export class DatabaseService {
         } else alert("insertaConfiguracion: Usuario no valido");
     }
 
+    public editaUsuario(usuario : number, nombre : string, color : string){
+        if(usuario && nombre && color){
+            return this.database.executeSql(
+                `UPDATE usuario SET nombre = '${nombre}', color = '${color}' WHERE id = ${usuario}`, [])
+                .catch((err) => alert("Error actualizando usuario -> " + JSON.stringify(err)));
+        } else alert("editaUsuario: Usuario, nombre o color no válidos");
+    }
+
     public borraUsuario(usuario : number){
         if(usuario){
             return this.database.executeSql(
