@@ -34,7 +34,7 @@ export class UsuarioPopoverPage implements OnInit {
   consigueUsuarios(){
     this.databaseService.lista.subscribe((ready)=>{
       if(ready){
-        this.databaseService.obtenUsuarios().then((usuariosBDD)=>{
+        this.databaseService.obtenUsuariosSesion().then((usuariosBDD)=>{
           this.usuarios = [];
           for(let i = 0; i < usuariosBDD.length; i++)
             this.usuarios.push(usuariosBDD.item(i));

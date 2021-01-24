@@ -13,7 +13,7 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class EditarPerfilPage implements OnInit {
 
-  usuario = {nombre: "Usuario no encontrado"};
+  usuario = {nombre: "Usuario no encontrado", color: "#FFFFFF"};
 
   constructor(
     private databaseService:DatabaseService,
@@ -34,7 +34,15 @@ export class EditarPerfilPage implements OnInit {
         }
       });
     });
+  }
 
+  editaUsuario(){
+    // Envio del usuario a la base de datos
+    this.databaseService.lista.subscribe((ready)=>{
+      if(ready){
+        //this.databaseService.publicaUsuario(this.usuario.nombre, this.usuario.color).then(() => {this.location.back();});
+      }
+    });
   }
 
   ngOnInit() {

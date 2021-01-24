@@ -78,37 +78,39 @@ export class DatabaseService {
     private insercionesIniciales() {
         // Igual esto deberia de ser una transaccion (??????)
 
-        // Usuario
-        this.database.executeSql(
-        `INSERT INTO usuario(nombre, color, fecha_ultimo_inicio) VALUES ('usuario', '#000000', datetime('now'));`, [])
-        .then((usuario) => {
-            alert("Usuario creado: " + usuario.insertId);
-            this.usuarioActual = usuario.insertId;
-            if(usuario.insertId){
-                // Configuracion
-                this.database.executeSql(
-                `INSERT INTO configuracion(usuario, modo_simple, respuesta) VALUES (${usuario.insertId}, 0, 0);`, [])
-                .then(() => {})
-                .catch((err) => alert("Error insertando configuracion -> " + JSON.stringify(err)));
-            }
-        })
-        .catch((err) => alert("Error insertando usuario1 -> " + JSON.stringify(err)));
+        this.publicaUsuario("Usuario", "#32a852").then(() => this.lista.next(true));
 
-        // Usuario2
-        this.database.executeSql(
-        `INSERT INTO usuario(nombre, color, fecha_ultimo_inicio) VALUES ('usuario2', '#000000', datetime('now'));`, [])
-        .then((usuario) => {
-            alert("Usuario creado: " + usuario.insertId);
-            // this.usuarioActual = usuario.insertId;
-            if(usuario.insertId){
-                // Configuracion2
-                this.database.executeSql(
-                `INSERT INTO configuracion(usuario, modo_simple, respuesta) VALUES (${usuario.insertId}, 1, 1);`, [])
-                .then(() => this.lista.next(true))
-                .catch((err) => alert("Error insertando configuracion -> " + JSON.stringify(err)));
-            }
-        })
-        .catch((err) => alert("Error insertando usuario2 -> " + JSON.stringify(err)));
+        // Usuario
+        // this.database.executeSql(
+        // `INSERT INTO usuario(nombre, color, fecha_ultimo_inicio) VALUES ('usuario', '#32a852', datetime('now'));`, [])
+        // .then((usuario) => {
+        //     alert("Usuario creado: " + usuario.insertId);
+        //     this.usuarioActual = usuario.insertId;
+        //     if(usuario.insertId){
+        //         // Configuracion
+        //         this.database.executeSql(
+        //         `INSERT INTO configuracion(usuario, modo_simple, respuesta) VALUES (${usuario.insertId}, 0, 0);`, [])
+        //         .then(() => {this.lista.next(true)})
+        //         .catch((err) => alert("Error insertando configuracion -> " + JSON.stringify(err)));
+        //     }
+        // })
+        // .catch((err) => alert("Error insertando usuario1 -> " + JSON.stringify(err)));
+
+        // // Usuario2
+        // this.database.executeSql(
+        // `INSERT INTO usuario(nombre, color, fecha_ultimo_inicio) VALUES ('usuario2', '#000000', datetime('now'));`, [])
+        // .then((usuario) => {
+        //     alert("Usuario creado: " + usuario.insertId);
+        //     // this.usuarioActual = usuario.insertId;
+        //     if(usuario.insertId){
+        //         // Configuracion2
+        //         this.database.executeSql(
+        //         `INSERT INTO configuracion(usuario, modo_simple, respuesta) VALUES (${usuario.insertId}, 1, 1);`, [])
+        //         .then(() => this.lista.next(true))
+        //         .catch((err) => alert("Error insertando configuracion -> " + JSON.stringify(err)));
+        //     }
+        // })
+        // .catch((err) => alert("Error insertando usuario2 -> " + JSON.stringify(err)));
 
     }
 
@@ -153,16 +155,26 @@ export class DatabaseService {
         return configuracion;
     }
 
-    public async obtenUsuarios(){
+    public async obtenUsuariosAlfabeticamente(){
         let listaUsuarios: any;
-        await this.database.executeSql(`SELECT * FROM usuario`, []).then((usuarios)=>{
+        await this.database.executeSql(`SELECT * FROM usuario ORDER BY nombre ASC;`, []).then((usuarios)=>{
             if(usuarios.rows.length) listaUsuarios = usuarios.rows;
-            else alert("obtenUsuarios: No hay usuarios");
+            else alert("obtenUsuariosAlfabeticamente: No hay usuarios");
         })
         .catch((err) => alert("Error obteniendo los usuarios -> " + JSON.stringify(err)));
         return listaUsuarios;
     }
-
+    
+    public async obtenUsuariosSesion(){
+        let listaUsuarios: any;
+        await this.database.executeSql(`SELECT * FROM usuario ORDER BY fecha_ultimo_inicio DESC;`, []).then((usuarios)=>{
+            if(usuarios.rows.length) listaUsuarios = usuarios.rows;
+            else alert("obtenUsuariosSesion: No hay usuarios");
+        })
+        .catch((err) => alert("Error obteniendo los usuarios -> " + JSON.stringify(err)));
+        return listaUsuarios;
+    }
+    
     public async obtenUsuario(usuarioID : number){
         let usuario: any;
         await this.database.executeSql(`SELECT * FROM usuario WHERE id = ${usuarioID}`, []).then((usuarios)=>{
@@ -242,6 +254,24 @@ export class DatabaseService {
             return this.database.executeSql(
                 `INSERT INTO configuracion(usuario, modo_simple, respuesta) VALUES (${usuario}, 0, 0);`, [])
                 .catch((err) => alert("Error insertando configuracion -> " + JSON.stringify(err)));
+        } else alert("insertaConfiguracion: Usuario no valido");
+    }
+
+    public borraUsuario(usuario : number){
+        if(usuario){
+            return this.database.executeSql(
+                `DELETE FROM configuracion WHERE usuario = ${usuario}`, [])
+                .then(() => {
+                    return this.database.executeSql(
+                        `DELETE FROM usuario WHERE id = ${usuario}`, [])
+                        .then(() => {
+                            this.obtenUsuariosSesion().then(usuariosBDD => {
+                                this.usuarioActual = usuariosBDD.rows.item(0).id;
+                            });
+                        })
+                        .catch((err) => alert("Error borrando usuario -> " + JSON.stringify(err)));
+                })
+                .catch((err) => alert("Error borrando configuracion -> " + JSON.stringify(err)));
         } else alert("insertaConfiguracion: Usuario no valido");
     }
 

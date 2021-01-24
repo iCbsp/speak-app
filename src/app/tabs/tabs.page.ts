@@ -43,7 +43,7 @@ export class TabsPage {
   permisoSTT = false;
 
   usuarios = [];
-  usuarioSeleccionado = 0;
+  usuarioSeleccionado = { nombre: "", color: "#FFFFFF" };
 
   constructor(  
     private menu: MenuController, // Menu desplegable
@@ -58,14 +58,14 @@ export class TabsPage {
     if(!this.preguntadaAccesibilidad) this.ventanaAccesibilidad();
 
     if(!platform.is('desktop')){
-      this.consigueUsuarios();
-  
-      this.location.onUrlChange((url) => {
-        // alert(url.toString());
-        // if(url.toString() == "/configuracion/perfiles") this.consigueUsuarios();
-        if(url.toString() == "/tabs/tab1") this.consigueUsuarios();
-        else if(url.toString() == "/tabs/tab2") this.consigueUsuarios();
-        else if(url.toString() == "/tabs/tab3") this.consigueUsuarios();
+      databaseService.lista.subscribe((ready)=>{
+        if(ready){
+          this.consigueUsuarios();
+      
+          this.location.onUrlChange((url) => {
+            if(url.toString() == "/tabs/tab1" || url.toString() == "/tabs/tab2" || url.toString() == "/tabs/tab3") this.consigueUsuarios();
+          });
+        }
       });
     }
   }
@@ -74,7 +74,7 @@ export class TabsPage {
     if(!this.platform.is('desktop')){
       this.popover.create({
       component:UsuarioPopoverPage,
-      showBackdrop:false
+      showBackdrop: true
       }).then((popoverElement)=>{
         popoverElement.present();
       })
@@ -84,11 +84,11 @@ export class TabsPage {
   consigueUsuarios(){
     this.databaseService.lista.subscribe((ready)=>{
       if(ready){
-        this.databaseService.obtenUsuarios().then((usuariosBDD)=>{
+        this.databaseService.obtenUsuariosSesion().then((usuariosBDD)=>{
           this.usuarios = [];
           for(let i = 0; i < usuariosBDD.length; i++)
             this.usuarios.push(usuariosBDD.item(i));
-          this.usuarioSeleccionado = this.usuarios[0].id;
+          this.usuarioSeleccionado = this.usuarios[0];
           this.changeDetector.detectChanges(); // Para actualizar la vista
         });
       }

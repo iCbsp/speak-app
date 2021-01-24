@@ -8,6 +8,14 @@
 </ion-header>
 
 <ion-content>
-  <p>Nombre: {{usuario.nombre}}</p>
-  <p *ngIf="usuario">Color: {{ usuario.color }}</p>
+  <ion-item>
+    <ion-label>Nombre</ion-label>
+    <ion-input [(ngModel)]="usuario.nombre"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label>Color</ion-label>
+    <input type="color" [(ngModel)]="usuario.color">
+  </ion-item>
+  <ion-button (click)="editaUsuario()">Enviar</ion-button>
+  
 </ion-content>

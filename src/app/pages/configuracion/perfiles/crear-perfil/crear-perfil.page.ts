@@ -14,7 +14,7 @@ import { Location } from '@angular/common';
 export class CrearPerfilPage implements OnInit {
 
   nombre = "";
-  color = "#000000";
+  color = "#FFFFFF";
 
   constructor(
     private databaseService:DatabaseService,
