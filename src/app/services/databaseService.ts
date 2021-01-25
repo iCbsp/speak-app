@@ -280,6 +280,14 @@ export class DatabaseService {
         } else alert("editaUsuario: Usuario, nombre o color no válidos");
     }
 
+    public editaAsistente(asistente : number, inicial : string, final : string){
+        if(asistente){
+            return this.database.executeSql(
+                `UPDATE asistente SET inicial = '${inicial}', final = '${final}' WHERE id = ${asistente}`, [])
+                .catch((err) => alert("Error actualizando asistente -> " + JSON.stringify(err)));
+        } else alert("editaAsistente: Asistente no válidos");
+    }
+
     public borraUsuario(usuario : number){
         if(usuario){
             return this.database.executeSql(

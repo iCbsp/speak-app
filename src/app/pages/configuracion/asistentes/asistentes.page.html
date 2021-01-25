@@ -18,11 +18,11 @@
   </ion-item> -->
   <ion-item *ngFor="let asistente of asistentes">
     <ion-item (click)="ventanaEditarAsistente(asistente)">
-      <ion-label>{{ asistente.inicial }}</ion-label>
-      <ion-label>{{ asistente.final }}</ion-label>
+      <ion-label position="fixed">{{ asistente.inicial }}</ion-label>
+      <ion-label position="fixed">{{ asistente.final }}</ion-label>
     </ion-item>
     <!-- <ion-button style="margin-right: 20px;"><ion-icon name="close-outline"></ion-icon></ion-button> -->
-    <ion-button (click)="borraAsistente(asistente.id)"><ion-icon name="close-outline"></ion-icon></ion-button>
+    <ion-button slot="end" (click)="borraAsistente(asistente.id)"><ion-icon name="close-outline"></ion-icon></ion-button>
   </ion-item>
   <ion-button expand="block" (click)="ventanaCrearAsistente()">Añadir asistente</ion-button>
 

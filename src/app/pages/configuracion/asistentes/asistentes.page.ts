@@ -54,23 +54,23 @@ export class AsistentesPage implements OnInit {
     });
   }
   
-  async ventanaEditarAsistente(asistente : object) {
+  async ventanaEditarAsistente(asistente : any) {
     
     const alert = await this.alertController.create({
-      cssClass: 'ventanaCrearAsistente',
-      header: 'Añadir asistente',
+      cssClass: 'ventanaEditarAsistente',
+      header: 'Editar asistente',
       inputs: [
         {
-          name: 'textoSTT',
+          name: 'inicial',
           type: 'text',
           placeholder: 'Palabra inicial',
-          // value: "texto"
+          value: asistente.inicial
         },
         {
-          name: 'textoSTT',
+          name: 'final',
           type: 'text',
           placeholder: 'Palabra final',
-          // value: "texto"
+          value: asistente.final
         }
       ],
       buttons: [
@@ -86,8 +86,10 @@ export class AsistentesPage implements OnInit {
           role: 'aceptar',
           handler: data => {
             console.log('Confirm Ok');
-            // Meterlo en la base de datos
-            // Llamar a changeDetector
+            this.databaseService.editaAsistente(asistente.id, data.inicial, data.final)
+            .then(() => {
+              this.consigueAsistentes();
+            });
           }
         }
       ]
@@ -133,7 +135,7 @@ export class AsistentesPage implements OnInit {
           handler: data => {
             console.log('Confirm Ok');
             // Meterlo en la base de datos
-            // Llamar a changeDetector
+            this.changeDetector.detectChanges();
           }
         }
       ]
