@@ -19,10 +19,17 @@
     <ion-grid>
       <ion-row>
         <ion-col size="5">
-          <ion-select [interfaceOptions]="customPopoverOptions" [(ngModel)]="asistente" interface="popover" value="ninguno">
-            <ion-select-option value="Ninguno">(Ninguno)</ion-select-option>
+          <ion-select [interfaceOptions]="customPopoverOptions" [(ngModel)]="asistenteSeleccionado" interface="popover">
+            <ion-select-option value="0">(Ninguno)</ion-select-option>
+            <ion-select-option *ngFor="let asistente of asistentes" [value]="asistente.id"> {{ asistente.inicial }} | {{ asistente.final }} </ion-select-option>
+            <!-- <ion-select-option value="Ninguno">(Ninguno)</ion-select-option>
             <ion-select-option value="Alexa">Alexa</ion-select-option>
-            <ion-select-option value="Ok Google">Ok Google</ion-select-option>
+            <ion-select-option value="Ok Google">Ok Google</ion-select-option> -->
+            <!-- <ion-select [interfaceOptions]="customPopoverOptions" [(ngModel)]="asistente" interface="popover" value="ninguno">
+              <ion-select-option value="Ninguno">(Ninguno)</ion-select-option>
+              <ion-select-option value="Alexa">Alexa</ion-select-option>
+              <ion-select-option value="Ok Google">Ok Google</ion-select-option>
+            </ion-select> -->
           </ion-select>
         </ion-col>
 

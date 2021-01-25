@@ -43,7 +43,9 @@ export class TabsPage {
   permisoSTT = false;
 
   usuarios = [];
-  usuarioSeleccionado = { nombre: "", color: "#FFFFFF" };
+  usuarioSeleccionado = { id: 0, nombre: "", color: "#FFFFFF" };
+  asistentes = [];
+  asistenteSeleccionado = "0";
 
   constructor(  
     private menu: MenuController, // Menu desplegable
@@ -61,9 +63,13 @@ export class TabsPage {
       databaseService.lista.subscribe((ready)=>{
         if(ready){
           this.consigueUsuarios();
-      
+          this.consigueAsistentes();
+          
           this.location.onUrlChange((url) => {
-            if(url.toString() == "/tabs/tab1" || url.toString() == "/tabs/tab2" || url.toString() == "/tabs/tab3") this.consigueUsuarios();
+            if(url.toString() == "/tabs/tab1" || url.toString() == "/tabs/tab2" || url.toString() == "/tabs/tab3") {
+              this.consigueUsuarios();
+              this.consigueAsistentes();
+            }
           });
         }
       });
@@ -89,6 +95,23 @@ export class TabsPage {
           for(let i = 0; i < usuariosBDD.length; i++)
             this.usuarios.push(usuariosBDD.item(i));
           this.usuarioSeleccionado = this.usuarios[0];
+          this.changeDetector.detectChanges(); // Para actualizar la vista
+        });
+      }
+    });
+  }
+
+  consigueAsistentes(){
+    this.databaseService.lista.subscribe((ready)=>{
+      if(ready){
+        this.databaseService.obtenAsistentes().then((asistentesBDD)=>{
+          this.asistentes = [];
+          for(let i = 0; i < asistentesBDD.length; i++){
+            this.asistentes.push(asistentesBDD.item(i));
+          }
+          //this.asistenteSeleccionado = this.asistentes[0].id;
+          this.databaseService.obtenAsistenteDeUsuario(this.usuarioSeleccionado.id)
+            .then((asistente) => this.asistenteSeleccionado = asistente.id);
           this.changeDetector.detectChanges(); // Para actualizar la vista
         });
       }

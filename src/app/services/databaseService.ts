@@ -42,6 +42,12 @@ export class DatabaseService {
                 this.database.executeSql(`SELECT * FROM configuracion;`, [])
                     .then((configuraciones)=>{
                         alert("Configuraciones: " + configuraciones.rows.length);
+                        this.database.executeSql(`SELECT * FROM asistente;`, [])
+                            .then((asistentes)=>{
+                                alert("Asistentes: " + asistentes.rows.length);
+                            })
+                            .catch((err) => alert("Error contando asistentes -> " + JSON.stringify(err))
+                        );
                     })
                     .catch((err) => alert("Error contando configuraciones -> " + JSON.stringify(err))
                 );
@@ -67,63 +73,50 @@ export class DatabaseService {
         `CREATE TABLE IF NOT EXISTS configuracion (
             id INTEGER primary key,
             usuario INTEGER,
+            asistente INTEGER,
             modo_simple INTEGER,
             respuesta INTEGER,
-            FOREIGN KEY(usuario) REFERENCES usuario(id)
+            FOREIGN KEY(usuario) REFERENCES usuario(id),
+            FOREIGN KEY(asistente) REFERENCES asistente(id)
         );`, [])
         .then(() => this.messages.push("Tabla de configuracion creada"))
+        .catch((err) => alert("Error creando la tabla -> " + JSON.stringify(err)));
+        
+        // Asistente
+        this.database.executeSql(
+        `CREATE TABLE IF NOT EXISTS asistente (
+            id INTEGER primary key,
+            inicial TEXT,
+            final TEXT
+        );`, [])
+        .then(() => this.messages.push("Tabla de asistente creada"))
         .catch((err) => alert("Error creando la tabla -> " + JSON.stringify(err)));
     }
         
     private insercionesIniciales() {
         // Igual esto deberia de ser una transaccion (??????)
 
+        this.insertaAsistente("Alexa", "");
+        this.insertaAsistente("Ok Google", "");
+        this.insertaAsistente("Siri", "");
+
         this.publicaUsuario("Usuario", "#32a852").then(() => this.lista.next(true));
-
-        // Usuario
-        // this.database.executeSql(
-        // `INSERT INTO usuario(nombre, color, fecha_ultimo_inicio) VALUES ('usuario', '#32a852', datetime('now'));`, [])
-        // .then((usuario) => {
-        //     alert("Usuario creado: " + usuario.insertId);
-        //     this.usuarioActual = usuario.insertId;
-        //     if(usuario.insertId){
-        //         // Configuracion
-        //         this.database.executeSql(
-        //         `INSERT INTO configuracion(usuario, modo_simple, respuesta) VALUES (${usuario.insertId}, 0, 0);`, [])
-        //         .then(() => {this.lista.next(true)})
-        //         .catch((err) => alert("Error insertando configuracion -> " + JSON.stringify(err)));
-        //     }
-        // })
-        // .catch((err) => alert("Error insertando usuario1 -> " + JSON.stringify(err)));
-
-        // // Usuario2
-        // this.database.executeSql(
-        // `INSERT INTO usuario(nombre, color, fecha_ultimo_inicio) VALUES ('usuario2', '#000000', datetime('now'));`, [])
-        // .then((usuario) => {
-        //     alert("Usuario creado: " + usuario.insertId);
-        //     // this.usuarioActual = usuario.insertId;
-        //     if(usuario.insertId){
-        //         // Configuracion2
-        //         this.database.executeSql(
-        //         `INSERT INTO configuracion(usuario, modo_simple, respuesta) VALUES (${usuario.insertId}, 1, 1);`, [])
-        //         .then(() => this.lista.next(true))
-        //         .catch((err) => alert("Error insertando configuracion -> " + JSON.stringify(err)));
-        //     }
-        // })
-        // .catch((err) => alert("Error insertando usuario2 -> " + JSON.stringify(err)));
-
+        // this.insertaUsuario("Usuario", "#32a852").then((usuario) => {
+        //     this.insertaConfiguracion(usuario.insertId).then(() => this.lista.next(true));
+        // });
+        
     }
 
     private comprobacionDatos(){
         this.database.executeSql(
         `SELECT * FROM usuario ORDER BY fecha_ultimo_inicio DESC;`, [])
-        .then((data)=>{
-            if(!data.rows.length){
+        .then((usuarios)=>{
+            if(!usuarios.rows.length){
                 alert("Base de datos vacía, insertando datos iniciales");
                 this.insercionesIniciales();
             } else {
-                //alert("Hay base de datos, iniciada la sesion del usuario " + data.rows.item(0).id);
-                this.usuarioActual = data.rows.item(0).id;
+                //alert("Hay base de datos, iniciada la sesion del usuario " + usuarios.rows.item(0).id);
+                this.usuarioActual = usuarios.rows.item(0).id;
                 this.lista.next(true);
             }
             // alert("idUsuario: " + this.usuarioActual);
@@ -174,6 +167,16 @@ export class DatabaseService {
         .catch((err) => alert("Error obteniendo los usuarios -> " + JSON.stringify(err)));
         return listaUsuarios;
     }
+
+    public async obtenAsistentes(){
+        let listaAsistentes: any;
+        await this.database.executeSql(`SELECT * FROM asistente;`, []).then((asistentes)=>{
+            if(asistentes.rows.length) listaAsistentes = asistentes.rows;
+            else alert("obtenAsistentes: No hay asistentes");
+        })
+        .catch((err) => alert("Error obteniendo los asistentes -> " + JSON.stringify(err)));
+        return listaAsistentes;
+    }
     
     public async obtenUsuario(usuarioID : number){
         let usuario: any;
@@ -183,6 +186,16 @@ export class DatabaseService {
         })
         .catch((err) => alert("Error en obtenUsuario -> " + JSON.stringify(err)));
         return usuario;
+    }
+
+    public async obtenAsistenteDeUsuario(usuarioID : number){
+        let asistente: any;
+        await this.database.executeSql(`SELECT asistente.id FROM asistente, configuracion WHERE configuracion.asistente = asistente.id AND configuracion.usuario = ${usuarioID};`, []).then((asistentes)=>{
+            if(asistentes.rows.length) asistente = asistentes.rows.item(0);
+            // else alert("obtenAsistente: No existe ese asistente");
+        })
+        .catch((err) => alert("Error en obtenAsistente -> " + JSON.stringify(err)));
+        return asistente;
     }
     
     public cambiaModoSimple(modoSimpleBool: boolean){
@@ -219,21 +232,6 @@ export class DatabaseService {
     }
 
     public publicaUsuario(nombre : string, color : string) : any{
-        // Usuario
-        // if(nombre && color){
-        //     this.database.executeSql(
-        //         `INSERT INTO usuario(nombre, color, fecha_ultimo_inicio) VALUES ('${nombre}', '${color}', datetime('now'));`, [])
-        //     .then((usuario)=>{
-        //         // Configuracion
-        //         this.database.executeSql(
-        //             `INSERT INTO configuracion(usuario, modo_simple, respuesta) VALUES (${usuario.insertId}, 0, 0);`, [])
-        //         .then(() => {})
-        //         .catch((err) => alert("Error insertando configuracion -> " + JSON.stringify(err)));
-        //     })
-        //     .catch((err) => {
-        //         alert("Error insertando usuario -> " + JSON.stringify(err));
-        //     });
-        // } else alert("publicaUsuario: Nombre o color no válido");
         return this.insertaUsuario(nombre, color).then((usuario) => {
             return this.insertaConfiguracion(usuario.insertId);
         });
@@ -252,9 +250,17 @@ export class DatabaseService {
     private insertaConfiguracion(usuario : number){
         if(usuario){
             return this.database.executeSql(
-                `INSERT INTO configuracion(usuario, modo_simple, respuesta) VALUES (${usuario}, 0, 0);`, [])
+                `INSERT INTO configuracion(usuario, asistente, modo_simple, respuesta) VALUES (${usuario}, 0, 0, 0);`, [])
                 .catch((err) => alert("Error insertando configuracion -> " + JSON.stringify(err)));
         } else alert("insertaConfiguracion: Usuario no valido");
+    }
+    
+    private insertaAsistente(inicial : string, final : string){
+        // if(inicial && final){
+            return this.database.executeSql(
+                `INSERT INTO asistente(inicial, final) VALUES ('${inicial}', '${final}');`, [])
+                .catch((err) => alert("Error insertando asistente -> " + JSON.stringify(err)));
+        // } else alert("insertaAsistente: Texto no valido");
     }
 
     public editaUsuario(usuario : number, nombre : string, color : string){

@@ -27,11 +27,10 @@ export class EditarPerfilPage implements OnInit {
     private location: Location,
     private changeDetector: ChangeDetectorRef,
   ) {
-    let usuarioAEditar : number;
-
+    
     // Recogida del usuario a editar
     this.route.params.subscribe(params => {
-      usuarioAEditar = params['usuarioAEditar'];
+      let usuarioAEditar = params['usuarioAEditar'];
       databaseService.lista.subscribe((ready)=>{
         if(ready){
           if(usuarioAEditar){
