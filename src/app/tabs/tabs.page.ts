@@ -118,6 +118,10 @@ export class TabsPage {
     });
   }
 
+  cambiaAsistente(){
+    this.databaseService.cambiaAsistente(parseInt(this.asistenteSeleccionado));
+  }
+
   tienePermisoSTT(){
     return this.permisoSTT;
   }

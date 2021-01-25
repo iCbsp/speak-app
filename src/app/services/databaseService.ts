@@ -230,6 +230,15 @@ export class DatabaseService {
             alert("Error actualizando usuario -> " + JSON.stringify(err));
         });
     }
+    
+    public cambiaAsistente(nuevoAsistente : number){
+        this.database.executeSql(
+            `UPDATE configuracion SET asistente = ${nuevoAsistente} WHERE usuario = ${this.usuarioActual}`, [])
+        .then(()=>{})
+        .catch((err) => {
+            alert("Error actualizando asistente -> " + JSON.stringify(err));
+        });
+    }
 
     public publicaUsuario(nombre : string, color : string) : any{
         return this.insertaUsuario(nombre, color).then((usuario) => {
