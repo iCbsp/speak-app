@@ -315,4 +315,6 @@ export class DatabaseService {
         })
         .catch((err) => alert("Error borrando tabla usuario -> " + JSON.stringify(err)));
     }
+
+    public getIdUsuarioActual() { return this.usuarioActual; }
 }
