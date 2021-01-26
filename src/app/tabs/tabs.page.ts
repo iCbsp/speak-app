@@ -67,7 +67,6 @@ export class TabsPage {
           
           this.location.onUrlChange((url) => {
             if(url.toString() == "/tabs/tab1" || url.toString() == "/tabs/tab2" || url.toString() == "/tabs/tab3") {
-              // Bug relativo a borrar asistentes seleccionados
               this.consigueUsuarios();
               this.consigueAsistentes();
             }
@@ -110,12 +109,16 @@ export class TabsPage {
           for(let i = 0; i < asistentesBDD.length; i++){
             this.asistentes.push(asistentesBDD.item(i));
           }
-          //this.asistenteSeleccionado = this.asistentes[0].id;
+          // No entra aqui si 
           this.databaseService.obtenAsistenteDeUsuario(this.usuarioSeleccionado.id)
             .then((asistente) => {
-              this.asistenteSeleccionado = asistente.id;
+              if(asistente) {
+                // this.asistenteSeleccionado = String(asistente.id);
+                this.asistenteSeleccionado = asistente.id;
+              } else {
+                this.asistenteSeleccionado = "0";
+              }
               this.changeDetector.detectChanges();
-              alert("Asistentes actualizados");
             });
         });
       }

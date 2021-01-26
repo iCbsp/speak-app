@@ -189,7 +189,7 @@ export class DatabaseService {
     }
 
     public async obtenAsistenteDeUsuario(usuarioID : number){
-        let asistente: any;
+        let asistente = null;
         await this.database.executeSql(`SELECT asistente.id FROM asistente, configuracion WHERE configuracion.asistente = asistente.id AND configuracion.usuario = ${usuarioID};`, []).then((asistentes)=>{
             if(asistentes.rows.length) asistente = asistentes.rows.item(0);
             // else alert("obtenAsistente: No existe ese asistente");
