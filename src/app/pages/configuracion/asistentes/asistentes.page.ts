@@ -99,7 +99,10 @@ export class AsistentesPage implements OnInit {
   }
 
   borraAsistente(asistenteID : number){
-    // Llamar a la BDD
+    this.databaseService.borraAsistente(asistenteID)
+      .then(() => {
+        this.consigueAsistentes();
+    });
   }
   
   async ventanaCrearAsistente() {
@@ -109,13 +112,13 @@ export class AsistentesPage implements OnInit {
       header: 'Añadir asistente',
       inputs: [
         {
-          name: 'textoSTT',
+          name: 'inicial',
           type: 'text',
           placeholder: 'Palabra inicial',
           // value: "texto"
         },
         {
-          name: 'textoSTT',
+          name: 'final',
           type: 'text',
           placeholder: 'Palabra final',
           // value: "texto"
@@ -134,8 +137,9 @@ export class AsistentesPage implements OnInit {
           role: 'aceptar',
           handler: data => {
             console.log('Confirm Ok');
-            // Meterlo en la base de datos
-            this.changeDetector.detectChanges();
+            this.databaseService.publicaAsistente(data.inicial, data.final).then(() => {
+              this.consigueAsistentes();
+            });
           }
         }
       ]

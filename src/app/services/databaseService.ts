@@ -172,7 +172,7 @@ export class DatabaseService {
         let listaAsistentes: any;
         await this.database.executeSql(`SELECT * FROM asistente;`, []).then((asistentes)=>{
             if(asistentes.rows.length) listaAsistentes = asistentes.rows;
-            else alert("obtenAsistentes: No hay asistentes");
+            // else alert("obtenAsistentes: No hay asistentes");
         })
         .catch((err) => alert("Error obteniendo los asistentes -> " + JSON.stringify(err)));
         return listaAsistentes;
@@ -245,6 +245,10 @@ export class DatabaseService {
             return this.insertaConfiguracion(usuario.insertId);
         });
     }
+
+    public publicaAsistente(inicial : string, final : string) : any{
+        return this.insertaAsistente(inicial, final);
+    }
     
     private insertaUsuario(nombre : string, color : string){
         if(nombre && color){
@@ -303,7 +307,21 @@ export class DatabaseService {
                         .catch((err) => alert("Error borrando usuario -> " + JSON.stringify(err)));
                 })
                 .catch((err) => alert("Error borrando configuracion -> " + JSON.stringify(err)));
-        } else alert("insertaConfiguracion: Usuario no valido");
+        } else alert("borraUsuario: Usuario no valido");
+    }
+    
+    public borraAsistente(asistenteID : number){
+        if(asistenteID){
+            return this.database.executeSql(
+                `UPDATE configuracion SET asistente = 0 WHERE asistente = ${asistenteID};`, [])
+                .finally(() => {
+                    return this.database.executeSql(
+                        `DELETE FROM asistente WHERE id = ${asistenteID};`, [])
+                        .then(() => {})
+                        .catch((err) => alert("Error borrando asistente -> " + JSON.stringify(err)));
+                })
+                // .catch((err) => alert("Error actualizando configuracion -> " + JSON.stringify(err)));
+        } else alert("borraAsistente: Usuario no valido");
     }
 
     private borraTablas() {
