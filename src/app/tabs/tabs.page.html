@@ -4,16 +4,10 @@
           <ion-menu-button color="primary" menu="menuPrincipal"></ion-menu-button>
         </ion-buttons>
         <ion-title>SpeechApp</ion-title>
-        <!-- <ion-button slot="end" (click)="createPopover()" [fill]="usuarioSeleccionado.color"> -->
-        <!-- <ion-button slot="end" (click)="createPopover()">
-          <ion-icon name="person-outline" slot="start"></ion-icon>
-        </ion-button> -->
-        <!-- <ion-card> -->
-          <ion-button slot="end" (click)="createPopover()">
-            <ion-icon name="person-outline" slot="start" style="border-radius: 50%; display: inline-block; border: 1px solid black; padding: 0.2em;" [ngStyle]="{ 'background-color': usuarioSeleccionado.color }"></ion-icon>
-            <ion-label> {{ usuarioSeleccionado.nombre }} </ion-label>
-          </ion-button>
-        <!-- </ion-card> -->
+        <ion-button slot="end" (click)="createPopover()" style="max-width: 30%;">
+          <ion-icon name="person-outline" slot="start" style="border-radius: 50%; display: inline-block; border: 1px solid black; padding: 0.2em;" [ngStyle]="{ 'background-color': usuarioSeleccionado.color }"></ion-icon>
+          <ion-label style="max-width: 70%;"> {{ usuarioSeleccionado.nombre }} </ion-label>
+        </ion-button>
   </ion-toolbar>
   <ion-toolbar>
     <ion-grid>
