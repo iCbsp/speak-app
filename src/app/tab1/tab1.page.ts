@@ -15,6 +15,10 @@ import { Platform } from '@ionic/angular';
 // Para actualizar la vista
 import { ChangeDetectorRef } from '@angular/core';
 
+// Popover
+import { PopoverController } from '@ionic/angular';
+import { AccionPopoverPage } from 'src/app/components/accion-popover/accion-popover.page';
+
 @Component({
   selector: 'app-tab1',
   templateUrl: 'tab1.page.html',
@@ -29,7 +33,8 @@ export class Tab1Page {
     private databaseService:DatabaseService,
     private platform: Platform,
     private changeDetector: ChangeDetectorRef,
-    private router: Router // Para pasar parametros
+    private router: Router, // Para pasar parametros
+    private popover:PopoverController
   ){
     if(!platform.is('desktop')){
       this.databaseService.lista.subscribe((ready)=>{
@@ -50,61 +55,19 @@ export class Tab1Page {
       this.changeDetector.detectChanges();
     });
   }
-
-  async ventanaAccion() {
-
-    var header = "Alarma";
-
-    const alert = await this.alertController.create({
-      cssClass: 'ventanaAccion',
-      header: header,
-      inputs: [
-        {
-          name: 'texto1',
-          type: 'text',
-          value: 'Alexa,',
-          disabled: true
-        },
-        {
-          name: 'texto2',
-          type: 'text',
-          value: 'pon una alarma a las ',
-          disabled: true
-        },
-        {
-          name: 'texto3',
-          type: 'text',
-          value: '18:30',
-          disabled: false
-        }
-      ],
-      buttons: [
-        {
-          text: 'Cancelar',
-          role: 'cancelar',
-          handler: () => {
-          }
-        },
-        {
-          text: 'Aceptar',
-          role: 'aceptar',
-          handler: data => {
-            try{
-              //this.navCtrl.navigateForward(['configuracion'], true);
-              this.router.navigate(['reproduccion', 
-              {
-                textoAReproducir: 'Alexa, pon una alarma a las ' + data.texto3,
-                STTActivado: true
-              }]);
-            }
-            catch(e){
-              console.log(e);
-            }
-          }
-        }
-      ]
-    });
-
-    await alert.present();
+  
+  createPopover(accion){
+    if(!this.platform.is('desktop') && accion){
+      this.popover.create({
+      component:AccionPopoverPage,
+      componentProps: {
+        accion: accion
+      },
+      showBackdrop: true
+      }).then((popoverElement)=>{
+        popoverElement.present();
+      })
+    }
   }
+
 }

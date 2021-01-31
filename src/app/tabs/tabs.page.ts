@@ -53,7 +53,7 @@ export class TabsPage {
     private menu: MenuController, // Menu desplegable
     private router: Router, // Para pasar parametros
     public alertController: AlertController, // Alertas - Prompt
-    private platform: Platform, 
+    private platform: Platform,
     private speechRecognition: SpeechRecognition, 
     private changeDetector: ChangeDetectorRef,
     private databaseService:DatabaseService,

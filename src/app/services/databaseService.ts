@@ -255,6 +255,18 @@ export class DatabaseService {
         .catch((err) => alert("Error en obtenAcciones -> " + JSON.stringify(err)));
         return acciones;
     }
+
+    public async obtenFilas(accion : number){
+        let filas = null;
+            
+        await this.database.executeSql(`SELECT * FROM fila WHERE accion = ${accion};`, [])
+        .then((filasBDD)=>{
+            if(filasBDD.rows.length) filas = filasBDD.rows;
+            else alert("obtenFilas: Esta acción no tiene filas");
+        })
+        .catch((err) => alert("Error en obtenFilas -> " + JSON.stringify(err)));
+        return filas;
+    }
     
     public cambiaModoSimple(modoSimpleBool: boolean){
         let modoSimpleInt = 0;

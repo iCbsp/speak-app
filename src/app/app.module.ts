@@ -24,11 +24,12 @@ import { DatabaseService } from './services/databaseService';
 
 // Popover
 import { UsuarioPopoverPageModule } from 'src/app/components/usuario-popover/usuario-popover.module';
+import { AccionPopoverPageModule } from 'src/app/components/accion-popover/accion-popover.module';
 
 @NgModule({
   declarations: [AppComponent, MenuComponent],
   entryComponents: [],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, UsuarioPopoverPageModule],
+  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, UsuarioPopoverPageModule, AccionPopoverPageModule],
   exports: [MenuComponent],
   providers: [
     StatusBar,

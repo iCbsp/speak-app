@@ -1,0 +1,13 @@
+<ion-content>
+  <!-- <ion-title>Cambio de usuario</ion-title> -->
+  <!-- <ion-button expand="block" (click)="closePopover()" [routerLink]="['configuracion/perfiles/crear-perfil']">Crear perfil</ion-button> -->
+  <!-- <ion-card>
+    <ion-item class="ion-activated">
+      <ion-icon name="person-outline" slot="start"></ion-icon>
+      <ion-label> asdasd </ion-label>
+    </ion-item>
+  </ion-card> -->
+  <!-- <ion-input position="fixed" placeholder="(Frase final)" disabled [value]="asistente.final"></ion-input> -->
+  <p> {{ accion.titulo }} </p>
+  <ion-input *ngFor="let fila of filas" position="fixed" placeholder="(Frase final)" disabled [value]="fila.texto"></ion-input>
+</ion-content>
