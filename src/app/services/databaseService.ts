@@ -45,6 +45,12 @@ export class DatabaseService {
                         this.database.executeSql(`SELECT * FROM asistente;`, [])
                             .then((asistentes)=>{
                                 alert("Asistentes: " + asistentes.rows.length);
+                                this.database.executeSql(`SELECT * FROM accion;`, [])
+                                    .then((acciones)=>{
+                                        alert("Acciones: " + acciones.rows.length);
+                                    })
+                                    .catch((err) => alert("Error contando acciones -> " + JSON.stringify(err))
+                                );
                             })
                             .catch((err) => alert("Error contando asistentes -> " + JSON.stringify(err))
                         );
@@ -91,6 +97,36 @@ export class DatabaseService {
         );`, [])
         .then(() => this.messages.push("Tabla de asistente creada"))
         .catch((err) => alert("Error creando la tabla -> " + JSON.stringify(err)));
+
+
+        // Fila
+        this.database.executeSql(
+        `CREATE TABLE IF NOT EXISTS fila (
+            id INTEGER primary key,
+            accion INTEGER,
+            tipo INTEGER,
+            texto TEXT,
+            FOREIGN KEY(accion) REFERENCES accion(id)
+        );`, [])
+        .then(() => this.messages.push("Tabla de fila creada"))
+        .catch((err) => alert("Error creando la tabla -> " + JSON.stringify(err)));
+
+
+        // Accion
+        this.database.executeSql(
+        `CREATE TABLE IF NOT EXISTS accion (
+            id INTEGER primary key,
+            usuario INTEGER,
+            tipo INTEGER,
+            titulo TEXT,
+            imagen TEXT,
+            orden_filas TEXT,
+            ultimo_uso TEXT,
+            FOREIGN KEY(usuario) REFERENCES usuario(id)
+        );`, [])
+        .then(() => this.messages.push("Tabla de accion creada"))
+        .catch((err) => alert("Error creando la tabla -> " + JSON.stringify(err)));
+
     }
         
     private insercionesIniciales() {
@@ -100,7 +136,12 @@ export class DatabaseService {
         this.insertaAsistente("Ok Google", "");
         this.insertaAsistente("Siri", "");
 
+        this.insertaAccion(0, 1, "Prueba", "", "").then((accion) => {
+            this.insertaFila(accion.insertId, 1, "Jeje");
+        });
         this.publicaUsuario("Usuario", "#32a852").then(() => this.lista.next(true));
+
+
         // this.insertaUsuario("Usuario", "#32a852").then((usuario) => {
         //     this.insertaConfiguracion(usuario.insertId).then(() => this.lista.next(true));
         // });
@@ -180,7 +221,8 @@ export class DatabaseService {
     
     public async obtenUsuario(usuarioID : number){
         let usuario: any;
-        await this.database.executeSql(`SELECT * FROM usuario WHERE id = ${usuarioID}`, []).then((usuarios)=>{
+        await this.database.executeSql(`SELECT * FROM usuario WHERE id = ${usuarioID}`, [])
+        .then((usuarios)=>{
             if(usuarios.rows.length) usuario = usuarios.rows.item(0);
             else alert("obtenUsuario: No existe ese usuario");
         })
@@ -190,12 +232,28 @@ export class DatabaseService {
 
     public async obtenAsistenteDeUsuario(usuarioID : number){
         let asistente = null;
-        await this.database.executeSql(`SELECT asistente.id FROM asistente, configuracion WHERE configuracion.asistente = asistente.id AND configuracion.usuario = ${usuarioID};`, []).then((asistentes)=>{
+        await this.database.executeSql(`SELECT asistente.id FROM asistente, configuracion WHERE configuracion.asistente = asistente.id AND configuracion.usuario = ${usuarioID};`, [])
+        .then((asistentes)=>{
             if(asistentes.rows.length) asistente = asistentes.rows.item(0);
             // else alert("obtenAsistente: No existe ese asistente");
         })
-        .catch((err) => alert("Error en obtenAsistente -> " + JSON.stringify(err)));
+        .catch((err) => alert("Error en obtenAsistenteDeUsuario -> " + JSON.stringify(err)));
         return asistente;
+    }
+
+    public async obtenAcciones(tipo : number, usuario? : number){
+        let acciones = null;
+        let usuarioQuery = "";
+        if(usuario)
+            usuarioQuery = " AND usuario = " + usuario;
+            
+        await this.database.executeSql(`SELECT * FROM accion WHERE tipo = ${tipo}${usuarioQuery};`, [])
+        .then((accionesBDD)=>{
+            if(accionesBDD.rows.length) acciones = accionesBDD.rows;
+            else alert("obtenAcciones: No existen acciones del tipo " + tipo);
+        })
+        .catch((err) => alert("Error en obtenAcciones -> " + JSON.stringify(err)));
+        return acciones;
     }
     
     public cambiaModoSimple(modoSimpleBool: boolean){
@@ -274,6 +332,25 @@ export class DatabaseService {
                 `INSERT INTO asistente(inicial, final) VALUES ('${inicial}', '${final}');`, [])
                 .catch((err) => alert("Error insertando asistente -> " + JSON.stringify(err)));
         // } else alert("insertaAsistente: Texto no valido");
+    }
+
+    private insertaFila(accion : number, tipo : number, textoTemp? : string){
+        let texto = "";
+        if(textoTemp) texto = textoTemp;
+
+        if(accion){
+            return this.database.executeSql(
+                `INSERT INTO fila(accion, tipo, texto) VALUES (${accion}, ${tipo}, '${texto}');`, [])
+                .catch((err) => alert("Error insertando fila -> " + JSON.stringify(err)));
+        } else alert("insertaFila: Texto no valido");
+    }
+
+    private insertaAccion(usuario : number, tipo : number, titulo : string, imagen : string, orden_filas : string){
+        // if(inicial && final){
+            return this.database.executeSql(
+                `INSERT INTO accion(usuario, tipo, titulo, imagen, orden_filas, ultimo_uso) VALUES (${usuario}, ${tipo}, '${titulo}', '${imagen}', '${orden_filas}', datetime('now'));`, [])
+                .catch((err) => alert("Error insertando accion -> " + JSON.stringify(err)));
+        // } else alert("insertaAccion: Texto no valido");
     }
 
     public editaUsuario(usuario : number, nombre : string, color : string){

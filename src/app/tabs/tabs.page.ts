@@ -12,7 +12,9 @@ import { Data, Router } from '@angular/router';
 
 // STT
 import { SpeechRecognition } from '@ionic-native/speech-recognition/ngx';
-import { ChangeDetectorRef } from '@angular/core'; // Si no se usa no actualiza el input
+
+// Para actualizar la vista
+import { ChangeDetectorRef } from '@angular/core';
 
 // Base de datos
 import { DatabaseService } from '../services/databaseService';
@@ -51,7 +53,9 @@ export class TabsPage {
     private menu: MenuController, // Menu desplegable
     private router: Router, // Para pasar parametros
     public alertController: AlertController, // Alertas - Prompt
-    private platform: Platform, private speechRecognition: SpeechRecognition, private changeDetector: ChangeDetectorRef, // Si el STT no va: public navCtrl: NavController
+    private platform: Platform, 
+    private speechRecognition: SpeechRecognition, 
+    private changeDetector: ChangeDetectorRef,
     private databaseService:DatabaseService,
     private location: Location,
     private popover:PopoverController
@@ -109,7 +113,6 @@ export class TabsPage {
           for(let i = 0; i < asistentesBDD.length; i++){
             this.asistentes.push(asistentesBDD.item(i));
           }
-          // No entra aqui si 
           this.databaseService.obtenAsistenteDeUsuario(this.usuarioSeleccionado.id)
             .then((asistente) => {
               if(asistente) {
