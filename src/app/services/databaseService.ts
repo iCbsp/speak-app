@@ -136,8 +136,15 @@ export class DatabaseService {
         this.insertaAsistente("Ok Google", "");
         this.insertaAsistente("Siri", "");
 
-        this.insertaAccion(0, 1, "Prueba", "", "").then((accion) => {
-            this.insertaFila(accion.insertId, 1, "Jeje");
+        this.insertaAccion(0, 1, "Alarma", "", "").then((accion) => { // Tipo 1: Fijo. Tipo 2: Editable.
+            this.insertaFila(accion.insertId, 1, "pon una alarma");
+            this.insertaFila(accion.insertId, 2, "hoy a las 9:00");
+        });
+        this.insertaAccion(0, 1, "El tiempo", "", "").then((accion) => { // Tipo 1: Fijo. Tipo 2: Editable.
+            this.insertaFila(accion.insertId, 1, "¿qué tiempo hará");
+            this.insertaFila(accion.insertId, 2, "hoy");
+            this.insertaFila(accion.insertId, 2, "en San Vicente del Raspeig");
+            this.insertaFila(accion.insertId, 1, "?");
         });
         this.publicaUsuario("Usuario", "#32a852").then(() => this.lista.next(true));
 
@@ -230,9 +237,10 @@ export class DatabaseService {
         return usuario;
     }
 
-    public async obtenAsistenteDeUsuario(usuarioID : number){
+    public async obtenAsistenteDeUsuario(usuarioID? : number){
         let asistente = null;
-        await this.database.executeSql(`SELECT asistente.id FROM asistente, configuracion WHERE configuracion.asistente = asistente.id AND configuracion.usuario = ${usuarioID};`, [])
+        if(usuarioID == undefined) usuarioID = this.usuarioActual;
+        await this.database.executeSql(`SELECT * FROM asistente, configuracion WHERE configuracion.asistente = asistente.id AND configuracion.usuario = ${usuarioID};`, [])
         .then((asistentes)=>{
             if(asistentes.rows.length) asistente = asistentes.rows.item(0);
             // else alert("obtenAsistente: No existe ese asistente");

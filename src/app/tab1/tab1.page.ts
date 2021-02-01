@@ -3,9 +3,6 @@ import { Component } from '@angular/core';
 // Alertas - Prompt
 import { AlertController } from '@ionic/angular';
 
-// Router, para pasar parametros
-import { Router } from '@angular/router';
-
 // Base de datos
 import { DatabaseService } from '../services/databaseService';
 
@@ -33,7 +30,6 @@ export class Tab1Page {
     private databaseService:DatabaseService,
     private platform: Platform,
     private changeDetector: ChangeDetectorRef,
-    private router: Router, // Para pasar parametros
     private popover:PopoverController
   ){
     if(!platform.is('desktop')){

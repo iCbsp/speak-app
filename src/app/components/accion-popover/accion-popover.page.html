@@ -1,13 +1,9 @@
 <ion-content>
-  <!-- <ion-title>Cambio de usuario</ion-title> -->
-  <!-- <ion-button expand="block" (click)="closePopover()" [routerLink]="['configuracion/perfiles/crear-perfil']">Crear perfil</ion-button> -->
-  <!-- <ion-card>
-    <ion-item class="ion-activated">
-      <ion-icon name="person-outline" slot="start"></ion-icon>
-      <ion-label> asdasd </ion-label>
-    </ion-item>
-  </ion-card> -->
-  <!-- <ion-input position="fixed" placeholder="(Frase final)" disabled [value]="asistente.final"></ion-input> -->
-  <p> {{ accion.titulo }} </p>
-  <ion-input *ngFor="let fila of filas" position="fixed" placeholder="(Frase final)" disabled [value]="fila.texto"></ion-input>
+  <ion-title> {{ accion.titulo }} </ion-title>
+  <!-- <ion-input *ngFor="let fila of filas; let i = index" position="fixed" placeholder="(Frase final)" [disabled]="deTipoFilaABoolean(fila.tipo)" [value]="textoFilas[i]"></ion-input> -->
+  <!-- <ion-input *ngIf="asistenteInicial" position="fixed" disabled>{{ asistenteInicial }},</ion-input> -->
+  <ion-input *ngIf="asistenteInicial" position="fixed" disabled [value]="asistenteInicial + ','"></ion-input>
+  <ion-input *ngFor="let fila of filas; let i = index" position="fixed" [disabled]="deTipoFilaABoolean(fila.tipo)" [(ngModel)]="fila.texto"></ion-input>
+  <ion-input *ngIf="asistenteFinal" position="fixed" disabled [value]="asistenteFinal"></ion-input>
+  <ion-button expand="block" (click)="reproducirTexto()">Crear perfil</ion-button>
 </ion-content>
