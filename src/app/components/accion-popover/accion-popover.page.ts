@@ -26,6 +26,7 @@ export class AccionPopoverPage implements OnInit {
   filas = [];
   asistenteInicial = "";
   asistenteFinal = "";
+  configuracion = { modo_simple: 1, respuesta: 1 };
   
   constructor(
     private changeDetector: ChangeDetectorRef,
@@ -55,9 +56,9 @@ export class AccionPopoverPage implements OnInit {
                     this.asistenteInicial = asistente.inicial;
                     this.asistenteFinal = asistente.final;
                   }
+                  this.consigueConfiguracion();
+                  this.changeDetector.detectChanges();
                 });
-
-                this.changeDetector.detectChanges();
               }
             });
           }
@@ -65,13 +66,23 @@ export class AccionPopoverPage implements OnInit {
       }
     }
     
-    closePopover(){
+  closePopover(){
       this.popover.dismiss();
     }
     
-    deTipoFilaABoolean(tipo : number){
+  deTipoFilaABoolean(tipo : number){
       if(tipo == 1) return true;
     return false;
+  }
+
+  consigueConfiguracion(){
+    this.databaseService.lista.subscribe((ready)=>{
+      if(ready){
+        this.databaseService.obtenConfiguracion().then((configuracionBDD)=>{
+          this.configuracion = configuracionBDD;
+        });
+      }
+    });
   }
 
   reproducirTexto(){
@@ -82,10 +93,11 @@ export class AccionPopoverPage implements OnInit {
     for(let i = 0; i < this.filas.length; i++)
       texto += " " + this.filas[i].texto;
     if(this.asistenteFinal) texto += " " + this.asistenteFinal;
-
     this.router.navigate(['reproduccion', {
         textoAReproducir: texto,
-        STTActivado: true // Cambiar
+        // configuracion: this.configuracion
+        respuesta: this.configuracion.respuesta,
+        modo_simple: this.configuracion.modo_simple
       }
     ]);
   }
