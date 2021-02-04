@@ -9,6 +9,7 @@ export class DatabaseService {
     private database: SQLiteObject;
     public messages = [];
     public lista = new BehaviorSubject<boolean>(false);
+    public cambio = new BehaviorSubject<boolean>(false);
     private usuarioActual = 0;
 
     constructor(
@@ -281,7 +282,7 @@ export class DatabaseService {
         if(modoSimpleBool) modoSimpleInt = 1;
         this.database.executeSql(
             `UPDATE configuracion SET modo_simple = ${modoSimpleInt} WHERE usuario = ${this.usuarioActual} `, [])
-        .then(()=>{})
+        .then(() => this.cambio.next(!this.cambio.value))
         .catch((err) => {
             alert("Error actualizando modo_simple -> " + JSON.stringify(err));
         });
@@ -292,7 +293,7 @@ export class DatabaseService {
         if(respuestaBool) respuestaInt = 1;
         this.database.executeSql(
             `UPDATE configuracion SET respuesta = ${respuestaInt} WHERE usuario = ${this.usuarioActual} `, [])
-        .then(()=>{})
+        .then(() => this.cambio.next(!this.cambio.value))
         .catch((err) => {
             alert("Error actualizando respuesta -> " + JSON.stringify(err));
         });
@@ -303,7 +304,7 @@ export class DatabaseService {
         this.usuarioActual = nuevoUsuario;
         this.database.executeSql(
             `UPDATE usuario SET fecha_ultimo_inicio = datetime('now') WHERE id = ${this.usuarioActual} `, [])
-        .then(()=>{})
+        .then(() => this.cambio.next(!this.cambio.value))
         .catch((err) => {
             alert("Error actualizando usuario -> " + JSON.stringify(err));
         });
@@ -312,7 +313,7 @@ export class DatabaseService {
     public cambiaAsistente(nuevoAsistente : number){
         this.database.executeSql(
             `UPDATE configuracion SET asistente = ${nuevoAsistente} WHERE usuario = ${this.usuarioActual}`, [])
-        .then(()=>{})
+        .then(() => this.cambio.next(!this.cambio.value))
         .catch((err) => {
             alert("Error actualizando asistente -> " + JSON.stringify(err));
         });
@@ -320,18 +321,18 @@ export class DatabaseService {
 
     public publicaUsuario(nombre : string, color : string) : any{
         return this.insertaUsuario(nombre, color).then((usuario) => {
-            return this.insertaConfiguracion(usuario.insertId);
+            return this.insertaConfiguracion(usuario.insertId).then(() => this.cambio.next(!this.cambio.value));
         });
     }
 
     public publicaAsistente(inicial : string, final : string) : any{
-        return this.insertaAsistente(inicial, final);
+        return this.insertaAsistente(inicial, final).then(() => this.cambio.next(!this.cambio.value));
     }
     
     private insertaUsuario(nombre : string, color : string){
         if(nombre && color){
             return this.database.executeSql(
-                `INSERT INTO usuario(nombre, color, fecha_ultimo_inicio) VALUES ('${nombre}', '${color}', datetime('now'));`, [])
+                `INSERT INTO usuario(nombre, color, fecha_ultimo_inicio) VALUES ('${nombre}', '${color}', 0);`, [])
             .catch((err) => {
                 alert("Error insertando usuario -> " + JSON.stringify(err));
             });
@@ -377,6 +378,7 @@ export class DatabaseService {
         if(usuario && nombre && color){
             return this.database.executeSql(
                 `UPDATE usuario SET nombre = '${nombre}', color = '${color}' WHERE id = ${usuario}`, [])
+                .then(() => this.cambio.next(!this.cambio.value))
                 .catch((err) => alert("Error actualizando usuario -> " + JSON.stringify(err)));
         } else alert("editaUsuario: Usuario, nombre o color no válidos");
     }
@@ -385,6 +387,7 @@ export class DatabaseService {
         if(asistente){
             return this.database.executeSql(
                 `UPDATE asistente SET inicial = '${inicial}', final = '${final}' WHERE id = ${asistente}`, [])
+                .then(() => this.cambio.next(!this.cambio.value))
                 .catch((err) => alert("Error actualizando asistente -> " + JSON.stringify(err)));
         } else alert("editaAsistente: Asistente no válidos");
     }
@@ -399,6 +402,7 @@ export class DatabaseService {
                         .then(() => {
                             this.obtenUsuariosSesion().then(usuariosBDD => {
                                 this.usuarioActual = usuariosBDD.rows.item(0).id;
+                                this.cambio.next(!this.cambio.value);
                             });
                         })
                         .catch((err) => alert("Error borrando usuario -> " + JSON.stringify(err)));
@@ -414,7 +418,7 @@ export class DatabaseService {
                 .finally(() => {
                     return this.database.executeSql(
                         `DELETE FROM asistente WHERE id = ${asistenteID};`, [])
-                        .then(() => {})
+                        .then(() => this.cambio.next(!this.cambio.value))
                         .catch((err) => alert("Error borrando asistente -> " + JSON.stringify(err)));
                 })
                 // .catch((err) => alert("Error actualizando configuracion -> " + JSON.stringify(err)));

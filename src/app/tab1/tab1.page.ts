@@ -38,6 +38,9 @@ export class Tab1Page {
           this.consigueAcciones();
         }
       });
+      this.databaseService.cambio.subscribe(()=>{
+        // alert("Cambio en la base de datos");
+      });
     }
   }
   

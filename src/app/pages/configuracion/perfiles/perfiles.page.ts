@@ -34,8 +34,11 @@ export class PerfilesPage implements OnInit {
   ) {
     this.consigueUsuarios();
 
-    this.location.onUrlChange((url) => {
-      if(url.toString() == "/configuracion/perfiles") this.consigueUsuarios();
+    // this.location.onUrlChange((url) => {
+    //   if(url.toString() == "/configuracion/perfiles") this.consigueUsuarios();
+    // });
+    databaseService.cambio.subscribe(()=>{
+      this.consigueUsuarios();
     });
   }
 

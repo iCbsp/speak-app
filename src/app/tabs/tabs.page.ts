@@ -69,11 +69,15 @@ export class TabsPage {
           this.consigueUsuarios();
           this.consigueAsistentes();
           
-          this.location.onUrlChange((url) => {
-            if(url.toString() == "/tabs/tab1" || url.toString() == "/tabs/tab2" || url.toString() == "/tabs/tab3") {
-              this.consigueUsuarios();
-              this.consigueAsistentes();
-            }
+          // this.location.onUrlChange((url) => {
+          //   if(url.toString() == "/tabs/tab1" || url.toString() == "/tabs/tab2" || url.toString() == "/tabs/tab3") {
+          //     this.consigueUsuarios();
+          //     this.consigueAsistentes();
+          //   }
+          // });
+          databaseService.cambio.subscribe(()=>{
+            this.consigueUsuarios();
+            this.consigueAsistentes();
           });
         }
       });
