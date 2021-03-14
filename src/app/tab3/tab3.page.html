@@ -8,13 +8,15 @@
 
 <ion-content>
   <div style="margin-top: 130px;"></div>
-
   <ion-grid>
     <ion-row>
-      <ion-col size="4" *ngFor="let c of [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]; let i = index;">
-        <div style="text-align: center; background-color:steelblue; padding: 3px 0px;">
-          <ion-icon style="font-size: 80px" name="add-circle-outline"></ion-icon>
-          <p>Personal. {{i+1}}</p>
+      <ion-col>
+        <ion-button expand="block" (click)="hoa()">Añadir acción</ion-button>
+      </ion-col>
+      <ion-col size="4" *ngFor="let accion of acciones">
+        <div style="text-align: center; background-color:steelblue; padding: 3px 0px;" (click)="abrirAccionPopover(accion)">
+          <ion-icon style="font-size: 80px" name="cloud-outline"></ion-icon>
+          <p>{{ accion.titulo }}</p>
         </div>
       </ion-col>
     </ion-row>

@@ -16,6 +16,8 @@ import { ChangeDetectorRef } from '@angular/core';
 import { PopoverController } from '@ionic/angular';
 import { AccionPopoverPage } from 'src/app/components/accion-popover/accion-popover.page';
 
+import { tiposAcciones } from 'src/app/enumerations';
+
 @Component({
   selector: 'app-tab1',
   templateUrl: 'tab1.page.html',
@@ -31,8 +33,10 @@ export class Tab1Page {
     private platform: Platform,
     private changeDetector: ChangeDetectorRef,
     private popover:PopoverController
-  ){
-    if(!platform.is('desktop')){
+  ){}
+
+  ngOnInit() {
+    if(!this.platform.is('desktop')){
       this.databaseService.lista.subscribe((ready)=>{
         if(ready){
           this.consigueAcciones();
@@ -45,7 +49,7 @@ export class Tab1Page {
   }
   
   consigueAcciones(){
-    this.databaseService.obtenAcciones(1).then((accionesBDD) => {
+    this.databaseService.obtenAcciones(tiposAcciones.basicas).then((accionesBDD) => {
       this.acciones = [];
       if(accionesBDD) {
         for(let i = 0; i < accionesBDD.length; i++)
