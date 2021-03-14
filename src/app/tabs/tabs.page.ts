@@ -8,11 +8,23 @@ import { AlertController } from '@ionic/angular';
 import { Platform } from '@ionic/angular';
 
 // Router, para pasar parametros
-import { Router } from '@angular/router';
+import { Data, Router } from '@angular/router';
 
 // STT
-import { SpeechRecognition } from '@ionic-native/speech-recognition/ngx'
-import { ChangeDetectorRef } from '@angular/core'; // Si no se usa no actualiza el input
+import { SpeechRecognition } from '@ionic-native/speech-recognition/ngx';
+
+// Para actualizar la vista
+import { ChangeDetectorRef } from '@angular/core';
+
+// Base de datos
+import { DatabaseService } from '../services/databaseService';
+
+// Para detectar cambios en la URL
+import { Location } from '@angular/common';
+
+// Popover
+import { PopoverController } from '@ionic/angular';
+import { UsuarioPopoverPage } from 'src/app/components/usuario-popover/usuario-popover.page';
 
 @Component({
   selector: 'app-tabs',
@@ -32,19 +44,96 @@ export class TabsPage {
   estaGrabando = false;
   permisoSTT = false;
 
-  constructor(  
-                private menu: MenuController, // Menu desplegable
-                private router: Router, // Para pasar parametros
-                public alertController: AlertController, // Alertas - Prompt
-                private plt: Platform, private speechRecognition: SpeechRecognition, private cd: ChangeDetectorRef // Si el STT no va: public navCtrl: NavController
-              ){
-                if(!this.preguntadoUsoDeDatos) this.ventanaPoliticas();
-                if(!this.preguntadaAccesibilidad) this.ventanaAccesibilidad();
-              }
+  usuarios = [];
+  usuarioSeleccionado = { id: 0, nombre: "", color: "#FFFFFF" };
+  asistentes = [];
+  asistenteSeleccionado = "0";
 
-  // Metodos STT
-  esIOS() {
-    return this.plt.is('ios');
+  constructor(  
+    private menu: MenuController, // Menu desplegable
+    private router: Router, // Para pasar parametros
+    public alertController: AlertController, // Alertas - Prompt
+    private platform: Platform,
+    private speechRecognition: SpeechRecognition, 
+    private changeDetector: ChangeDetectorRef,
+    private databaseService:DatabaseService,
+    private location: Location,
+    private popover:PopoverController
+  ){
+    if(!this.preguntadoUsoDeDatos) this.ventanaPoliticas();
+    if(!this.preguntadaAccesibilidad) this.ventanaAccesibilidad();
+
+    if(!platform.is('desktop')){
+      databaseService.lista.subscribe((ready)=>{
+        if(ready){
+          this.consigueUsuarios();
+          this.consigueAsistentes();
+          
+          // this.location.onUrlChange((url) => {
+          //   if(url.toString() == "/tabs/tab1" || url.toString() == "/tabs/tab2" || url.toString() == "/tabs/tab3") {
+          //     this.consigueUsuarios();
+          //     this.consigueAsistentes();
+          //   }
+          // });
+          databaseService.cambio.subscribe(()=>{
+            this.consigueUsuarios();
+            this.consigueAsistentes();
+          });
+        }
+      });
+    }
+  }
+
+  createPopover(){
+    if(!this.platform.is('desktop')){
+      this.popover.create({
+      component:UsuarioPopoverPage,
+      showBackdrop: true
+      }).then((popoverElement)=>{
+        popoverElement.present();
+      })
+    }
+  }
+
+  consigueUsuarios(){
+    this.databaseService.lista.subscribe((ready)=>{
+      if(ready){
+        this.databaseService.obtenUsuariosSesion().then((usuariosBDD)=>{
+          this.usuarios = [];
+          for(let i = 0; i < usuariosBDD.length; i++)
+            this.usuarios.push(usuariosBDD.item(i));
+          this.usuarioSeleccionado = this.usuarios[0];
+          this.changeDetector.detectChanges(); // Para actualizar la vista
+        });
+      }
+    });
+  }
+
+  consigueAsistentes(){
+    this.databaseService.lista.subscribe((ready)=>{
+      if(ready){
+        this.databaseService.obtenAsistentes().then((asistentesBDD)=>{
+          this.asistentes = [];
+          for(let i = 0; i < asistentesBDD.length; i++){
+            this.asistentes.push(asistentesBDD.item(i));
+          }
+          this.databaseService.obtenAsistenteDeUsuario(this.usuarioSeleccionado.id)
+            .then((asistente) => {
+              if(asistente) {
+                // this.asistenteSeleccionado = String(asistente.id);
+                this.asistenteSeleccionado = asistente.asistente;
+              } else {
+                this.asistenteSeleccionado = "0";
+              }
+              this.changeDetector.detectChanges();
+            });
+        });
+      }
+    });
+  }
+
+  cambiaAsistente(){
+    this.databaseService.cambiaAsistente(parseInt(this.asistenteSeleccionado));
   }
 
   tienePermisoSTT(){
@@ -58,7 +147,7 @@ export class TabsPage {
     }
     this.speechRecognition.startListening().subscribe(coincidencias => {
       this.coincidencias = coincidencias;
-      this.cd.detectChanges(); // Para actualizar la vista
+      this.changeDetector.detectChanges(); // Para actualizar la vista
     });
     this.estaGrabando = true;
   }
@@ -96,7 +185,6 @@ export class TabsPage {
   // }
 
   async ventanaTextoManual() {
-
     // Comprobación asistente
     var textoAsistente = "";
     if(this.asistente != "Ninguno") textoAsistente = this.asistente + ", ";

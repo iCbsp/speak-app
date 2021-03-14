@@ -8,16 +8,21 @@
 </ion-header>
 
 <ion-content>
-  <ion-card>
-    <ion-item class="ion-activated">
+  <ion-button expand="block" [routerLink]="['crear-perfil']">Crear perfil</ion-button>
+  <!-- <ion-card *ngFor="let usuario of usuarios">
+    <ion-item class="ion-activated" (click)="veAlPerfil(usuario.id)">
       <ion-icon name="person-outline" slot="start"></ion-icon>
-      <ion-label>Adrián</ion-label>
+      <ion-label> {{ usuario.nombre }} </ion-label>
     </ion-item>
-  </ion-card>
-  <ion-card>
-    <ion-item class="ion-activated">
-      <ion-icon name="person-outline" slot="start"></ion-icon>
-      <ion-label>Andrea</ion-label>
+  </ion-card> -->
+  <ion-card *ngFor="let usuario of usuarios">
+    <ion-item>
+      <ion-item (click)="veAlPerfil(usuario.id)">
+        <ion-icon name="person-outline" slot="start" style="border-radius: 50%; display: inline-block; border: 1px solid black; padding: 0.2em;" [ngStyle]="{ 'background-color': usuario.color }"></ion-icon>
+        <ion-label> {{ usuario.nombre }} </ion-label>
+      </ion-item>
+      <!-- <ion-icon name="close-circle-outline" slot="end" size="large" color="danger" (click)="preguntaBorraUsuario(usuario.id)"></ion-icon> -->
+      <ion-button slot="end" (click)="preguntaBorraUsuario(usuario.id)"><ion-icon name="close-outline"></ion-icon></ion-button>
     </ion-item>
   </ion-card>
 </ion-content>

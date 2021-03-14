@@ -7,7 +7,15 @@ const routes: Routes = [
   {
     path: '',
     component: PerfilesPage
+  },
+  {
+    path: 'editar-perfil',
+    loadChildren: () => import('./editar-perfil/editar-perfil.module').then( m => m.EditarPerfilPageModule)
+  },  {
+    path: 'crear-perfil',
+    loadChildren: () => import('./crear-perfil/crear-perfil.module').then( m => m.CrearPerfilPageModule)
   }
+
 ];
 
 @NgModule({
