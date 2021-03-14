@@ -121,7 +121,7 @@ export class TabsPage {
             .then((asistente) => {
               if(asistente) {
                 // this.asistenteSeleccionado = String(asistente.id);
-                this.asistenteSeleccionado = asistente.id;
+                this.asistenteSeleccionado = asistente.asistente;
               } else {
                 this.asistenteSeleccionado = "0";
               }
