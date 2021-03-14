@@ -5,5 +5,8 @@
   <ion-input *ngIf="asistenteInicial" position="fixed" disabled [value]="asistenteInicial + ','"></ion-input>
   <ion-input *ngFor="let fila of filas; let i = index" position="fixed" [disabled]="deTipoFilaABoolean(fila.tipo)" [(ngModel)]="fila.texto"></ion-input>
   <ion-input *ngIf="asistenteFinal" position="fixed" disabled [value]="asistenteFinal"></ion-input>
-  <ion-button expand="block" (click)="reproducirTexto()">Crear perfil</ion-button>
+  <section style="text-align: center;">
+  <ion-button (click)="reproducirTexto()">Cancelar</ion-button>
+  <ion-button (click)="reproducirTexto()">Reproducir</ion-button>
+  </section>
 </ion-content>

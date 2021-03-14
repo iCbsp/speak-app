@@ -258,8 +258,9 @@ export class DatabaseService {
             
         await this.database.executeSql(`SELECT * FROM accion WHERE tipo = ${tipo}${usuarioQuery};`, [])
         .then((accionesBDD)=>{
-            if(accionesBDD.rows.length) acciones = accionesBDD.rows;
-            else alert("obtenAcciones: No existen acciones del tipo " + tipo);
+            //if(accionesBDD.rows.length) 
+            acciones = accionesBDD.rows;
+            //else alert("obtenAcciones: No existen acciones del tipo " + tipo);
         })
         .catch((err) => alert("Error en obtenAcciones -> " + JSON.stringify(err)));
         return acciones;

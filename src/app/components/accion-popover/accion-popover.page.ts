@@ -68,7 +68,7 @@ export class AccionPopoverPage implements OnInit {
     
   closePopover(){
       this.popover.dismiss();
-    }
+  }
     
   deTipoFilaABoolean(tipo : number){
       if(tipo == 1) return true;

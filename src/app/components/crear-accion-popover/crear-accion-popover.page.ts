@@ -29,8 +29,12 @@ export class CrearAccionPopoverPage implements OnInit {
     private platform: Platform, 
     private databaseService:DatabaseService
     ) {
-    }
+  }
   
-    ngOnInit() {
-    }
+  ngOnInit() {
+  }
+
+  closePopover(){
+    this.popover.dismiss();
+  }
 }
