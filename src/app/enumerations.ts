@@ -3,3 +3,8 @@ export enum tiposAcciones{
     aplicaciones = 2,
     personalizadas = 3
 }
+
+export enum tiposFilas{
+    fija = 1,
+    temporal = 2
+}

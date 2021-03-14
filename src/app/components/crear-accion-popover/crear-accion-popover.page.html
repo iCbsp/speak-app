@@ -1,17 +1,12 @@
 <ion-content>
   <ion-title>Acción personalizada</ion-title>
-  <ion-item>
+  <ion-item *ngFor="let fila of filas">
     <ion-icon name="arrow-up"></ion-icon>
     <ion-icon name="arrow-down"></ion-icon>
-    <ion-input value="asdasd"></ion-input>
-  </ion-item>
-  <ion-item>
-    <ion-icon name="arrow-up"></ion-icon>
-    <ion-icon name="arrow-down"></ion-icon>
-    <ion-input value="asdasd" style="color:gray"></ion-input>
+    <ion-input [(ngModel)]="fila.texto" [ngStyle]="{ 'color': colorDependiendoDelTipo(fila.tipo) }"></ion-input>
   </ion-item>
   <section style="text-align: center;">
-    <ion-button (click)="reproducirTexto()">Cancelar</ion-button>
+    <ion-button (click)="closePopover()">Cancelar</ion-button>
     <ion-button (click)="reproducirTexto()">Crear</ion-button>
   </section>
 </ion-content>

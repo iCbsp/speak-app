@@ -1,12 +1,18 @@
 <ion-content>
   <ion-title> {{ accion.titulo }} </ion-title>
-  <!-- <ion-input *ngFor="let fila of filas; let i = index" position="fixed" placeholder="(Frase final)" [disabled]="deTipoFilaABoolean(fila.tipo)" [value]="textoFilas[i]"></ion-input> -->
-  <!-- <ion-input *ngIf="asistenteInicial" position="fixed" disabled>{{ asistenteInicial }},</ion-input> -->
-  <ion-input *ngIf="asistenteInicial" position="fixed" disabled [value]="asistenteInicial + ','"></ion-input>
-  <ion-input *ngFor="let fila of filas; let i = index" position="fixed" [disabled]="deTipoFilaABoolean(fila.tipo)" [(ngModel)]="fila.texto"></ion-input>
-  <ion-input *ngIf="asistenteFinal" position="fixed" disabled [value]="asistenteFinal"></ion-input>
+
+  <ion-item *ngIf="asistenteInicial">
+    <ion-input disabled [value]="asistenteInicial + ','"></ion-input>
+  </ion-item>
+  <ion-item *ngFor="let fila of filas; let i = index">
+    <ion-input [disabled]="deTipoFilaABoolean(fila.tipo)" [(ngModel)]="fila.texto"></ion-input>
+  </ion-item>
+  <ion-item *ngIf="asistenteFinal">
+    <ion-input disabled [value]="asistenteFinal"></ion-input>
+  </ion-item>
+
   <section style="text-align: center;">
-  <ion-button (click)="reproducirTexto()">Cancelar</ion-button>
-  <ion-button (click)="reproducirTexto()">Reproducir</ion-button>
+    <ion-button (click)="closePopover()">Cancelar</ion-button>
+    <ion-button (click)="reproducirTexto()">Reproducir</ion-button>
   </section>
 </ion-content>
