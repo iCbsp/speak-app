@@ -1,8 +1,12 @@
 <ion-content>
   <ion-title>Acción personalizada</ion-title>
   <ion-item *ngFor="let fila of filas">
-    <ion-icon name="arrow-up"></ion-icon>
-    <ion-icon name="arrow-down"></ion-icon>
+    <ion-button size="small" (click)="mueveFilaArriba(fila.id)">
+      <ion-icon name="arrow-up"></ion-icon>
+    </ion-button>
+    <ion-button size="small" (click)="mueveFilaAbajo(fila.id)">
+      <ion-icon name="arrow-down"></ion-icon>
+    </ion-button>
     <ion-input [(ngModel)]="fila.texto" [ngStyle]="{ 'color': colorDependiendoDelTipo(fila.tipo) }"></ion-input>
   </ion-item>
   <section style="text-align: center;">
