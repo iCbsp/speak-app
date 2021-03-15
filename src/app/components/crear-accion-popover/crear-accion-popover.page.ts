@@ -40,10 +40,7 @@ export class CrearAccionPopoverPage implements OnInit {
   ngOnInit() {
     this.filas = new Array();
     this.filas.push(new FilaAccion(this.filaId++, "Fila fija", tiposFilas.fija));
-    this.filas.push(new FilaAccion(this.filaId++, "Fila temporal1", tiposFilas.temporal));
-    this.filas.push(new FilaAccion(this.filaId++, "Fila temporal2", tiposFilas.temporal));
-    this.filas.push(new FilaAccion(this.filaId++, "Fila temporal3", tiposFilas.temporal));
-    //[this.filas[0], this.filas[1]] = [this.filas[1], this.filas[0]];
+    this.filas.push(new FilaAccion(this.filaId++, "Fila temporal", tiposFilas.temporal));
   }
 
   closePopover(){
@@ -54,28 +51,25 @@ export class CrearAccionPopoverPage implements OnInit {
     for(let fila = 0; fila < this.filas.length; fila++){
       if(this.filas[fila].id == id && fila > 0){
         [this.filas[fila-1], this.filas[fila]] = [this.filas[fila], this.filas[fila-1]];
-        //this.intercambiaFilas(fila, fila - 1);
-        break;
-      }
-    }
-    this.changeDetector.detectChanges();
-  }
-  mueveFilaAbajo(id: number){
-    for(let fila = 0; fila < this.filas.length; fila++){
-      if(this.filas[fila].id == id && fila < this.filas.length-1){
-        [this.filas[fila+1], this.filas[fila]] = [this.filas[fila], this.filas[fila+1]];
-        //this.intercambiaFilas(fila, fila + 1);
         break;
       }
     }
     this.changeDetector.detectChanges();
   }
 
-  intercambiaFilas(pos1, pos2){
-    alert("Intercambiando filas " + pos1 + " y " + pos2)
-    let filaPos1 = this.filas[pos1];
-    this.filas[pos1] = this.filas[pos2];
-    this.filas[pos2] = filaPos1;
+  mueveFilaAbajo(id: number){
+    for(let fila = 0; fila < this.filas.length; fila++){
+      if(this.filas[fila].id == id && fila < this.filas.length-1){
+        [this.filas[fila+1], this.filas[fila]] = [this.filas[fila], this.filas[fila+1]];
+        break;
+      }
+    }
+    this.changeDetector.detectChanges();
+  }
+
+  creaFila(tipo: string){
+    if(tipo == 't') this.filas.push(new FilaAccion(this.filaId++, "Fila temporal", tiposFilas.temporal));
+    else if(tipo == 'f') this.filas.push(new FilaAccion(this.filaId++, "Fila fija", tiposFilas.fija));
   }
 
   colorDependiendoDelTipo(tipo: tiposFilas){

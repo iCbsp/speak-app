@@ -10,6 +10,14 @@
     <ion-input [(ngModel)]="fila.texto" [ngStyle]="{ 'color': colorDependiendoDelTipo(fila.tipo) }"></ion-input>
   </ion-item>
   <section style="text-align: center;">
+    <ion-button (click)="creaFila('f')" style="background-color: #000000;">
+      <ion-icon name="add-outline"></ion-icon>
+    </ion-button>
+    <ion-button (click)="creaFila('t')" style="color: #808080;">
+      <ion-icon name="add-outline"></ion-icon>
+    </ion-button>
+  </section>
+  <section style="text-align: center;">
     <ion-button (click)="closePopover()">Cancelar</ion-button>
     <ion-button (click)="reproducirTexto()">Crear</ion-button>
   </section>
