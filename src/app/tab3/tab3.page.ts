@@ -45,6 +45,7 @@ export class Tab3Page {
         }
       });
       this.databaseService.cambio.subscribe(()=>{
+        this.consigueAcciones();
         // alert("Cambio en la base de datos");
       });
     }

@@ -16,7 +16,7 @@ import { Platform } from '@ionic/angular';
 import { Router } from '@angular/router';
 
 import { FilaAccion } from 'src/app/structures'
-import { tiposFilas } from 'src/app/enumerations';
+import { tiposAcciones, tiposFilas } from 'src/app/enumerations';
 
 @Component({
   selector: 'app-crear-accion-popover',
@@ -70,6 +70,14 @@ export class CrearAccionPopoverPage implements OnInit {
   creaFila(tipo: string){
     if(tipo == 't') this.filas.push(new FilaAccion(this.filaId++, "Fila temporal", tiposFilas.temporal));
     else if(tipo == 'f') this.filas.push(new FilaAccion(this.filaId++, "Fila fija", tiposFilas.fija));
+  }
+
+  creaAccion(){
+    if(this.filas && this.filas.length){
+      this.databaseService.publicaAccion(tiposAcciones.personalizadas, "Sin nombre", undefined, this.filas).then(() => {
+        this.closePopover();
+      });
+    } else alert("Para crear una acción es necesario que haya al menos una fila");
   }
 
   colorDependiendoDelTipo(tipo: tiposFilas){
