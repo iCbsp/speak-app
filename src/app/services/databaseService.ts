@@ -253,11 +253,12 @@ export class DatabaseService {
         return asistente;
     }
 
-    public async obtenAcciones(tipo : tiposAcciones, usuario? : number){
+    public async obtenAcciones(tipo : tiposAcciones){
         let acciones = null;
         let usuarioQuery = "";
-        if(usuario)
-            usuarioQuery = " AND usuario = " + usuario;
+        // if(usuario)
+        //     usuarioQuery = " AND usuario = " + usuario;
+        if(tipo == tiposAcciones.personalizadas) usuarioQuery = " AND usuario = " + this.usuarioActual;
             
         await this.database.executeSql(`SELECT * FROM accion WHERE tipo = ${tipo}${usuarioQuery};`, [])
         .then((accionesBDD)=>{

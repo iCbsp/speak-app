@@ -27,7 +27,7 @@ export class CrearAccionPopoverPage implements OnInit {
   
   filas: FilaAccion[];
   filaId = 0;
-  nombreAccion = "Nueva acción";
+  nombreAccion = "";
 
   constructor(
     private changeDetector: ChangeDetectorRef,
