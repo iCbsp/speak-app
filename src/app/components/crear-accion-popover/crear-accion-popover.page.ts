@@ -72,6 +72,12 @@ export class CrearAccionPopoverPage implements OnInit {
     else if(tipo == 'f') this.filas.push(new FilaAccion(this.filaId++, "Fila fija", tiposFilas.fija));
   }
 
+  borraFila(id: number){
+    for(let fila = 0; fila < this.filas.length; fila++){
+      if(this.filas[fila].id == id) this.filas.splice(fila, 1);
+    }
+  }
+
   creaAccion(){
     if(this.filas && this.filas.length){
       this.databaseService.publicaAccion(tiposAcciones.personalizadas, "Sin nombre", undefined, this.filas).then(() => {

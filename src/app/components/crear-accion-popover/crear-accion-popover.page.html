@@ -8,6 +8,10 @@
       <ion-icon name="arrow-down"></ion-icon>
     </ion-button>
     <ion-input [(ngModel)]="fila.texto" [ngStyle]="{ 'color': colorDependiendoDelTipo(fila.tipo) }"></ion-input>
+    <ion-button size="small" (click)="borraFila(fila.id)">
+      <ion-icon name="close-outline"></ion-icon>
+    </ion-button>
+
   </ion-item>
   <section style="text-align: center;">
     <ion-button (click)="creaFila('f')">
