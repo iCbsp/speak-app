@@ -27,6 +27,7 @@ export class CrearAccionPopoverPage implements OnInit {
   
   filas: FilaAccion[];
   filaId = 0;
+  nombreAccion = "Nueva acción";
 
   constructor(
     private changeDetector: ChangeDetectorRef,
@@ -39,8 +40,8 @@ export class CrearAccionPopoverPage implements OnInit {
   
   ngOnInit() {
     this.filas = new Array();
-    this.filas.push(new FilaAccion(this.filaId++, "Fila fija", tiposFilas.fija));
-    this.filas.push(new FilaAccion(this.filaId++, "Fila temporal", tiposFilas.temporal));
+    this.filas.push(new FilaAccion(this.filaId++, "", tiposFilas.fija));
+    this.filas.push(new FilaAccion(this.filaId++, "", tiposFilas.temporal));
   }
 
   closePopover(){
@@ -80,14 +81,14 @@ export class CrearAccionPopoverPage implements OnInit {
 
   creaAccion(){
     if(this.filas && this.filas.length){
-      this.databaseService.publicaAccion(tiposAcciones.personalizadas, "Sin nombre", undefined, this.filas).then(() => {
+      this.databaseService.publicaAccion(tiposAcciones.personalizadas, this.nombreAccion, undefined, this.filas).then(() => {
         this.closePopover();
       });
     } else alert("Para crear una acción es necesario que haya al menos una fila");
   }
 
   colorDependiendoDelTipo(tipo: tiposFilas){
-    if(tipo == tiposFilas.fija) return "#000000";
-    else if(tipo == tiposFilas.temporal) return "#808080";
+    if(tipo == tiposFilas.fija) return "#808080";
+    else if(tipo == tiposFilas.temporal) return "#000000";
   }
 }

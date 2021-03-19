@@ -1,18 +1,23 @@
 <ion-content>
-  <ion-title>Acción personalizada</ion-title>
-  <ion-item *ngFor="let fila of filas">
-    <ion-button size="small" (click)="mueveFilaArriba(fila.id)">
-      <ion-icon name="arrow-up"></ion-icon>
-    </ion-button>
-    <ion-button size="small" (click)="mueveFilaAbajo(fila.id)">
-      <ion-icon name="arrow-down"></ion-icon>
-    </ion-button>
-    <ion-input [(ngModel)]="fila.texto" [ngStyle]="{ 'color': colorDependiendoDelTipo(fila.tipo) }"></ion-input>
-    <ion-button size="small" (click)="borraFila(fila.id)">
-      <ion-icon name="close-outline"></ion-icon>
-    </ion-button>
-
-  </ion-item>
+  <section style="text-align: center;">
+    <ion-input [(ngModel)]="nombreAccion"></ion-input>
+  </section>
+  <section style="text-align: center;">
+    <ion-item *ngFor="let fila of filas">
+      <ion-button size="small" (click)="mueveFilaArriba(fila.id)">
+        <ion-icon name="arrow-up"></ion-icon>
+      </ion-button>
+      <ion-button size="small" (click)="mueveFilaAbajo(fila.id)">
+        <ion-icon name="arrow-down"></ion-icon>
+      </ion-button>
+      <!-- <ion-input [(ngModel)]="fila.texto" [ngStyle]="{ 'color': colorDependiendoDelTipo(fila.tipo) }"></ion-input> -->
+      <ion-input *ngIf="fila.tipo == 1" placeholder="Fila fija" [(ngModel)]="fila.texto" [ngStyle]="{ 'color': colorDependiendoDelTipo(fila.tipo) }"></ion-input>
+      <ion-input *ngIf="fila.tipo == 2" placeholder="Fila temporal" [(ngModel)]="fila.texto" [ngStyle]="{ 'color': colorDependiendoDelTipo(fila.tipo) }"></ion-input>
+      <ion-button size="small" (click)="borraFila(fila.id)">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-item>
+  </section>
   <section style="text-align: center;">
     <ion-button (click)="creaFila('f')">
       <ion-icon slot="start" name="add-outline" color="secondary"></ion-icon>
