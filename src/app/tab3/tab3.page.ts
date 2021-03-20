@@ -27,6 +27,8 @@ import { tiposAcciones } from 'src/app/enumerations';
 export class Tab3Page {
 
   acciones = [];
+  idAccionesSeleccionadas = [];
+  modoGrupo = false;
 
   constructor(
     public alertController: AlertController, // Alertas - Prompt
@@ -75,18 +77,41 @@ export class Tab3Page {
     }
   }
 
-  abrirAccionPopover(accion){
-    if(!this.platform.is('desktop') && accion){
-      this.popover.create({
-      component:AccionPopoverPage,
-      componentProps: {
-        accion: accion
-      },
-      showBackdrop: true
-      }).then((popoverElement)=>{
-        popoverElement.present();
-      })
+  abrirAccionPopover(accionSeleccionada){
+    if(!this.modoGrupo){
+      if(!this.platform.is('desktop') && accionSeleccionada){
+        this.popover.create({
+        component:AccionPopoverPage,
+        componentProps: {
+          accion: accionSeleccionada
+        },
+        showBackdrop: true
+        }).then((popoverElement)=>{
+          popoverElement.present();
+        })
+      }
+    } else {
+      let estabaSeleccioada = false;
+      for(let accion = 0; accion < this.idAccionesSeleccionadas.length; accion++){
+        if(this.idAccionesSeleccionadas[accion] == accionSeleccionada.id){
+          this.idAccionesSeleccionadas.splice(accion, 1);
+          estabaSeleccioada = true;
+          break;
+        }
+      }
+      if(!estabaSeleccioada) this.idAccionesSeleccionadas.push(accionSeleccionada.id);
     }
+  }
+
+  obtenIndiceSeleccionada(accionPreguntada){
+    for(let indiceAccion = 0; indiceAccion < this.idAccionesSeleccionadas.length; indiceAccion++){
+      if(accionPreguntada.id == this.idAccionesSeleccionadas[indiceAccion]) return (indiceAccion + 1);
+    }
+  }
+
+  conmutarModoGrupo(){
+    this.modoGrupo = !this.modoGrupo;
+    this.idAccionesSeleccionadas = new Array();
   }
 
 }
