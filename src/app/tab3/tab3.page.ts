@@ -109,6 +109,48 @@ export class Tab3Page {
     }
   }
 
+  async borrarAccionesSeleccionadas(){
+    let accionesABorrar = "";
+
+    if(this.idAccionesSeleccionadas.length){
+      for(let indiceAccionesSeleccionadas = 0; indiceAccionesSeleccionadas < this.idAccionesSeleccionadas.length; indiceAccionesSeleccionadas++){
+        for(let indiceAcciones = 0; indiceAcciones < this.acciones.length; indiceAcciones++){
+          if(this.acciones[indiceAcciones].id == this.idAccionesSeleccionadas[indiceAccionesSeleccionadas]) accionesABorrar += "<br>'" + this.acciones[indiceAcciones].titulo + "'";
+        }
+      }
+    } else {
+      alert("Debe de seleccionar al menos una acción");
+      return;
+    }
+
+    const ventanaConfirmacionBorrarAccion = await this.alertController.create({
+      cssClass: 'ventanaConfirmacionBorrarAccion',
+      header: 'Borrar acciones',
+      message: '¿Seguro que quiere borrar las siguientes acciones?<br>' + accionesABorrar,
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancelar',
+          cssClass: 'secondary',
+          handler: () => {
+            console.log('Confirm Cancel');
+          }
+        }, {
+          text: 'Confirmar',
+          role: 'confirmar',
+          handler: data => {
+            console.log('Confirm Ok');
+            this.databaseService.borraAcciones(this.idAccionesSeleccionadas).then(() => {
+              this.idAccionesSeleccionadas = new Array();
+            });
+          }
+        }
+      ]
+    });
+
+    await ventanaConfirmacionBorrarAccion.present();
+  }
+
   conmutarModoGrupo(){
     this.modoGrupo = !this.modoGrupo;
     this.idAccionesSeleccionadas = new Array();

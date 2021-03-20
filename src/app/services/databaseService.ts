@@ -444,6 +444,28 @@ export class DatabaseService {
         } else alert("borraAsistente: Usuario no valido");
     }
 
+    public borraAcciones(idAcciones : number[]){
+        let devuelve : Promise<any>;
+          
+        if(idAcciones.length){
+            for(let indiceIdAcciones = 0; indiceIdAcciones < idAcciones.length; indiceIdAcciones++){
+                devuelve = this.database.executeSql(
+                    `DELETE FROM fila WHERE accion = ${idAcciones[indiceIdAcciones]};`, [])
+                    .finally(() => {
+                        devuelve = this.database.executeSql(
+                            `DELETE FROM accion WHERE id = ${idAcciones[indiceIdAcciones]};`, [])
+                            .then(() => this.cambio.next(!this.cambio.value))
+                            .catch((err) => alert("Error borrando accion -> " + JSON.stringify(err)));
+                    })
+            }
+        } else {
+            alert("borraAcciones: No se han pasado acciones");
+            devuelve = new Promise(() => {});
+        }
+
+        return devuelve;
+    }
+
     private borraTablas() {
         // Usuario
         this.database.executeSql(
