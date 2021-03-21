@@ -93,7 +93,7 @@ export class Tab3Page {
         });
         
         return await popover.present();
-      }
+      } else alert("La función no es compatible con este dispositivo");
     } else {
       let estabaSeleccioada = false;
       for(let accion = 0; accion < this.idAccionesSeleccionadas.length; accion++){

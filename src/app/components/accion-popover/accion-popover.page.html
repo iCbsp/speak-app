@@ -1,14 +1,14 @@
 <ion-content>
   <ion-item>
-    <h2 style="display: inline-block;"> {{ accion.titulo }} </h2>
-    <section>
-      <ion-button slot="end" *ngIf="accion.tipo == 3" (click)="aaa()">
+    <section style="text-align: right;">
+      <ion-button slot="end" *ngIf="accion.tipo == 3" (click)="abrirEditarAccionPopover()">
         <ion-icon name="create-outline"></ion-icon>
       </ion-button>
       <ion-button color="danger" slot="end" *ngIf="accion.tipo == 3" (click)="ventanaBorrarAccion()">
         <ion-icon name="trash-outline"></ion-icon>
       </ion-button>
     </section>
+    <h2> {{ accion.titulo }} </h2>
   </ion-item>
 
   <ion-item *ngIf="asistenteInicial">
