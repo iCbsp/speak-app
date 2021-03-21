@@ -1,4 +1,4 @@
-import { tiposFilas } from 'src/app/enumerations'
+import { TiposFilas } from 'src/app/enumerations'
 
 export class FilaAccion {
 
@@ -10,5 +10,5 @@ export class FilaAccion {
 
     id: number;
     texto: string;
-    tipo: tiposFilas;
+    tipo: TiposFilas;
 }

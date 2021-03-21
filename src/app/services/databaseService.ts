@@ -4,7 +4,7 @@ import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
 import { BehaviorSubject } from 'rxjs';
 
 import { FilaAccion } from 'src/app/structures';
-import { tiposAcciones, tiposFilas } from 'src/app/enumerations';
+import { TiposAcciones, TiposFilas } from 'src/app/enumerations';
 
 @Injectable()
 export class DatabaseService {
@@ -140,15 +140,15 @@ export class DatabaseService {
         this.insertaAsistente("Ok Google", "");
         this.insertaAsistente("Siri", "");
 
-        this.insertaAccion(0, tiposAcciones.basicas, "Alarma", "", "").then((accion) => { // Tipo 1: Fijo. Tipo 2: Editable.
-            this.insertaFila(accion.insertId, tiposFilas.fija, "pon una alarma");
-            this.insertaFila(accion.insertId, tiposFilas.temporal, "hoy a las 9:00");
+        this.insertaAccion(0, TiposAcciones.basicas, "Alarma", "", "").then((accion) => { // Tipo 1: Fijo. Tipo 2: Editable.
+            this.insertaFila(accion.insertId, TiposFilas.fija, "pon una alarma");
+            this.insertaFila(accion.insertId, TiposFilas.temporal, "hoy a las 9:00");
         });
-        this.insertaAccion(0, tiposAcciones.basicas, "El tiempo", "", "").then((accion) => { // Tipo 1: Fijo. Tipo 2: Editable.
-            this.insertaFila(accion.insertId, tiposFilas.fija, "¿qué tiempo hará");
-            this.insertaFila(accion.insertId, tiposFilas.temporal, "hoy");
-            this.insertaFila(accion.insertId, tiposFilas.temporal, "en San Vicente del Raspeig");
-            this.insertaFila(accion.insertId, tiposFilas.fija, "?");
+        this.insertaAccion(0, TiposAcciones.basicas, "El tiempo", "", "").then((accion) => { // Tipo 1: Fijo. Tipo 2: Editable.
+            this.insertaFila(accion.insertId, TiposFilas.fija, "¿qué tiempo hará");
+            this.insertaFila(accion.insertId, TiposFilas.temporal, "hoy");
+            this.insertaFila(accion.insertId, TiposFilas.temporal, "en San Vicente del Raspeig");
+            this.insertaFila(accion.insertId, TiposFilas.fija, "?");
         });
         this.publicaUsuario("Usuario", "#32a852").then(() => this.lista.next(true));
 
@@ -253,12 +253,12 @@ export class DatabaseService {
         return asistente;
     }
 
-    public async obtenAcciones(tipo : tiposAcciones){
+    public async obtenAcciones(tipo : TiposAcciones){
         let acciones = null;
         let usuarioQuery = "";
         // if(usuario)
         //     usuarioQuery = " AND usuario = " + usuario;
-        if(tipo == tiposAcciones.personalizadas) usuarioQuery = " AND usuario = " + this.usuarioActual;
+        if(tipo == TiposAcciones.personalizadas) usuarioQuery = " AND usuario = " + this.usuarioActual;
             
         await this.database.executeSql(`SELECT * FROM accion WHERE tipo = ${tipo}${usuarioQuery};`, [])
         .then((accionesBDD)=>{
@@ -334,7 +334,7 @@ export class DatabaseService {
         return this.insertaAsistente(inicial, final).then(() => this.cambio.next(!this.cambio.value));
     }
 
-    public publicaAccion(tipo: tiposAcciones, nombre: string, usuario?: number, filas?: FilaAccion[]){
+    public publicaAccion(tipo: TiposAcciones, nombre: string, usuario?: number, filas?: FilaAccion[]){
         // if(!filas || !filas.length) {
         //     alert("Error publicando accion -> La acción debe de tener al menos una fila");
         //     return null;
@@ -374,7 +374,7 @@ export class DatabaseService {
         // } else alert("insertaAsistente: Texto no valido");
     }
 
-    private insertaFila(accion : number, tipo : tiposFilas, textoTemp? : string){
+    private insertaFila(accion : number, tipo : TiposFilas, textoTemp? : string){
         let texto = "";
         if(textoTemp) texto = textoTemp;
 
@@ -385,7 +385,7 @@ export class DatabaseService {
         } else alert("insertaFila: Texto no valido");
     }
 
-    private insertaAccion(usuario : number, tipo : tiposAcciones, titulo : string, imagen : string, orden_filas : string){
+    private insertaAccion(usuario : number, tipo : TiposAcciones, titulo : string, imagen : string, orden_filas : string){
         // if(inicial && final){
             return this.database.executeSql(
                 `INSERT INTO accion(usuario, tipo, titulo, imagen, orden_filas, ultimo_uso) VALUES (${usuario}, ${tipo}, '${titulo}', '${imagen}', '${orden_filas}', datetime('now'));`, [])

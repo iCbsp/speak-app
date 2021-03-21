@@ -13,7 +13,8 @@ const routes: Routes = [
   {
     path: 'nosotros',
     loadChildren: () => import('./pages/nosotros/nosotros.module').then( m => m.NosotrosPageModule)
-  },  {
+  },
+  {
     path: 'reproduccion',
     loadChildren: () => import('./pages/reproduccion/reproduccion.module').then( m => m.ReproduccionPageModule)
   },
@@ -24,10 +25,6 @@ const routes: Routes = [
   {
     path: 'accion-popover',
     loadChildren: () => import('./components/accion-popover/accion-popover.module').then( m => m.AccionPopoverPageModule)
-  },
-  {
-    path: 'crear-accion-popover',
-    loadChildren: () => import('./components/crear-accion-popover/crear-accion-popover.module').then( m => m.CrearAccionPopoverPageModule)
   }
 
 ];

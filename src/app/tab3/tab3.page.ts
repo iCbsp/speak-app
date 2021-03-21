@@ -14,10 +14,9 @@ import { ChangeDetectorRef } from '@angular/core';
 
 // Popovers
 import { PopoverController } from '@ionic/angular';
-import { CrearAccionPopoverPage } from 'src/app/components/crear-accion-popover/crear-accion-popover.page';
 import { AccionPopoverPage } from 'src/app/components/accion-popover/accion-popover.page';
 
-import { tiposAcciones } from 'src/app/enumerations';
+import { ModoAccion, TiposAcciones } from 'src/app/enumerations';
 
 @Component({
   selector: 'app-tab3',
@@ -54,7 +53,7 @@ export class Tab3Page {
   }
   
   consigueAcciones(){
-    this.databaseService.obtenAcciones(tiposAcciones.personalizadas).then((accionesBDD) => {
+    this.databaseService.obtenAcciones(TiposAcciones.personalizadas).then((accionesBDD) => {
       this.acciones = [];
       if(accionesBDD) {
         for(let i = 0; i < accionesBDD.length; i++)
@@ -67,8 +66,9 @@ export class Tab3Page {
   crearAccionPopover(){
     if(!this.platform.is('desktop')){
       this.popover.create({
-      component:CrearAccionPopoverPage,
+      component:AccionPopoverPage,
       componentProps: {
+        modoAccion: ModoAccion.crear
       },
       showBackdrop: true
       }).then((popoverElement)=>{
@@ -83,7 +83,8 @@ export class Tab3Page {
         const popover = await this.popover.create({
         component:AccionPopoverPage,
         componentProps: {
-          accion: accionSeleccionada
+          accion: accionSeleccionada,
+          modoAccion: ModoAccion.ver
         },
         showBackdrop: true
         });

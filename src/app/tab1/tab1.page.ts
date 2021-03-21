@@ -16,7 +16,7 @@ import { ChangeDetectorRef } from '@angular/core';
 import { PopoverController } from '@ionic/angular';
 import { AccionPopoverPage } from 'src/app/components/accion-popover/accion-popover.page';
 
-import { tiposAcciones } from 'src/app/enumerations';
+import { TiposAcciones } from 'src/app/enumerations';
 
 @Component({
   selector: 'app-tab1',
@@ -49,7 +49,7 @@ export class Tab1Page {
   }
   
   consigueAcciones(){
-    this.databaseService.obtenAcciones(tiposAcciones.basicas).then((accionesBDD) => {
+    this.databaseService.obtenAcciones(TiposAcciones.basicas).then((accionesBDD) => {
       this.acciones = [];
       if(accionesBDD) {
         for(let i = 0; i < accionesBDD.length; i++)
