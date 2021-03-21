@@ -75,6 +75,7 @@ export class AccionPopoverPage implements OnInit {
           });
         } else if(this.modoAccion == ModoAccion.crear){
           this.accion.titulo = "";
+          this.filaId = 0;
           this.filas = new Array();
           this.filas.push(new FilaAccion(this.filaId++, "", TiposFilas.fija));
           this.filas.push(new FilaAccion(this.filaId++, "", TiposFilas.temporal));
@@ -189,9 +190,29 @@ export class AccionPopoverPage implements OnInit {
       });
     } else alert("Para crear una acción es necesario que haya al menos una fila");
   }
-
+  
   colorDependiendoDelTipo(tipo: TiposFilas){
     if(tipo == TiposFilas.fija) return "#808080";
     else if(tipo == TiposFilas.temporal) return "#000000";
+  }
+  
+  /*
+  *
+  * Metodos de editar accion
+  * 
+  */
+  cambiaAModoEditar(){
+    this.modoAccion = ModoAccion.editar;
+    this.ngOnInit();
+  }
+
+  editaAccion(){
+    if(this.filas && this.filas.length){
+      this.databaseService.editaAccion(this.accion.id, this.filas, this.accion.titulo, "").then(() => {
+        // this.closePopover();
+        this.modoAccion = ModoAccion.ver;
+        this.ngOnInit();
+      });
+    } else alert("Para guardar una acción es necesario que haya al menos una fila");
   }
 }

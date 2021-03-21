@@ -1,7 +1,7 @@
 <ion-content *ngIf="modoAccion == 1">
   <ion-item>
     <section style="text-align: right;">
-      <ion-button slot="end" *ngIf="accion.tipo == 3" (click)="abrirEditarAccionPopover()">
+      <ion-button slot="end" *ngIf="accion.tipo == 3" (click)="cambiaAModoEditar()">
         <ion-icon name="create-outline"></ion-icon>
       </ion-button>
       <ion-button color="danger" slot="end" *ngIf="accion.tipo == 3" (click)="ventanaBorrarAccion()">
@@ -59,6 +59,7 @@
   </section>
   <section style="text-align: center;">
     <ion-button (click)="closePopover()">Cancelar</ion-button>
-    <ion-button (click)="creaAccion()">Crear</ion-button>
+    <ion-button *ngIf="modoAccion == 2" (click)="editaAccion()">Guardar</ion-button>
+    <ion-button *ngIf="modoAccion == 3" (click)="creaAccion()">Crear</ion-button>
   </section>
 </ion-content>

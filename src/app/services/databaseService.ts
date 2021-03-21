@@ -411,6 +411,23 @@ export class DatabaseService {
         } else alert("editaAsistente: Asistente no válidos");
     }
 
+    public editaAccion(id: number, filas: FilaAccion[], titulo: string, imagen: string){
+        let ordenFilas = "";
+        if(id){
+            return this.database.executeSql(
+                `UPDATE accion SET titulo = '${titulo}', imagen = '${imagen}', orden_filas = '${ordenFilas}' WHERE id = ${id}`, [])
+                .then(() => {
+                    return this.borraFilasDeAccion(id).then(() => {
+                        if(filas && filas != undefined) filas.map(fila => {
+                            this.insertaFila(id, fila.tipo, fila.texto);
+                        });
+                        this.cambio.next(!this.cambio.value);
+                    });
+            });
+        } else alert("editaAccion: Acción no válida");
+    }
+    
+
     public borraUsuario(usuario : number){
         if(usuario){
             return this.database.executeSql(
@@ -449,8 +466,7 @@ export class DatabaseService {
           
         if(idAcciones.length){
             for(let indiceIdAcciones = 0; indiceIdAcciones < idAcciones.length; indiceIdAcciones++){
-                devuelve = this.database.executeSql(
-                    `DELETE FROM fila WHERE accion = ${idAcciones[indiceIdAcciones]};`, [])
+                devuelve = this.borraFilasDeAccion(idAcciones[indiceIdAcciones])
                     .finally(() => {
                         devuelve = this.database.executeSql(
                             `DELETE FROM accion WHERE id = ${idAcciones[indiceIdAcciones]};`, [])
@@ -464,6 +480,14 @@ export class DatabaseService {
         }
 
         return devuelve;
+    }
+
+    public borraFilasDeAccion(id: number){
+        return this.database.executeSql(
+            `DELETE FROM fila WHERE accion = ${id};`, [])
+            .then(() => {
+                this.cambio.next(!this.cambio.value);
+        });
     }
 
     private borraTablas() {
