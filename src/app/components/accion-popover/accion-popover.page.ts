@@ -3,6 +3,9 @@ import { Component, OnInit } from '@angular/core';
 // Popover
 import { PopoverController } from '@ionic/angular';
 
+// Alertas - Prompt
+import { AlertController } from '@ionic/angular';
+
 // Base de datos
 import { DatabaseService } from 'src/app/services/databaseService';
 
@@ -32,7 +35,8 @@ export class AccionPopoverPage implements OnInit {
     private changeDetector: ChangeDetectorRef,
     private popover:PopoverController,
     private router: Router, // Para pasar parametros
-    private platform: Platform, 
+    private platform: Platform,
+    public alertController: AlertController, // Alertas - Prompt
     private databaseService:DatabaseService
     ) {
     }
@@ -100,5 +104,34 @@ export class AccionPopoverPage implements OnInit {
         modo_simple: this.configuracion.modo_simple
       }
     ]);
+  }
+
+  async ventanaBorrarAccion(){
+    const ventanaConfirmacionBorrarAccion = await this.alertController.create({
+      cssClass: 'ventanaConfirmacionBorrarAccion',
+      header: 'Borrar acciones',
+      message: '¿Seguro que quiere borrar las siguientes acciones?<br><br>' + this.accion.titulo,
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancelar',
+          cssClass: 'secondary',
+          handler: () => {
+            console.log('Confirm Cancel');
+          }
+        }, {
+          text: 'Confirmar',
+          role: 'confirmar',
+          handler: () => {
+            console.log('Confirm Ok');
+            this.databaseService.borraAcciones([this.accion.id]).then(() => {
+              this.closePopover();
+            });
+          }
+        }
+      ]
+    });
+
+    await ventanaConfirmacionBorrarAccion.present();
   }
 }

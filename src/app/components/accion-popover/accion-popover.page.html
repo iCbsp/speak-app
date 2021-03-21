@@ -1,11 +1,22 @@
 <ion-content>
-  <ion-title> {{ accion.titulo }} </ion-title>
+  <ion-item>
+    <h2 style="display: inline-block;"> {{ accion.titulo }} </h2>
+    <section>
+      <ion-button slot="end" *ngIf="accion.tipo == 3" (click)="aaa()">
+        <ion-icon name="create-outline"></ion-icon>
+      </ion-button>
+      <ion-button color="danger" slot="end" *ngIf="accion.tipo == 3" (click)="ventanaBorrarAccion()">
+        <ion-icon name="trash-outline"></ion-icon>
+      </ion-button>
+    </section>
+  </ion-item>
 
   <ion-item *ngIf="asistenteInicial">
     <ion-input disabled [value]="asistenteInicial + ','"></ion-input>
   </ion-item>
   <ion-item *ngFor="let fila of filas; let i = index">
-    <ion-input [disabled]="deTipoFilaABoolean(fila.tipo)" [(ngModel)]="fila.texto"></ion-input>
+    <ion-input *ngIf="fila.tipo == 1" placeholder="Fila fija" [disabled]="deTipoFilaABoolean(fila.tipo)" [(ngModel)]="fila.texto"></ion-input>
+    <ion-input *ngIf="fila.tipo == 2" placeholder="Fila temporal" [disabled]="deTipoFilaABoolean(fila.tipo)" [(ngModel)]="fila.texto"></ion-input>
   </ion-item>
   <ion-item *ngIf="asistenteFinal">
     <ion-input disabled [value]="asistenteFinal"></ion-input>

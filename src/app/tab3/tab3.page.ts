@@ -77,18 +77,22 @@ export class Tab3Page {
     }
   }
 
-  abrirAccionPopover(accionSeleccionada){
+  async abrirAccionPopover(accionSeleccionada){
     if(!this.modoGrupo){
       if(!this.platform.is('desktop') && accionSeleccionada){
-        this.popover.create({
+        const popover = await this.popover.create({
         component:AccionPopoverPage,
         componentProps: {
           accion: accionSeleccionada
         },
         showBackdrop: true
-        }).then((popoverElement)=>{
-          popoverElement.present();
-        })
+        });
+
+        popover.onDidDismiss().then((result) => {
+          //alert(result.data);
+        });
+        
+        return await popover.present();
       }
     } else {
       let estabaSeleccioada = false;
@@ -138,7 +142,7 @@ export class Tab3Page {
         }, {
           text: 'Confirmar',
           role: 'confirmar',
-          handler: data => {
+          handler: () => {
             console.log('Confirm Ok');
             this.databaseService.borraAcciones(this.idAccionesSeleccionadas).then(() => {
               this.idAccionesSeleccionadas = new Array();
