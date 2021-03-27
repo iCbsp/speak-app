@@ -33,8 +33,8 @@ export class MenuComponent implements OnInit {
     this.databaseService.lista.subscribe((ready)=>{
       if(ready){
         this.databaseService.obtenConfiguracion().then((configuracion)=>{
-          configuracion.modo_simple = 0;
-          configuracion.respuesta = 0;
+          this.modoSimpleActivado = false;
+          this.respuestaActivada = false;
           if(configuracion.modo_simple) this.modoSimpleActivado = true;
           if(configuracion.respuesta) this.respuestaActivada = true;
         });
