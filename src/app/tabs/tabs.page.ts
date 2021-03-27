@@ -33,8 +33,7 @@ import { UsuarioPopoverPage } from 'src/app/components/usuario-popover/usuario-p
 })
 export class TabsPage {
 
-  //asistente: string;
-  asistente = "Alexa"; // cambiar si hay persistencia
+  asistente = "Alexa";
 
   preguntadaAccesibilidad = true;
   preguntadoUsoDeDatos = true;
@@ -59,25 +58,23 @@ export class TabsPage {
     private databaseService:DatabaseService,
     private location: Location,
     private popover:PopoverController
-  ){
+  ){}
+
+  ngOnInit() {
     if(!this.preguntadoUsoDeDatos) this.ventanaPoliticas();
     if(!this.preguntadaAccesibilidad) this.ventanaAccesibilidad();
+    this.actualizaPermisoSTT();
 
-    if(!platform.is('desktop')){
-      databaseService.lista.subscribe((ready)=>{
+    if(!this.platform.is('desktop')){
+      this.databaseService.lista.subscribe((ready)=>{
         if(ready){
           this.consigueUsuarios();
           this.consigueAsistentes();
           
-          // this.location.onUrlChange((url) => {
-          //   if(url.toString() == "/tabs/tab1" || url.toString() == "/tabs/tab2" || url.toString() == "/tabs/tab3") {
-          //     this.consigueUsuarios();
-          //     this.consigueAsistentes();
-          //   }
-          // });
-          databaseService.cambio.subscribe(()=>{
+          this.databaseService.cambio.subscribe(()=>{
             this.consigueUsuarios();
             this.consigueAsistentes();
+            this.actualizaPermisoSTT();
           });
         }
       });
@@ -138,6 +135,13 @@ export class TabsPage {
 
   tienePermisoSTT(){
     return this.permisoSTT;
+  }
+
+  actualizaPermisoSTT(){
+    this.speechRecognition.hasPermission()
+    .then((hasPermission: boolean) => {
+      this.permisoSTT = hasPermission;
+    });
   }
 
   iniciaSTT(){

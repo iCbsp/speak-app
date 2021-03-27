@@ -11,15 +11,15 @@
     <h2> {{ accion.titulo }} </h2>
   </ion-item>
 
-  <ion-item *ngIf="asistenteInicial">
-    <ion-input disabled [value]="asistenteInicial + ','"></ion-input>
+  <ion-item *ngIf="asistente.inicial">
+    <ion-input disabled [value]="asistente.inicial + ','"></ion-input>
   </ion-item>
   <ion-item *ngFor="let fila of filas; let i = index">
     <ion-input *ngIf="fila.tipo == 1" placeholder="Fila fija" [disabled]="deTipoFilaABoolean(fila.tipo)" [(ngModel)]="fila.texto"></ion-input>
     <ion-input *ngIf="fila.tipo == 2" placeholder="Fila temporal" [disabled]="deTipoFilaABoolean(fila.tipo)" [(ngModel)]="fila.texto"></ion-input>
   </ion-item>
-  <ion-item *ngIf="asistenteFinal">
-    <ion-input disabled [value]="asistenteFinal"></ion-input>
+  <ion-item *ngIf="asistente.final">
+    <ion-input disabled [value]="asistente.final"></ion-input>
   </ion-item>
 
   <section style="text-align: center;">

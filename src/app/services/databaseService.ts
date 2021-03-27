@@ -296,7 +296,7 @@ export class DatabaseService {
     public cambiaRespuesta(respuestaBool: boolean){
         let respuestaInt = 0;
         if(respuestaBool) respuestaInt = 1;
-        this.database.executeSql(
+        return this.database.executeSql(
             `UPDATE configuracion SET respuesta = ${respuestaInt} WHERE usuario = ${this.usuarioActual} `, [])
         .then(() => this.cambio.next(!this.cambio.value))
         .catch((err) => {

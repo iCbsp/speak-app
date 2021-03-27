@@ -20,10 +20,21 @@ export class MenuComponent implements OnInit {
   constructor(
     private plt: Platform,
     private databaseService:DatabaseService
-  ) {
-    databaseService.lista.subscribe((ready)=>{
+  ) {}
+
+  ngOnInit() {
+    this.obtenConfiguracion();
+    this.databaseService.cambio.subscribe(()=>{
+      this.obtenConfiguracion();
+    });
+  }
+
+  obtenConfiguracion(){
+    this.databaseService.lista.subscribe((ready)=>{
       if(ready){
-        databaseService.obtenConfiguracion().then((configuracion)=>{
+        this.databaseService.obtenConfiguracion().then((configuracion)=>{
+          configuracion.modo_simple = 0;
+          configuracion.respuesta = 0;
           if(configuracion.modo_simple) this.modoSimpleActivado = true;
           if(configuracion.respuesta) this.respuestaActivada = true;
         });
@@ -31,6 +42,9 @@ export class MenuComponent implements OnInit {
     });
   }
 
+  public getRespuesta(){
+    return this.respuestaActivada;
+  }
   
   cambiaModoSimple(){
     this.modoSimpleActivado = !this.modoSimpleActivado;
@@ -42,7 +56,5 @@ export class MenuComponent implements OnInit {
     this.respuestaActivada = !this.respuestaActivada;
     this.databaseService.cambiaRespuesta(this.respuestaActivada);
   }
-
-  ngOnInit() {}
 
 }
