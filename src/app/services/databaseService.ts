@@ -52,6 +52,18 @@ export class DatabaseService {
                                 this.database.executeSql(`SELECT * FROM accion;`, [])
                                     .then((acciones)=>{
                                         alert("Acciones: " + acciones.rows.length);
+                                        this.database.executeSql(`SELECT * FROM fila;`, [])
+                                            .then((filas)=>{
+                                                alert("Filas: " + filas.rows.length);
+                                                this.database.executeSql(`SELECT * FROM sugerencia;`, [])
+                                                .then((sugerencias)=>{
+                                                    alert("Sugerencias: " + sugerencias.rows.length);
+                                                })
+                                                .catch((err) => alert("Error contando sugerencias -> " + JSON.stringify(err))
+                                                );
+                                            })
+                                            .catch((err) => alert("Error contando filas -> " + JSON.stringify(err))
+                                        );
                                     })
                                     .catch((err) => alert("Error contando acciones -> " + JSON.stringify(err))
                                 );
@@ -116,6 +128,19 @@ export class DatabaseService {
         .catch((err) => alert("Error creando la tabla -> " + JSON.stringify(err)));
 
 
+        // Sugerencia
+        this.database.executeSql(
+        `CREATE TABLE IF NOT EXISTS sugerencia (
+            id INTEGER primary key,
+            fila INTEGER,
+            texto TEXT,
+            fecha_ultimo_uso TEXT,
+            FOREIGN KEY(fila) REFERENCES fila(id)
+        );`, [])
+        .then(() => this.messages.push("Tabla de sugerencia creada"))
+        .catch((err) => alert("Error creando la tabla -> " + JSON.stringify(err)));
+
+
         // Accion
         this.database.executeSql(
         `CREATE TABLE IF NOT EXISTS accion (
@@ -140,14 +165,19 @@ export class DatabaseService {
         this.insertaAsistente("Ok Google", "");
         this.insertaAsistente("Siri", "");
 
-        this.insertaAccion(0, TiposAcciones.basicas, "Alarma", "", "").then((accion) => { // Tipo 1: Fijo. Tipo 2: Editable.
+        this.insertaAccion(0, TiposAcciones.basicas, "Alarma", "", "").then((accion) => {
             this.insertaFila(accion.insertId, TiposFilas.fija, "pon una alarma");
             this.insertaFila(accion.insertId, TiposFilas.temporal, "hoy a las 9:00");
         });
-        this.insertaAccion(0, TiposAcciones.basicas, "El tiempo", "", "").then((accion) => { // Tipo 1: Fijo. Tipo 2: Editable.
+        this.insertaAccion(0, TiposAcciones.basicas, "El tiempo", "", "").then((accion) => {
             this.insertaFila(accion.insertId, TiposFilas.fija, "¿qué tiempo hará");
-            this.insertaFila(accion.insertId, TiposFilas.temporal, "hoy");
-            this.insertaFila(accion.insertId, TiposFilas.temporal, "en San Vicente del Raspeig");
+            this.insertaFila(accion.insertId, TiposFilas.temporal, "hoy").then((fila) => {
+                this.insertaSugerencia(fila.insertId, "hoy");
+                this.insertaSugerencia(fila.insertId, "mañana");
+            });
+            this.insertaFila(accion.insertId, TiposFilas.temporal, "en San Vicente del Raspeig").then((fila) => {
+                this.insertaSugerencia(fila.insertId, "Alicante");
+            });
             this.insertaFila(accion.insertId, TiposFilas.fija, "?");
         });
         this.publicaUsuario("Usuario", "#32a852").then(() => this.lista.next(true));
@@ -275,11 +305,23 @@ export class DatabaseService {
             
         await this.database.executeSql(`SELECT * FROM fila WHERE accion = ${accion};`, [])
         .then((filasBDD)=>{
-            if(filasBDD.rows.length) filas = filasBDD.rows;
+            if(filasBDD && filasBDD.rows.length) filas = filasBDD.rows;
             else alert("obtenFilas: Esta acción no tiene filas");
         })
         .catch((err) => alert("Error en obtenFilas -> " + JSON.stringify(err)));
         return filas;
+    }
+    
+    public async obtenSugerencias(fila: number){
+        let sugerencias = null;
+            
+        await this.database.executeSql(`SELECT * FROM sugerencia WHERE fila = ${fila};`, [])
+        .then((sugerenciasBDD)=>{
+            if(sugerenciasBDD && sugerenciasBDD.rows.length) sugerencias = sugerenciasBDD.rows;
+            // else alert("obtenSugerencias: Esta fila no tiene sugerencias");
+        })
+        .catch((err) => alert("Error en obtenSugerencias -> " + JSON.stringify(err)));
+        return sugerencias;
     }
     
     public cambiaModoSimple(modoSimpleBool: boolean){
@@ -383,6 +425,14 @@ export class DatabaseService {
                 `INSERT INTO fila(accion, tipo, texto) VALUES (${accion}, ${tipo}, '${texto}');`, [])
                 .catch((err) => alert("Error insertando fila -> " + JSON.stringify(err)));
         } else alert("insertaFila: Texto no valido");
+    }
+
+    private insertaSugerencia(fila : number, texto: string){
+        if(fila){
+            return this.database.executeSql(
+                `INSERT INTO sugerencia(fila, texto, fecha_ultimo_uso) VALUES (${fila}, '${texto}', datetime('now'));`, [])
+                .catch((err) => alert("Error insertando sugerencia -> " + JSON.stringify(err)));
+        } else alert("insertaSugerencia: Texto no valido");
     }
 
     private insertaAccion(usuario : number, tipo : TiposAcciones, titulo : string, imagen : string, orden_filas : string){

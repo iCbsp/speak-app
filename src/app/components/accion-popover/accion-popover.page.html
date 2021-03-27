@@ -1,4 +1,4 @@
-<ion-content *ngIf="modoAccion == 1">
+<ion-content *ngIf="modoAccion == 1"> <!-- ver -->
   <ion-item>
     <section style="text-align: right;">
       <ion-button slot="end" *ngIf="accion.tipo == 3" (click)="cambiaAModoEditar()">
@@ -17,6 +17,7 @@
   <ion-item *ngFor="let fila of filas; let i = index">
     <ion-input *ngIf="fila.tipo == 1" placeholder="Fila fija" [disabled]="deTipoFilaABoolean(fila.tipo)" [(ngModel)]="fila.texto"></ion-input>
     <ion-input *ngIf="fila.tipo == 2" placeholder="Fila temporal" [disabled]="deTipoFilaABoolean(fila.tipo)" [(ngModel)]="fila.texto"></ion-input>
+    <p *ngFor="let sugerencia of fila.sugerencias">{{ sugerencia.texto }}</p>
   </ion-item>
   <ion-item *ngIf="asistente.final">
     <ion-input disabled [value]="asistente.final"></ion-input>
@@ -28,7 +29,7 @@
   </section>
 </ion-content>
 
-<ion-content *ngIf="modoAccion == 2 || modoAccion == 3">
+<ion-content *ngIf="modoAccion == 2 || modoAccion == 3"> <!-- editar o crear -->
   <section style="text-align: center;">
     <ion-input [(ngModel)]="accion.titulo" placeholder="Nueva acción"></ion-input>
   </section>

@@ -19,7 +19,7 @@ import { Platform } from '@ionic/angular';
 import { Router } from '@angular/router';
 
 import { ModoAccion, TiposAcciones, TiposFilas } from 'src/app/enumerations';
-import { FilaAccion } from 'src/app/structures';
+import { FilaAccion, SugerenciaFila } from 'src/app/structures';
 
 @Component({
   selector: 'app-accion-popover',
@@ -56,8 +56,20 @@ export class AccionPopoverPage implements OnInit {
               this.databaseService.obtenFilas(this.accion.id).then((filasBDD) => {
                 this.filas = [];
                 if(filasBDD) {
-                  for(let i = 0; i < filasBDD.length; i++)
-                    this.filas.push(filasBDD.item(i));
+                  for(let fila = 0; fila < filasBDD.length; fila++)
+                    this.filas.push(filasBDD.item(fila));
+
+                  for(let fila = 0; fila < this.filas.length; fila++){
+                    this.databaseService.obtenSugerencias(this.filas[fila].id).then(sugerenciasBDD => {
+                      let sugerencias = new Array<SugerenciaFila>();
+                      if(sugerenciasBDD){
+                        for(let sugerencia = 0; sugerencia < sugerenciasBDD.length; sugerencia++)
+                          sugerencias.push(sugerenciasBDD.item(sugerencia));
+
+                        }
+                        this.filas[fila].sugerencias = sugerencias;
+                      });
+                  };
                   
                   if(this.modoAccion == ModoAccion.ver){
                     // Asistentes
@@ -84,12 +96,12 @@ export class AccionPopoverPage implements OnInit {
     }
     
   closePopover(){
-      this.popover.dismiss();
+    this.popover.dismiss();
   }
     
   deTipoFilaABoolean(tipo : number){
-      if(tipo == 1) return true;
-    return false;
+    if(tipo == 1) return true;
+    else return false;
   }
 
   consigueConfiguracion(){
