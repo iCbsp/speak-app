@@ -176,7 +176,7 @@ export class DatabaseService {
                 this.insertaSugerencia(fila.insertId, "mañana");
             });
             this.insertaFila(accion.insertId, TiposFilas.temporal, "en San Vicente del Raspeig").then((fila) => {
-                this.insertaSugerencia(fila.insertId, "Alicante");
+                this.insertaSugerencia(fila.insertId, "en Alicante");
             });
             this.insertaFila(accion.insertId, TiposFilas.fija, "?");
         });
