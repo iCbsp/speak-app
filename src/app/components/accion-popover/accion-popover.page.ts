@@ -65,9 +65,8 @@ export class AccionPopoverPage implements OnInit {
                       if(sugerenciasBDD){
                         for(let sugerencia = 0; sugerencia < sugerenciasBDD.length; sugerencia++)
                           sugerencias.push(sugerenciasBDD.item(sugerencia));
-
-                        }
-                        this.filas[fila].sugerencias = sugerencias;
+                      }
+                      this.filas[fila].sugerencias = sugerencias;
                       });
                   };
                   
@@ -115,6 +114,19 @@ export class AccionPopoverPage implements OnInit {
   }
 
   reproducirTexto(){
+
+    this.filas.forEach(fila => {
+      if(fila.tipo == TiposFilas.temporal && fila.texto != ""){
+        let diferente = true;
+        if(fila.sugerencias && fila.sugerencias.length){
+          fila.sugerencias.forEach(sugerencia => {
+            if(sugerencia.texto == fila.texto) diferente = false;
+          });
+        }
+        if(diferente) this.databaseService.publicaSugerencia(fila.id, fila.texto);
+      }
+    });
+
     this.closePopover();
       
     let texto = "";

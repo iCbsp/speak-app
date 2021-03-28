@@ -167,15 +167,15 @@ export class DatabaseService {
 
         this.insertaAccion(0, TiposAcciones.basicas, "Alarma", "", "").then((accion) => {
             this.insertaFila(accion.insertId, TiposFilas.fija, "pon una alarma");
-            this.insertaFila(accion.insertId, TiposFilas.temporal, "hoy a las 9:00");
+            this.insertaFila(accion.insertId, TiposFilas.temporal, "");
         });
         this.insertaAccion(0, TiposAcciones.basicas, "El tiempo", "", "").then((accion) => {
             this.insertaFila(accion.insertId, TiposFilas.fija, "¿qué tiempo hará");
-            this.insertaFila(accion.insertId, TiposFilas.temporal, "hoy").then((fila) => {
+            this.insertaFila(accion.insertId, TiposFilas.temporal, "").then((fila) => {
                 this.insertaSugerencia(fila.insertId, "hoy");
                 this.insertaSugerencia(fila.insertId, "mañana");
             });
-            this.insertaFila(accion.insertId, TiposFilas.temporal, "en San Vicente del Raspeig").then((fila) => {
+            this.insertaFila(accion.insertId, TiposFilas.temporal, "").then((fila) => {
                 this.insertaSugerencia(fila.insertId, "en Alicante");
             });
             this.insertaFila(accion.insertId, TiposFilas.fija, "?");
@@ -386,6 +386,12 @@ export class DatabaseService {
             if(filas && filas != undefined) filas.map(fila => {
                 this.insertaFila(accion.insertId, fila.tipo, fila.texto);
             });
+            this.cambio.next(!this.cambio.value);
+        });
+    }
+    
+    public publicaSugerencia(fila: number, texto: string){
+        return this.insertaSugerencia(fila, texto).then(() => {
             this.cambio.next(!this.cambio.value);
         });
     }
