@@ -63,6 +63,9 @@ export class AccionPopoverPage implements OnInit {
                     this.databaseService.obtenSugerencias(this.filas[fila].id).then(sugerenciasBDD => {
                       let sugerencias = new Array<SugerenciaFila>();
                       if(sugerenciasBDD){
+                        // Pone como valor la primera sugerencia
+                        if(sugerenciasBDD.length > 0 && this.filas[fila].tipo == TiposFilas.temporal) this.filas[fila].texto = sugerenciasBDD.item(0).texto;
+
                         for(let sugerencia = 0; sugerencia < sugerenciasBDD.length; sugerencia++)
                           sugerencias.push(sugerenciasBDD.item(sugerencia));
                       }
@@ -120,7 +123,10 @@ export class AccionPopoverPage implements OnInit {
         let diferente = true;
         if(fila.sugerencias && fila.sugerencias.length){
           fila.sugerencias.forEach(sugerencia => {
-            if(sugerencia.texto == fila.texto) diferente = false;
+            if(sugerencia.texto == fila.texto) {
+              diferente = false;
+              this.databaseService.actualizaFechaUltimoUsoSugerenciaTextoFila(sugerencia.texto, fila.id);
+            }
           });
         }
         if(diferente) this.databaseService.publicaSugerencia(fila.id, fila.texto);

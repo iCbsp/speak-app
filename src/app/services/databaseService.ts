@@ -315,7 +315,7 @@ export class DatabaseService {
     public async obtenSugerencias(fila: number){
         let sugerencias = null;
             
-        await this.database.executeSql(`SELECT * FROM sugerencia WHERE fila = ${fila};`, [])
+        await this.database.executeSql(`SELECT * FROM sugerencia WHERE fila = ${fila} ORDER BY fecha_ultimo_uso DESC;`, [])
         .then((sugerenciasBDD)=>{
             if(sugerenciasBDD && sugerenciasBDD.rows.length) sugerencias = sugerenciasBDD.rows;
             // else alert("obtenSugerencias: Esta fila no tiene sugerencias");
@@ -392,7 +392,12 @@ export class DatabaseService {
     
     public publicaSugerencia(fila: number, texto: string){
         return this.insertaSugerencia(fila, texto).then(() => {
-            this.cambio.next(!this.cambio.value);
+            this.obtenSugerencias(fila).then((sugerencias) => {
+                this.cambio.next(!this.cambio.value);
+                if(sugerencias.length > 3){
+                    this.borraSugerenciasDeFila(fila, sugerencias.length - 3);
+                }
+            });
         });
     }
     
@@ -407,11 +412,9 @@ export class DatabaseService {
     }
 
     private insertaConfiguracion(usuario : number){
-        if(usuario){
-            return this.database.executeSql(
-                `INSERT INTO configuracion(usuario, asistente, modo_simple, respuesta) VALUES (${usuario}, 0, 0, 0);`, [])
-                .catch((err) => alert("Error insertando configuracion -> " + JSON.stringify(err)));
-        } else alert("insertaConfiguracion: Usuario no valido");
+        return this.database.executeSql(
+            `INSERT INTO configuracion(usuario, asistente, modo_simple, respuesta) VALUES (${usuario}, 0, 0, 0);`, [])
+            .catch((err) => alert("Error insertando configuracion -> " + JSON.stringify(err)));
     }
     
     private insertaAsistente(inicial : string, final : string){
@@ -426,19 +429,15 @@ export class DatabaseService {
         let texto = "";
         if(textoTemp) texto = textoTemp;
 
-        if(accion){
             return this.database.executeSql(
                 `INSERT INTO fila(accion, tipo, texto) VALUES (${accion}, ${tipo}, '${texto}');`, [])
                 .catch((err) => alert("Error insertando fila -> " + JSON.stringify(err)));
-        } else alert("insertaFila: Texto no valido");
     }
 
     private insertaSugerencia(fila : number, texto: string){
-        if(fila){
-            return this.database.executeSql(
-                `INSERT INTO sugerencia(fila, texto, fecha_ultimo_uso) VALUES (${fila}, '${texto}', datetime('now'));`, [])
-                .catch((err) => alert("Error insertando sugerencia -> " + JSON.stringify(err)));
-        } else alert("insertaSugerencia: Texto no valido");
+        return this.database.executeSql(
+            `INSERT INTO sugerencia(fila, texto, fecha_ultimo_uso) VALUES (${fila}, '${texto}', datetime('now'));`, [])
+            .catch((err) => alert("Error insertando sugerencia -> " + JSON.stringify(err)));
     }
 
     private insertaAccion(usuario : number, tipo : TiposAcciones, titulo : string, imagen : string, orden_filas : string){
@@ -450,39 +449,50 @@ export class DatabaseService {
     }
 
     public editaUsuario(usuario : number, nombre : string, color : string){
-        if(usuario && nombre && color){
+        if(nombre && color){
             return this.database.executeSql(
                 `UPDATE usuario SET nombre = '${nombre}', color = '${color}' WHERE id = ${usuario}`, [])
                 .then(() => this.cambio.next(!this.cambio.value))
                 .catch((err) => alert("Error actualizando usuario -> " + JSON.stringify(err)));
-        } else alert("editaUsuario: Usuario, nombre o color no válidos");
+        } else alert("editaUsuario: nombre o color no válidos");
     }
 
     public editaAsistente(asistente : number, inicial : string, final : string){
-        if(asistente){
-            return this.database.executeSql(
-                `UPDATE asistente SET inicial = '${inicial}', final = '${final}' WHERE id = ${asistente}`, [])
-                .then(() => this.cambio.next(!this.cambio.value))
-                .catch((err) => alert("Error actualizando asistente -> " + JSON.stringify(err)));
-        } else alert("editaAsistente: Asistente no válidos");
+        return this.database.executeSql(
+            `UPDATE asistente SET inicial = '${inicial}', final = '${final}' WHERE id = ${asistente}`, [])
+            .then(() => this.cambio.next(!this.cambio.value))
+            .catch((err) => alert("Error actualizando asistente -> " + JSON.stringify(err)));
     }
 
     public editaAccion(id: number, filas: FilaAccion[], titulo: string, imagen: string){
         let ordenFilas = "";
-        if(id){
-            return this.database.executeSql(
-                `UPDATE accion SET titulo = '${titulo}', imagen = '${imagen}', orden_filas = '${ordenFilas}' WHERE id = ${id}`, [])
-                .then(() => {
-                    return this.borraFilasDeAccion(id).then(() => {
-                        if(filas && filas != undefined) filas.map(fila => {
-                            this.insertaFila(id, fila.tipo, fila.texto);
-                        });
-                        this.cambio.next(!this.cambio.value);
+        return this.database.executeSql(
+            `UPDATE accion SET titulo = '${titulo}', imagen = '${imagen}', orden_filas = '${ordenFilas}' WHERE id = ${id}`, [])
+            .then(() => {
+                return this.borraFilasDeAccion(id).then(() => {
+                    if(filas && filas != undefined) filas.map(fila => {
+                        this.insertaFila(id, fila.tipo, fila.texto);
                     });
+                    this.cambio.next(!this.cambio.value);
+                });
             });
-        } else alert("editaAccion: Acción no válida");
+        }
+        
+    public actualizaFechaUltimoUsoSugerenciaId(sugerencia: number){
+        return this.database.executeSql(
+            `UPDATE sugerencia SET fecha_ultimo_uso = datetime('now') WHERE id = ${sugerencia};`, [])
+        .then(() => {
+            this.cambio.next(!this.cambio.value);
+        });
     }
-    
+
+    public actualizaFechaUltimoUsoSugerenciaTextoFila(sugerencia: string, fila:number){
+        return this.database.executeSql(
+            `UPDATE sugerencia SET fecha_ultimo_uso = datetime('now') WHERE texto = ${sugerencia} AND fila = ${fila};`, [])
+        .then(() => {
+            this.cambio.next(!this.cambio.value);
+        });
+    }
 
     public borraUsuario(usuario : number){
         if(usuario){
@@ -543,7 +553,22 @@ export class DatabaseService {
             `DELETE FROM fila WHERE accion = ${id};`, [])
             .then(() => {
                 this.cambio.next(!this.cambio.value);
-        });
+        })
+        .catch((err) => alert("Error borrando filas -> " + JSON.stringify(err)));
+        
+    }
+
+    public borraSugerenciasDeFila(fila: number, cantidad?: number){
+        let filasQueBorrar = "";
+        if(cantidad != undefined) filasQueBorrar = "id IN (SELECT id FROM sugerencia WHERE fila = " + fila + " ORDER BY fecha_ultimo_uso ASC LIMIT " + cantidad + ")";
+        else filasQueBorrar = "fila = " + fila;
+        alert(`DELETE FROM sugerencia WHERE ${filasQueBorrar};`);
+        return this.database.executeSql(
+            `DELETE FROM sugerencia WHERE ${filasQueBorrar};`, [])
+        .then(() => {
+            this.cambio.next(!this.cambio.value);
+        })
+        .catch((err) => alert("Error borrando sugerencias -> " + JSON.stringify(err)));
     }
 
     private borraTablas() {
