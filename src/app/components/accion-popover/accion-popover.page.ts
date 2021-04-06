@@ -52,6 +52,11 @@ export class AccionPopoverPage implements OnInit {
             if(ready){
               if(!this.accion.id) alert("No se ha recibido el id de la accion");
   
+              // Accion
+              this.databaseService.obtenInfoAccion(this.accion.id).then((accionBDD) => {
+                if(accionBDD) this.accion = accionBDD;
+              });
+
               // Filas
               this.databaseService.obtenFilas(this.accion.id).then((filasBDD) => {
                 this.filas = [];
@@ -102,6 +107,11 @@ export class AccionPopoverPage implements OnInit {
     this.popover.dismiss();
   }
     
+  cambiaAModoVer(){
+    this.modoAccion = ModoAccion.ver;
+    this.ngOnInit();
+  }
+
   deTipoFilaABoolean(tipo : number){
     if(tipo == 1) return true;
     else return false;

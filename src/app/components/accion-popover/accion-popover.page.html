@@ -85,7 +85,8 @@
     </ion-button>
   </section>
   <section style="text-align: center;">
-    <ion-button (click)="closePopover()">Cancelar</ion-button>
+    <ion-button *ngIf="modoAccion == 2" (click)="cambiaAModoVer()">Cancelar</ion-button>
+    <ion-button *ngIf="modoAccion == 3" (click)="closePopover()">Cancelar</ion-button>
     <ion-button *ngIf="modoAccion == 2" (click)="editaAccion()">Guardar</ion-button>
     <ion-button *ngIf="modoAccion == 3" (click)="creaAccion()">Crear</ion-button>
   </section>

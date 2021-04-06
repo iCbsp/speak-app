@@ -270,6 +270,16 @@ export class DatabaseService {
         return asistente;
     }
 
+    public async obtenInfoAccion(id: number){
+        let accion = null;
+        await this.database.executeSql(`SELECT * FROM accion WHERE id = ${id};`, [])
+        .then((accionBDD)=>{
+            if(accionBDD.rows.length) accion = accionBDD.rows.item(0);
+        })
+        .catch((err) => alert("Error en obtenAcciones -> " + JSON.stringify(err)));
+        return accion;
+    }
+
     public async obtenAcciones(tipo : TiposAcciones){
         let acciones = null;
         let usuarioQuery = "";
