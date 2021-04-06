@@ -1,9 +1,89 @@
-<ion-content>
-  <ion-title> {{ accion.titulo }} </ion-title>
-  <!-- <ion-input *ngFor="let fila of filas; let i = index" position="fixed" placeholder="(Frase final)" [disabled]="deTipoFilaABoolean(fila.tipo)" [value]="textoFilas[i]"></ion-input> -->
-  <!-- <ion-input *ngIf="asistenteInicial" position="fixed" disabled>{{ asistenteInicial }},</ion-input> -->
-  <ion-input *ngIf="asistenteInicial" position="fixed" disabled [value]="asistenteInicial + ','"></ion-input>
-  <ion-input *ngFor="let fila of filas; let i = index" position="fixed" [disabled]="deTipoFilaABoolean(fila.tipo)" [(ngModel)]="fila.texto"></ion-input>
-  <ion-input *ngIf="asistenteFinal" position="fixed" disabled [value]="asistenteFinal"></ion-input>
-  <ion-button expand="block" (click)="reproducirTexto()">Crear perfil</ion-button>
+<ion-content *ngIf="modoAccion == 1"
+  [scrollEvents]="true"
+  (ionScrollStart)="logScrollStart()"
+  (ionScroll)="logScrolling($event)"
+  (ionScrollEnd)="logScrollEnd()"> <!-- ver -->
+  <section style="text-align: right;">
+    <ion-grid>
+      <ion-row>
+        <ion-col size="6">
+          <ion-button *ngIf="accion.tipo == 3" (click)="cambiaAModoEditar()">
+            Editar
+            <ion-icon slot="end" name="create-outline"></ion-icon>
+          </ion-button>
+        </ion-col>
+        <ion-col size="6">
+          <ion-button color="danger" *ngIf="accion.tipo == 3" (click)="ventanaBorrarAccion()">
+            Borrar
+            <ion-icon slot="end" name="trash-outline"></ion-icon>
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </section>
+  <div style="padding: 0em 0.5em; border-bottom: 1px solid gray; text-align: center;">
+    <h2> {{ accion.titulo }} </h2>
+  </div>
+
+  <ion-item *ngIf="asistente.inicial">
+    <ion-input disabled [value]="asistente.inicial + ','"></ion-input>
+    <ion-button slot="end" (click)="asistente.inicial = ''"><ion-icon name="close-outline"></ion-icon></ion-button>
+  </ion-item>
+  <div *ngFor="let fila of filas; let i = index" style="padding: 0.5em 0em; border-bottom: 1px solid lightgray;">
+    <ion-item no-lines lines="none">
+      <ion-input *ngIf="fila.tipo == 1" placeholder="Fila fija" [disabled]="deTipoFilaABoolean(fila.tipo)" [(ngModel)]="fila.texto"></ion-input>
+      <ion-input *ngIf="fila.tipo == 2" placeholder="Fila temporal" [disabled]="deTipoFilaABoolean(fila.tipo)" [(ngModel)]="fila.texto"></ion-input>
+      <ion-button *ngIf="fila.tipo == 1" slot="end" (click)="filas.splice(i, 1)"><ion-icon name="close-outline"></ion-icon></ion-button>
+      <ion-button *ngIf="fila.tipo == 2" slot="end" (click)="fila.texto=''"><ion-icon name="close-outline"></ion-icon></ion-button>
+    </ion-item>
+    
+    <ion-chip *ngFor="let sugerencia of fila.sugerencias" (click)="fila.texto = sugerencia.texto">
+      <ion-label>{{ sugerencia.texto }}</ion-label>
+    </ion-chip>
+  </div>
+  <ion-item *ngIf="asistente.final">
+    <ion-input disabled [value]="asistente.final"></ion-input>
+    <ion-button slot="end" (click)="asistente.final = ''"><ion-icon name="close-outline"></ion-icon></ion-button>
+  </ion-item>
+
+  <section style="text-align: center;">
+    <ion-button (click)="closePopover()">Cancelar</ion-button>
+    <ion-button (click)="reproducirTexto()">Reproducir</ion-button>
+  </section>
+</ion-content>
+
+<ion-content *ngIf="modoAccion == 2 || modoAccion == 3"> <!-- editar o crear -->
+  <section style="text-align: center; border-bottom: 1px solid lightgray;">
+    <ion-input [(ngModel)]="accion.titulo" placeholder="Nueva acción"></ion-input>
+  </section>
+  <section style="text-align: center;">
+    <ion-item *ngFor="let fila of filas">
+      <ion-button size="small" (click)="mueveFilaArriba(fila.id)">
+        <ion-icon name="arrow-up"></ion-icon>
+      </ion-button>
+      <ion-button size="small" (click)="mueveFilaAbajo(fila.id)">
+        <ion-icon name="arrow-down"></ion-icon>
+      </ion-button>
+      <ion-input *ngIf="fila.tipo == 1" placeholder="Fila fija" [(ngModel)]="fila.texto" [ngStyle]="{ 'color': colorDependiendoDelTipo(fila.tipo) }"></ion-input>
+      <ion-input *ngIf="fila.tipo == 2" disabled placeholder="Fila temporal" [(ngModel)]="fila.texto" [ngStyle]="{ 'color': colorDependiendoDelTipo(fila.tipo) }"></ion-input>
+      <ion-button size="small" (click)="borraFila(fila.id)">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-item>
+  </section>
+  <section style="text-align: center;">
+    <ion-button (click)="creaFila('f')">
+      <ion-icon slot="start" name="add-outline"></ion-icon>
+      Fija
+    </ion-button>
+    <ion-button (click)="creaFila('t')">
+      <ion-icon slot="start" name="add-outline"></ion-icon>
+      Temporal
+    </ion-button>
+  </section>
+  <section style="text-align: center;">
+    <ion-button (click)="closePopover()">Cancelar</ion-button>
+    <ion-button *ngIf="modoAccion == 2" (click)="editaAccion()">Guardar</ion-button>
+    <ion-button *ngIf="modoAccion == 3" (click)="creaAccion()">Crear</ion-button>
+  </section>
 </ion-content>

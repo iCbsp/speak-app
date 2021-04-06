@@ -33,8 +33,7 @@ import { UsuarioPopoverPage } from 'src/app/components/usuario-popover/usuario-p
 })
 export class TabsPage {
 
-  //asistente: string;
-  asistente = "Alexa"; // cambiar si hay persistencia
+  asistente = "Alexa";
 
   preguntadaAccesibilidad = true;
   preguntadoUsoDeDatos = true;
@@ -59,25 +58,23 @@ export class TabsPage {
     private databaseService:DatabaseService,
     private location: Location,
     private popover:PopoverController
-  ){
+  ){}
+
+  ngOnInit() {
     if(!this.preguntadoUsoDeDatos) this.ventanaPoliticas();
     if(!this.preguntadaAccesibilidad) this.ventanaAccesibilidad();
+    this.actualizaPermisoSTT();
 
-    if(!platform.is('desktop')){
-      databaseService.lista.subscribe((ready)=>{
+    if(!this.platform.is('desktop')){
+      this.databaseService.lista.subscribe((ready)=>{
         if(ready){
           this.consigueUsuarios();
           this.consigueAsistentes();
           
-          // this.location.onUrlChange((url) => {
-          //   if(url.toString() == "/tabs/tab1" || url.toString() == "/tabs/tab2" || url.toString() == "/tabs/tab3") {
-          //     this.consigueUsuarios();
-          //     this.consigueAsistentes();
-          //   }
-          // });
-          databaseService.cambio.subscribe(()=>{
+          this.databaseService.cambio.subscribe(()=>{
             this.consigueUsuarios();
             this.consigueAsistentes();
+            this.actualizaPermisoSTT();
           });
         }
       });
@@ -140,6 +137,13 @@ export class TabsPage {
     return this.permisoSTT;
   }
 
+  actualizaPermisoSTT(){
+    this.speechRecognition.hasPermission()
+    .then((hasPermission: boolean) => {
+      this.permisoSTT = hasPermission;
+    });
+  }
+
   iniciaSTT(){
     let options = {
       // language: 'en-US'
@@ -185,21 +189,48 @@ export class TabsPage {
   // }
 
   async ventanaTextoManual() {
-    // Comprobación asistente
-    var textoAsistente = "";
-    if(this.asistente != "Ninguno") textoAsistente = this.asistente + ", ";
+    let inicialTexto = "";
+    let finalTexto = "";
+
+    if(this.asistenteSeleccionado && this.asistentes.length){
+      this.asistentes.forEach(asistente => {
+        if(asistente.id == this.asistenteSeleccionado) {
+          if(asistente.inicial.length) inicialTexto = asistente.inicial;
+          if(asistente.final.length) finalTexto = asistente.final;
+        }
+      });
+    }
+
+    let inputs = [];
+    if(inicialTexto.length) inputs.push(
+        {
+          name: 'asistenteInicial',
+          type: 'text',
+          disabled: true,
+          value: inicialTexto + ","
+        }
+    );
+    inputs.push(
+        {
+          name: 'texto',
+          type: 'text',
+          placeholder: "Acción a realizar",
+          disabled: false
+        }
+    );
+    if(finalTexto.length) inputs.push(
+        {
+          name: 'asistenteFinal',
+          type: 'text',
+          disabled: true,
+          value: " " + finalTexto
+        }
+    );
 
     const alert = await this.alertController.create({
       cssClass: 'ventanaTextoManual',
       header: 'Acción manual',
-      inputs: [
-        {
-          name: 'textoSTT',
-          type: 'text',
-          //placeholder: 'Acción a realizar',
-          value: textoAsistente
-        }
-      ],
+      inputs: inputs,
       buttons: [
         {
           text: 'Cancelar',
@@ -213,9 +244,7 @@ export class TabsPage {
           role: 'enviar',
           handler: data => {
             console.log('Confirm Ok');
-            //this.texto =  data.textoSTT;
-            //this.diTTS();
-            this.router.navigate(['reproduccion', {textoAReproducir: data.textoSTT}]);
+            this.router.navigate(['reproduccion', {textoAReproducir: data.asistenteInicial + data.texto + data.asistenteFinal}]);
           }
         }
       ]

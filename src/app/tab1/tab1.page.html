@@ -37,5 +37,10 @@
         </div>
       </ion-col>
     </ion-row>
+    <ion-row>
+      <ion-col *ngIf="!(acciones.length)">
+        <ion-title text-center>No hay acciones</ion-title>
+      </ion-col>
+    </ion-row>
   </ion-grid>
 </ion-content>

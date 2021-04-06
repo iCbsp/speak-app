@@ -16,6 +16,8 @@ import { ChangeDetectorRef } from '@angular/core';
 import { PopoverController } from '@ionic/angular';
 import { AccionPopoverPage } from 'src/app/components/accion-popover/accion-popover.page';
 
+import { TiposAcciones } from 'src/app/enumerations';
+
 @Component({
   selector: 'app-tab1',
   templateUrl: 'tab1.page.html',
@@ -31,21 +33,23 @@ export class Tab1Page {
     private platform: Platform,
     private changeDetector: ChangeDetectorRef,
     private popover:PopoverController
-  ){
-    if(!platform.is('desktop')){
+  ){}
+
+  ngOnInit() {
+    if(!this.platform.is('desktop')){
       this.databaseService.lista.subscribe((ready)=>{
         if(ready){
           this.consigueAcciones();
         }
       });
       this.databaseService.cambio.subscribe(()=>{
-        // alert("Cambio en la base de datos");
+        this.consigueAcciones();
       });
     }
   }
   
   consigueAcciones(){
-    this.databaseService.obtenAcciones(1).then((accionesBDD) => {
+    this.databaseService.obtenAcciones(TiposAcciones.basicas).then((accionesBDD) => {
       this.acciones = [];
       if(accionesBDD) {
         for(let i = 0; i < accionesBDD.length; i++)
@@ -59,6 +63,7 @@ export class Tab1Page {
     if(!this.platform.is('desktop') && accion){
       this.popover.create({
       component:AccionPopoverPage,
+      cssClass: 'accionPopover',
       componentProps: {
         accion: accion
       },

@@ -3,6 +3,9 @@ import { Platform } from '@ionic/angular';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
 import { BehaviorSubject } from 'rxjs';
 
+import { FilaAccion } from 'src/app/structures';
+import { TiposAcciones, TiposFilas } from 'src/app/enumerations';
+
 @Injectable()
 export class DatabaseService {
 
@@ -34,6 +37,7 @@ export class DatabaseService {
             else alert("Error creando la base de datos");
         });
     }
+    public getIdUsuarioActual() { return this.usuarioActual; }
 
     public alertDatabaseInfo(){
         alert("Base de datos: " + this.lista.value);
@@ -49,6 +53,18 @@ export class DatabaseService {
                                 this.database.executeSql(`SELECT * FROM accion;`, [])
                                     .then((acciones)=>{
                                         alert("Acciones: " + acciones.rows.length);
+                                        this.database.executeSql(`SELECT * FROM fila;`, [])
+                                            .then((filas)=>{
+                                                alert("Filas: " + filas.rows.length);
+                                                this.database.executeSql(`SELECT * FROM sugerencia;`, [])
+                                                .then((sugerencias)=>{
+                                                    alert("Sugerencias: " + sugerencias.rows.length);
+                                                })
+                                                .catch((err) => alert("Error contando sugerencias -> " + JSON.stringify(err))
+                                                );
+                                            })
+                                            .catch((err) => alert("Error contando filas -> " + JSON.stringify(err))
+                                        );
                                     })
                                     .catch((err) => alert("Error contando acciones -> " + JSON.stringify(err))
                                 );
@@ -113,6 +129,19 @@ export class DatabaseService {
         .catch((err) => alert("Error creando la tabla -> " + JSON.stringify(err)));
 
 
+        // Sugerencia
+        this.database.executeSql(
+        `CREATE TABLE IF NOT EXISTS sugerencia (
+            id INTEGER primary key,
+            fila INTEGER,
+            texto TEXT,
+            fecha_ultimo_uso TEXT,
+            FOREIGN KEY(fila) REFERENCES fila(id)
+        );`, [])
+        .then(() => this.messages.push("Tabla de sugerencia creada"))
+        .catch((err) => alert("Error creando la tabla -> " + JSON.stringify(err)));
+
+
         // Accion
         this.database.executeSql(
         `CREATE TABLE IF NOT EXISTS accion (
@@ -132,23 +161,14 @@ export class DatabaseService {
         
     private insercionesIniciales() {
         // Igual esto deberia de ser una transaccion (??????)
-
+        
         this.insertaAsistente("Alexa", "");
         this.insertaAsistente("Ok Google", "");
         this.insertaAsistente("Siri", "");
-
-        this.insertaAccion(0, 1, "Alarma", "", "").then((accion) => { // Tipo 1: Fijo. Tipo 2: Editable.
-            this.insertaFila(accion.insertId, 1, "pon una alarma");
-            this.insertaFila(accion.insertId, 2, "hoy a las 9:00");
+        
+        this.publicaUsuario("Usuario", "#32a852").then(() => {
+            this.lista.next(true);
         });
-        this.insertaAccion(0, 1, "El tiempo", "", "").then((accion) => { // Tipo 1: Fijo. Tipo 2: Editable.
-            this.insertaFila(accion.insertId, 1, "¿qué tiempo hará");
-            this.insertaFila(accion.insertId, 2, "hoy");
-            this.insertaFila(accion.insertId, 2, "en San Vicente del Raspeig");
-            this.insertaFila(accion.insertId, 1, "?");
-        });
-        this.publicaUsuario("Usuario", "#32a852").then(() => this.lista.next(true));
-
 
         // this.insertaUsuario("Usuario", "#32a852").then((usuario) => {
         //     this.insertaConfiguracion(usuario.insertId).then(() => this.lista.next(true));
@@ -250,16 +270,18 @@ export class DatabaseService {
         return asistente;
     }
 
-    public async obtenAcciones(tipo : number, usuario? : number){
+    public async obtenAcciones(tipo : TiposAcciones){
         let acciones = null;
         let usuarioQuery = "";
-        if(usuario)
-            usuarioQuery = " AND usuario = " + usuario;
+        // if(usuario)
+        //     usuarioQuery = " AND usuario = " + usuario;
+        if(tipo == TiposAcciones.personalizadas) usuarioQuery = " AND usuario = " + this.usuarioActual;
             
         await this.database.executeSql(`SELECT * FROM accion WHERE tipo = ${tipo}${usuarioQuery};`, [])
         .then((accionesBDD)=>{
-            if(accionesBDD.rows.length) acciones = accionesBDD.rows;
-            else alert("obtenAcciones: No existen acciones del tipo " + tipo);
+            //if(accionesBDD.rows.length) 
+            acciones = accionesBDD.rows;
+            //else alert("obtenAcciones: No existen acciones del tipo " + tipo);
         })
         .catch((err) => alert("Error en obtenAcciones -> " + JSON.stringify(err)));
         return acciones;
@@ -270,11 +292,23 @@ export class DatabaseService {
             
         await this.database.executeSql(`SELECT * FROM fila WHERE accion = ${accion};`, [])
         .then((filasBDD)=>{
-            if(filasBDD.rows.length) filas = filasBDD.rows;
+            if(filasBDD && filasBDD.rows.length) filas = filasBDD.rows;
             else alert("obtenFilas: Esta acción no tiene filas");
         })
         .catch((err) => alert("Error en obtenFilas -> " + JSON.stringify(err)));
         return filas;
+    }
+    
+    public async obtenSugerencias(fila: number){
+        let sugerencias = null;
+            
+        await this.database.executeSql(`SELECT * FROM sugerencia WHERE fila = ${fila} ORDER BY fecha_ultimo_uso DESC;`, [])
+        .then((sugerenciasBDD)=>{
+            if(sugerenciasBDD && sugerenciasBDD.rows.length) sugerencias = sugerenciasBDD.rows;
+            // else alert("obtenSugerencias: Esta fila no tiene sugerencias");
+        })
+        .catch((err) => alert("Error en obtenSugerencias -> " + JSON.stringify(err)));
+        return sugerencias;
     }
     
     public cambiaModoSimple(modoSimpleBool: boolean){
@@ -291,7 +325,7 @@ export class DatabaseService {
     public cambiaRespuesta(respuestaBool: boolean){
         let respuestaInt = 0;
         if(respuestaBool) respuestaInt = 1;
-        this.database.executeSql(
+        return this.database.executeSql(
             `UPDATE configuracion SET respuesta = ${respuestaInt} WHERE usuario = ${this.usuarioActual} `, [])
         .then(() => this.cambio.next(!this.cambio.value))
         .catch((err) => {
@@ -321,18 +355,48 @@ export class DatabaseService {
 
     public publicaUsuario(nombre : string, color : string) : any{
         return this.insertaUsuario(nombre, color).then((usuario) => {
-            return this.insertaConfiguracion(usuario.insertId).then(() => this.cambio.next(!this.cambio.value));
+            return this.insertaConfiguracion(usuario.insertId).then(() => {
+                this.usuarioActual = usuario.insertId;
+                this.insertaAccionesBasicas(usuario.insertId);
+                this.insertaAccionesAplicaciones(usuario.insertId);
+                this.cambio.next(!this.cambio.value);
+            });
         });
     }
 
     public publicaAsistente(inicial : string, final : string) : any{
         return this.insertaAsistente(inicial, final).then(() => this.cambio.next(!this.cambio.value));
     }
+
+    public publicaAccion(tipo: TiposAcciones, nombre: string, usuario?: number, filas?: FilaAccion[]){
+        // if(!filas || !filas.length) {
+        //     alert("Error publicando accion -> La acción debe de tener al menos una fila");
+        //     return null;
+        // }
+        if(usuario == undefined) usuario = this.usuarioActual;
+        return this.insertaAccion(this.usuarioActual, tipo, nombre, "imagen", "orden").then((accion) => {
+            if(filas && filas != undefined) filas.map(fila => {
+                this.insertaFila(accion.insertId, fila.tipo, fila.texto);
+            });
+            this.cambio.next(!this.cambio.value);
+        });
+    }
+    
+    public publicaSugerencia(fila: number, texto: string){
+        return this.insertaSugerencia(fila, texto).then(() => {
+            this.obtenSugerencias(fila).then((sugerencias) => {
+                this.cambio.next(!this.cambio.value);
+                if(sugerencias.length > 3){
+                    this.borraSugerenciasDeFila(fila, sugerencias.length - 3);
+                }
+            });
+        });
+    }
     
     private insertaUsuario(nombre : string, color : string){
         if(nombre && color){
             return this.database.executeSql(
-                `INSERT INTO usuario(nombre, color, fecha_ultimo_inicio) VALUES ('${nombre}', '${color}', 0);`, [])
+                `INSERT INTO usuario(nombre, color, fecha_ultimo_inicio) VALUES ('${nombre}', '${color}', datetime('now'));`, [])
             .catch((err) => {
                 alert("Error insertando usuario -> " + JSON.stringify(err));
             });
@@ -340,11 +404,9 @@ export class DatabaseService {
     }
 
     private insertaConfiguracion(usuario : number){
-        if(usuario){
-            return this.database.executeSql(
-                `INSERT INTO configuracion(usuario, asistente, modo_simple, respuesta) VALUES (${usuario}, 0, 0, 0);`, [])
-                .catch((err) => alert("Error insertando configuracion -> " + JSON.stringify(err)));
-        } else alert("insertaConfiguracion: Usuario no valido");
+        return this.database.executeSql(
+            `INSERT INTO configuracion(usuario, asistente, modo_simple, respuesta) VALUES (${usuario}, 0, 0, 0);`, [])
+            .catch((err) => alert("Error insertando configuracion -> " + JSON.stringify(err)));
     }
     
     private insertaAsistente(inicial : string, final : string){
@@ -355,18 +417,22 @@ export class DatabaseService {
         // } else alert("insertaAsistente: Texto no valido");
     }
 
-    private insertaFila(accion : number, tipo : number, textoTemp? : string){
+    private insertaFila(accion : number, tipo : TiposFilas, textoTemp? : string){
         let texto = "";
         if(textoTemp) texto = textoTemp;
 
-        if(accion){
             return this.database.executeSql(
                 `INSERT INTO fila(accion, tipo, texto) VALUES (${accion}, ${tipo}, '${texto}');`, [])
                 .catch((err) => alert("Error insertando fila -> " + JSON.stringify(err)));
-        } else alert("insertaFila: Texto no valido");
     }
 
-    private insertaAccion(usuario : number, tipo : number, titulo : string, imagen : string, orden_filas : string){
+    private insertaSugerencia(fila : number, texto: string){
+        return this.database.executeSql(
+            `INSERT INTO sugerencia(fila, texto, fecha_ultimo_uso) VALUES (${fila}, '${texto}', datetime('now'));`, [])
+            .catch((err) => alert("Error insertando sugerencia -> " + JSON.stringify(err)));
+    }
+
+    private insertaAccion(usuario : number, tipo : TiposAcciones, titulo : string, imagen : string, orden_filas : string){
         // if(inicial && final){
             return this.database.executeSql(
                 `INSERT INTO accion(usuario, tipo, titulo, imagen, orden_filas, ultimo_uso) VALUES (${usuario}, ${tipo}, '${titulo}', '${imagen}', '${orden_filas}', datetime('now'));`, [])
@@ -375,21 +441,49 @@ export class DatabaseService {
     }
 
     public editaUsuario(usuario : number, nombre : string, color : string){
-        if(usuario && nombre && color){
+        if(nombre && color){
             return this.database.executeSql(
                 `UPDATE usuario SET nombre = '${nombre}', color = '${color}' WHERE id = ${usuario}`, [])
                 .then(() => this.cambio.next(!this.cambio.value))
                 .catch((err) => alert("Error actualizando usuario -> " + JSON.stringify(err)));
-        } else alert("editaUsuario: Usuario, nombre o color no válidos");
+        } else alert("editaUsuario: nombre o color no válidos");
     }
 
     public editaAsistente(asistente : number, inicial : string, final : string){
-        if(asistente){
-            return this.database.executeSql(
-                `UPDATE asistente SET inicial = '${inicial}', final = '${final}' WHERE id = ${asistente}`, [])
-                .then(() => this.cambio.next(!this.cambio.value))
-                .catch((err) => alert("Error actualizando asistente -> " + JSON.stringify(err)));
-        } else alert("editaAsistente: Asistente no válidos");
+        return this.database.executeSql(
+            `UPDATE asistente SET inicial = '${inicial}', final = '${final}' WHERE id = ${asistente}`, [])
+            .then(() => this.cambio.next(!this.cambio.value))
+            .catch((err) => alert("Error actualizando asistente -> " + JSON.stringify(err)));
+    }
+
+    public editaAccion(id: number, filas: FilaAccion[], titulo: string, imagen: string){
+        let ordenFilas = "";
+        return this.database.executeSql(
+            `UPDATE accion SET titulo = '${titulo}', imagen = '${imagen}', orden_filas = '${ordenFilas}' WHERE id = ${id}`, [])
+            .then(() => {
+                return this.borraFilasDeAccion(id).then(() => {
+                    if(filas && filas != undefined) filas.map(fila => {
+                        this.insertaFila(id, fila.tipo, fila.texto);
+                    });
+                    this.cambio.next(!this.cambio.value);
+                });
+            });
+        }
+        
+    public actualizaFechaUltimoUsoSugerenciaId(sugerencia: number){
+        return this.database.executeSql(
+            `UPDATE sugerencia SET fecha_ultimo_uso = datetime('now') WHERE id = ${sugerencia};`, [])
+        .then(() => {
+            this.cambio.next(!this.cambio.value);
+        });
+    }
+
+    public actualizaFechaUltimoUsoSugerenciaTextoFila(sugerencia: string, fila:number){
+        return this.database.executeSql(
+            `UPDATE sugerencia SET fecha_ultimo_uso = datetime('now') WHERE texto = ${sugerencia} AND fila = ${fila};`, [])
+        .then(() => {
+            this.cambio.next(!this.cambio.value);
+        });
     }
 
     public borraUsuario(usuario : number){
@@ -425,6 +519,50 @@ export class DatabaseService {
         } else alert("borraAsistente: Usuario no valido");
     }
 
+    public borraAcciones(idAcciones : number[]){
+        let devuelve : Promise<any>;
+          
+        if(idAcciones.length){
+            for(let indiceIdAcciones = 0; indiceIdAcciones < idAcciones.length; indiceIdAcciones++){
+                devuelve = this.borraFilasDeAccion(idAcciones[indiceIdAcciones])
+                    .finally(() => {
+                        devuelve = this.database.executeSql(
+                            `DELETE FROM accion WHERE id = ${idAcciones[indiceIdAcciones]};`, [])
+                            .then(() => this.cambio.next(!this.cambio.value))
+                            .catch((err) => alert("Error borrando accion -> " + JSON.stringify(err)));
+                    })
+            }
+        } else {
+            alert("borraAcciones: No se han pasado acciones");
+            devuelve = new Promise(() => {});
+        }
+
+        return devuelve;
+    }
+
+    public borraFilasDeAccion(id: number){
+        return this.database.executeSql(
+            `DELETE FROM fila WHERE accion = ${id};`, [])
+            .then(() => {
+                this.cambio.next(!this.cambio.value);
+        })
+        .catch((err) => alert("Error borrando filas -> " + JSON.stringify(err)));
+        
+    }
+
+    public borraSugerenciasDeFila(fila: number, cantidad?: number){
+        let filasQueBorrar = "";
+        if(cantidad != undefined) filasQueBorrar = "id IN (SELECT id FROM sugerencia WHERE fila = " + fila + " ORDER BY fecha_ultimo_uso ASC LIMIT " + cantidad + ")";
+        else filasQueBorrar = "fila = " + fila;
+        alert(`DELETE FROM sugerencia WHERE ${filasQueBorrar};`);
+        return this.database.executeSql(
+            `DELETE FROM sugerencia WHERE ${filasQueBorrar};`, [])
+        .then(() => {
+            this.cambio.next(!this.cambio.value);
+        })
+        .catch((err) => alert("Error borrando sugerencias -> " + JSON.stringify(err)));
+    }
+
     private borraTablas() {
         // Usuario
         this.database.executeSql(
@@ -443,5 +581,53 @@ export class DatabaseService {
         .catch((err) => alert("Error borrando tabla usuario -> " + JSON.stringify(err)));
     }
 
-    public getIdUsuarioActual() { return this.usuarioActual; }
+    private insertaAccionesBasicas(usuario: number){
+        this.insertaAccion(usuario, TiposAcciones.basicas, "Alarma", "", "").then((accion) => {
+            this.insertaFila(accion.insertId, TiposFilas.fija, "pon una alarma");
+            this.insertaFila(accion.insertId, TiposFilas.temporal, "").then((fila) => {
+                this.insertaSugerencia(fila.insertId, "hoy");
+                this.insertaSugerencia(fila.insertId, "mañana");
+                this.insertaSugerencia(fila.insertId, "pasado mañana");
+            });
+            this.insertaFila(accion.insertId, TiposFilas.fija, "a las");
+            this.insertaFila(accion.insertId, TiposFilas.temporal, "").then((fila) => {
+                this.insertaSugerencia(fila.insertId, "8:00");
+                this.insertaSugerencia(fila.insertId, "14:00");
+                this.insertaSugerencia(fila.insertId, "22:00");
+            });
+        });
+
+        this.insertaAccion(usuario, TiposAcciones.basicas, "El tiempo", "", "").then((accion) => {
+            this.insertaFila(accion.insertId, TiposFilas.fija, "¿qué tiempo hará");
+            this.insertaFila(accion.insertId, TiposFilas.temporal, "").then((fila) => {
+                this.insertaSugerencia(fila.insertId, "hoy");
+                this.insertaSugerencia(fila.insertId, "mañana");
+                this.insertaSugerencia(fila.insertId, "pasado mañana");
+            });
+            this.insertaFila(accion.insertId, TiposFilas.temporal, "").then((fila) => {
+                this.insertaSugerencia(fila.insertId, "en Madrid");
+                this.insertaSugerencia(fila.insertId, "en Alicante");
+                this.insertaSugerencia(fila.insertId, "en Pontevedra");
+            });
+            this.insertaFila(accion.insertId, TiposFilas.fija, "?");
+        });
+    }
+
+    private insertaAccionesAplicaciones(usuario: number){
+        this.insertaAccion(usuario, TiposAcciones.aplicaciones, "Spotify", "", "").then((accion) => {
+            this.insertaFila(accion.insertId, TiposFilas.fija, "pon");
+            this.insertaFila(accion.insertId, TiposFilas.temporal, "").then((fila) => {
+                this.insertaSugerencia(fila.insertId, "Imagine");
+                this.insertaSugerencia(fila.insertId, "Für Elise");
+                this.insertaSugerencia(fila.insertId, "16 añitos");
+            });
+            this.insertaFila(accion.insertId, TiposFilas.fija, "de");
+            this.insertaFila(accion.insertId, TiposFilas.temporal, "").then((fila) => {
+                this.insertaSugerencia(fila.insertId, "John Lennon");
+                this.insertaSugerencia(fila.insertId, "Beethoven");
+                this.insertaSugerencia(fila.insertId, "Dani Martín");
+            });
+            this.insertaFila(accion.insertId, TiposFilas.fija, "en Spotify");
+        });
+    }
 }

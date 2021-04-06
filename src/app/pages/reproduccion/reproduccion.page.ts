@@ -13,6 +13,9 @@ import { ChangeDetectorRef } from '@angular/core'; // Si no se usa no actualiza 
 // Para saber si es iOS
 import { Platform } from '@ionic/angular';
 
+// Alertas - Prompt
+import { AlertController } from '@ionic/angular';
+
 // Base de datos
 import { DatabaseService } from 'src/app/services/databaseService';
 
@@ -41,19 +44,33 @@ export class ReproduccionPage implements OnInit {
     private route: ActivatedRoute, // Para recibir los parametros del Router
     private tts: TextToSpeech, // TTS
     private plt: Platform, private speechRecognition: SpeechRecognition, private changeDetector: ChangeDetectorRef, // Si el STT no va: public navCtrl: NavController
-    private platform: Platform, 
+    public alertController: AlertController, // Alertas - Prompt
+    private platform: Platform,
     private databaseService:DatabaseService
-    ){
+    ){}
 
+  ngOnInit() {
+    
     // Recogida del texto
     this.route.params.subscribe(params => {
       this.textoAReproducir = params['textoAReproducir'];
       this.configuracion.respuesta = params['respuesta'];
       this.configuracion.modo_simple = params['modo_simple'];
+
+      this.actualizaPermisoSTT().then(() => {
+        if(this.configuracion.respuesta == 1 && !this.permisoSTT){
+          // while(this.configuracion.respuesta == 1 && !this.permisoSTT){
+            this.ventanaNoTienePermisoSTT().then(() => {
+              this.diTTS();
+  
+            });
+  
+          // }
+        } else this.diTTS();
+      });
+
       console.log(params['textoAReproducir']);
     });
-
-    //this.diElTextoTrasEsperar();
   }
 
   consigueConfiguracion(){
@@ -114,6 +131,13 @@ export class ReproduccionPage implements OnInit {
     return this.permisoSTT;
   }
 
+  actualizaPermisoSTT(){
+    return this.speechRecognition.hasPermission()
+    .then((hasPermission: boolean) => {
+      this.permisoSTT = hasPermission;
+    });
+  }
+
   iniciaSTT(){
     this.grabando = true;
     let options = {
@@ -148,14 +172,11 @@ export class ReproduccionPage implements OnInit {
   }
 
   pidePermisoSTT() {
-    this.speechRecognition.hasPermission()
-    .then((hasPermission: boolean) => {
-      if(hasPermission){
-        this.iniciaSTT();
-      } else {
-        this.speechRecognition.requestPermission();
-      }
-      this.permisoSTT = hasPermission;
+    return this.speechRecognition.requestPermission().finally(() => {
+      return this.speechRecognition.hasPermission()
+      .then((hasPermission: boolean) => {
+        this.permisoSTT = hasPermission;
+      });
     });
   }
 
@@ -188,9 +209,43 @@ export class ReproduccionPage implements OnInit {
     this.diTTS();
   }
 
-  // Al iniciar la pagina
-  ngOnInit() {
-    this.diTTS();
+  async ventanaNoTienePermisoSTT() {
+
+    const alert = await this.alertController.create({
+      cssClass: 'ventanaNoTienePermisoSTT',
+      backdropDismiss: false,
+      header: 'Permiso micrófono',
+      message: 'La opción de respuesta está activada, pero la aplicación no tiene permiso para utilizar el micrófono. Puede darle permiso o desactivar la función de respuesta.',
+      buttons: [
+        {
+          text: 'Desactivar respuesta',
+          handler: () => {
+            console.log('Confirm Desactivar respuesta');
+            this.databaseService.cambiaRespuesta(false).then(() => {
+              this.configuracion.respuesta = 0;
+              alert.dismiss();
+            });
+          }
+        }, {
+          text: 'Dar permiso',
+          handler: () => {
+            console.log('Confirm Dar permiso');
+            this.pidePermisoSTT().then(()=>{
+              if(this.permisoSTT) alert.dismiss();
+              else return false;
+            }).finally(()=>{
+              if(this.permisoSTT) alert.dismiss();
+              else return false;
+            });
+            return false;
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+
+    return alert.onDidDismiss();
   }
 
 }
