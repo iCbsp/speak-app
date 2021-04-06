@@ -56,16 +56,19 @@ export class ReproduccionPage implements OnInit {
       this.textoAReproducir = params['textoAReproducir'];
       this.configuracion.respuesta = params['respuesta'];
       this.configuracion.modo_simple = params['modo_simple'];
-      if(this.configuracion.respuesta == 1 && !this.permisoSTT){
-        // while(this.configuracion.respuesta == 1 && !this.permisoSTT){
-          this.ventanaNoTienePermisoSTT().then(() => {
-            this.diTTS();
 
-          });
+      this.actualizaPermisoSTT().then(() => {
+        if(this.configuracion.respuesta == 1 && !this.permisoSTT){
+          // while(this.configuracion.respuesta == 1 && !this.permisoSTT){
+            this.ventanaNoTienePermisoSTT().then(() => {
+              this.diTTS();
+  
+            });
+  
+          // }
+        } else this.diTTS();
+      });
 
-        // }
-      }else
-        this.diTTS();
       console.log(params['textoAReproducir']);
     });
   }
@@ -129,7 +132,7 @@ export class ReproduccionPage implements OnInit {
   }
 
   actualizaPermisoSTT(){
-    this.speechRecognition.hasPermission()
+    return this.speechRecognition.hasPermission()
     .then((hasPermission: boolean) => {
       this.permisoSTT = hasPermission;
     });
