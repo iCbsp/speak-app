@@ -27,6 +27,7 @@
 
   <ion-item *ngIf="asistente.inicial">
     <ion-input disabled [value]="asistente.inicial + ','"></ion-input>
+    <ion-button slot="end" (click)="asistente.inicial = ''"><ion-icon name="close-outline"></ion-icon></ion-button>
   </ion-item>
   <div *ngFor="let fila of filas; let i = index" style="padding: 0.5em 0em; border-bottom: 1px solid lightgray;">
     <ion-item no-lines lines="none">
@@ -42,6 +43,7 @@
   </div>
   <ion-item *ngIf="asistente.final">
     <ion-input disabled [value]="asistente.final"></ion-input>
+    <ion-button slot="end" (click)="asistente.final = ''"><ion-icon name="close-outline"></ion-icon></ion-button>
   </ion-item>
 
   <section style="text-align: center;">

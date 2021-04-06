@@ -37,6 +37,7 @@ export class DatabaseService {
             else alert("Error creando la base de datos");
         });
     }
+    public getIdUsuarioActual() { return this.usuarioActual; }
 
     public alertDatabaseInfo(){
         alert("Base de datos: " + this.lista.value);
@@ -160,28 +161,14 @@ export class DatabaseService {
         
     private insercionesIniciales() {
         // Igual esto deberia de ser una transaccion (??????)
-
+        
         this.insertaAsistente("Alexa", "");
         this.insertaAsistente("Ok Google", "");
         this.insertaAsistente("Siri", "");
-
-        this.insertaAccion(0, TiposAcciones.basicas, "Alarma", "", "").then((accion) => {
-            this.insertaFila(accion.insertId, TiposFilas.fija, "pon una alarma");
-            this.insertaFila(accion.insertId, TiposFilas.temporal, "");
+        
+        this.publicaUsuario("Usuario", "#32a852").then(() => {
+            this.lista.next(true);
         });
-        this.insertaAccion(0, TiposAcciones.basicas, "El tiempo", "", "").then((accion) => {
-            this.insertaFila(accion.insertId, TiposFilas.fija, "¿qué tiempo hará");
-            this.insertaFila(accion.insertId, TiposFilas.temporal, "").then((fila) => {
-                this.insertaSugerencia(fila.insertId, "hoy");
-                this.insertaSugerencia(fila.insertId, "mañana");
-            });
-            this.insertaFila(accion.insertId, TiposFilas.temporal, "").then((fila) => {
-                this.insertaSugerencia(fila.insertId, "en Alicante");
-            });
-            this.insertaFila(accion.insertId, TiposFilas.fija, "?");
-        });
-        this.publicaUsuario("Usuario", "#32a852").then(() => this.lista.next(true));
-
 
         // this.insertaUsuario("Usuario", "#32a852").then((usuario) => {
         //     this.insertaConfiguracion(usuario.insertId).then(() => this.lista.next(true));
@@ -368,7 +355,12 @@ export class DatabaseService {
 
     public publicaUsuario(nombre : string, color : string) : any{
         return this.insertaUsuario(nombre, color).then((usuario) => {
-            return this.insertaConfiguracion(usuario.insertId).then(() => this.cambio.next(!this.cambio.value));
+            return this.insertaConfiguracion(usuario.insertId).then(() => {
+                this.usuarioActual = usuario.insertId;
+                this.insertaAccionesBasicas(usuario.insertId);
+                this.insertaAccionesAplicaciones(usuario.insertId);
+                this.cambio.next(!this.cambio.value);
+            });
         });
     }
 
@@ -404,7 +396,7 @@ export class DatabaseService {
     private insertaUsuario(nombre : string, color : string){
         if(nombre && color){
             return this.database.executeSql(
-                `INSERT INTO usuario(nombre, color, fecha_ultimo_inicio) VALUES ('${nombre}', '${color}', 0);`, [])
+                `INSERT INTO usuario(nombre, color, fecha_ultimo_inicio) VALUES ('${nombre}', '${color}', datetime('now'));`, [])
             .catch((err) => {
                 alert("Error insertando usuario -> " + JSON.stringify(err));
             });
@@ -589,5 +581,53 @@ export class DatabaseService {
         .catch((err) => alert("Error borrando tabla usuario -> " + JSON.stringify(err)));
     }
 
-    public getIdUsuarioActual() { return this.usuarioActual; }
+    private insertaAccionesBasicas(usuario: number){
+        this.insertaAccion(usuario, TiposAcciones.basicas, "Alarma", "", "").then((accion) => {
+            this.insertaFila(accion.insertId, TiposFilas.fija, "pon una alarma");
+            this.insertaFila(accion.insertId, TiposFilas.temporal, "").then((fila) => {
+                this.insertaSugerencia(fila.insertId, "hoy");
+                this.insertaSugerencia(fila.insertId, "mañana");
+                this.insertaSugerencia(fila.insertId, "pasado mañana");
+            });
+            this.insertaFila(accion.insertId, TiposFilas.fija, "a las");
+            this.insertaFila(accion.insertId, TiposFilas.temporal, "").then((fila) => {
+                this.insertaSugerencia(fila.insertId, "8:00");
+                this.insertaSugerencia(fila.insertId, "14:00");
+                this.insertaSugerencia(fila.insertId, "22:00");
+            });
+        });
+
+        this.insertaAccion(usuario, TiposAcciones.basicas, "El tiempo", "", "").then((accion) => {
+            this.insertaFila(accion.insertId, TiposFilas.fija, "¿qué tiempo hará");
+            this.insertaFila(accion.insertId, TiposFilas.temporal, "").then((fila) => {
+                this.insertaSugerencia(fila.insertId, "hoy");
+                this.insertaSugerencia(fila.insertId, "mañana");
+                this.insertaSugerencia(fila.insertId, "pasado mañana");
+            });
+            this.insertaFila(accion.insertId, TiposFilas.temporal, "").then((fila) => {
+                this.insertaSugerencia(fila.insertId, "en Madrid");
+                this.insertaSugerencia(fila.insertId, "en Alicante");
+                this.insertaSugerencia(fila.insertId, "en Pontevedra");
+            });
+            this.insertaFila(accion.insertId, TiposFilas.fija, "?");
+        });
+    }
+
+    private insertaAccionesAplicaciones(usuario: number){
+        this.insertaAccion(usuario, TiposAcciones.aplicaciones, "Spotify", "", "").then((accion) => {
+            this.insertaFila(accion.insertId, TiposFilas.fija, "pon");
+            this.insertaFila(accion.insertId, TiposFilas.temporal, "").then((fila) => {
+                this.insertaSugerencia(fila.insertId, "Imagine");
+                this.insertaSugerencia(fila.insertId, "Für Elise");
+                this.insertaSugerencia(fila.insertId, "16 añitos");
+            });
+            this.insertaFila(accion.insertId, TiposFilas.fija, "de");
+            this.insertaFila(accion.insertId, TiposFilas.temporal, "").then((fila) => {
+                this.insertaSugerencia(fila.insertId, "John Lennon");
+                this.insertaSugerencia(fila.insertId, "Beethoven");
+                this.insertaSugerencia(fila.insertId, "Dani Martín");
+            });
+            this.insertaFila(accion.insertId, TiposFilas.fija, "en Spotify");
+        });
+    }
 }

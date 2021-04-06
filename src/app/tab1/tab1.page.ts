@@ -43,7 +43,7 @@ export class Tab1Page {
         }
       });
       this.databaseService.cambio.subscribe(()=>{
-        // alert("Cambio en la base de datos");
+        this.consigueAcciones();
       });
     }
   }

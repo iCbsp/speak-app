@@ -189,21 +189,48 @@ export class TabsPage {
   // }
 
   async ventanaTextoManual() {
-    // Comprobación asistente
-    var textoAsistente = "";
-    if(this.asistente != "Ninguno") textoAsistente = this.asistente + ", ";
+    let inicialTexto = "";
+    let finalTexto = "";
+
+    if(this.asistenteSeleccionado && this.asistentes.length){
+      this.asistentes.forEach(asistente => {
+        if(asistente.id == this.asistenteSeleccionado) {
+          if(asistente.inicial.length) inicialTexto = asistente.inicial;
+          if(asistente.final.length) finalTexto = asistente.final;
+        }
+      });
+    }
+
+    let inputs = [];
+    if(inicialTexto.length) inputs.push(
+        {
+          name: 'asistenteInicial',
+          type: 'text',
+          disabled: true,
+          value: inicialTexto + ","
+        }
+    );
+    inputs.push(
+        {
+          name: 'texto',
+          type: 'text',
+          placeholder: "Acción a realizar",
+          disabled: false
+        }
+    );
+    if(finalTexto.length) inputs.push(
+        {
+          name: 'asistenteFinal',
+          type: 'text',
+          disabled: true,
+          value: " " + finalTexto
+        }
+    );
 
     const alert = await this.alertController.create({
       cssClass: 'ventanaTextoManual',
       header: 'Acción manual',
-      inputs: [
-        {
-          name: 'textoSTT',
-          type: 'text',
-          //placeholder: 'Acción a realizar',
-          value: textoAsistente
-        }
-      ],
+      inputs: inputs,
       buttons: [
         {
           text: 'Cancelar',
@@ -217,9 +244,7 @@ export class TabsPage {
           role: 'enviar',
           handler: data => {
             console.log('Confirm Ok');
-            //this.texto =  data.textoSTT;
-            //this.diTTS();
-            this.router.navigate(['reproduccion', {textoAReproducir: data.textoSTT}]);
+            this.router.navigate(['reproduccion', {textoAReproducir: data.asistenteInicial + data.texto + data.asistenteFinal}]);
           }
         }
       ]

@@ -46,7 +46,8 @@ export class UsuarioPopoverPage implements OnInit {
   
   cambiaUsuario(usuarioID : number){
     this.databaseService.cambiaUsuarioActual(usuarioID);
-    window.location.reload();
+    // window.location.reload();
+    this.popover.dismiss();
   }
 
   closePopover(){
