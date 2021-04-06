@@ -368,13 +368,13 @@ export class DatabaseService {
         return this.insertaAsistente(inicial, final).then(() => this.cambio.next(!this.cambio.value));
     }
 
-    public publicaAccion(tipo: TiposAcciones, nombre: string, usuario?: number, filas?: FilaAccion[]){
+    public publicaAccion(tipo: TiposAcciones, nombre: string, imagen: string, usuario?: number, filas?: FilaAccion[]){
         // if(!filas || !filas.length) {
         //     alert("Error publicando accion -> La acción debe de tener al menos una fila");
         //     return null;
         // }
         if(usuario == undefined) usuario = this.usuarioActual;
-        return this.insertaAccion(this.usuarioActual, tipo, nombre, "imagen", "orden").then((accion) => {
+        return this.insertaAccion(this.usuarioActual, tipo, nombre, imagen, "orden").then((accion) => {
             if(filas && filas != undefined) filas.map(fila => {
                 this.insertaFila(accion.insertId, fila.tipo, fila.texto);
             });
@@ -582,7 +582,7 @@ export class DatabaseService {
     }
 
     private insertaAccionesBasicas(usuario: number){
-        this.insertaAccion(usuario, TiposAcciones.basicas, "Alarma", "", "").then((accion) => {
+        this.insertaAccion(usuario, TiposAcciones.basicas, "Alarma", "⏰", "").then((accion) => {
             this.insertaFila(accion.insertId, TiposFilas.fija, "pon una alarma");
             this.insertaFila(accion.insertId, TiposFilas.temporal, "").then((fila) => {
                 this.insertaSugerencia(fila.insertId, "hoy");
@@ -597,7 +597,7 @@ export class DatabaseService {
             });
         });
 
-        this.insertaAccion(usuario, TiposAcciones.basicas, "El tiempo", "", "").then((accion) => {
+        this.insertaAccion(usuario, TiposAcciones.basicas, "El tiempo", "⛅", "").then((accion) => {
             this.insertaFila(accion.insertId, TiposFilas.fija, "¿qué tiempo hará");
             this.insertaFila(accion.insertId, TiposFilas.temporal, "").then((fila) => {
                 this.insertaSugerencia(fila.insertId, "hoy");
@@ -614,7 +614,7 @@ export class DatabaseService {
     }
 
     private insertaAccionesAplicaciones(usuario: number){
-        this.insertaAccion(usuario, TiposAcciones.aplicaciones, "Spotify", "", "").then((accion) => {
+        this.insertaAccion(usuario, TiposAcciones.aplicaciones, "Spotify", "💚", "").then((accion) => {
             this.insertaFila(accion.insertId, TiposFilas.fija, "pon");
             this.insertaFila(accion.insertId, TiposFilas.temporal, "").then((fila) => {
                 this.insertaSugerencia(fila.insertId, "Imagine");

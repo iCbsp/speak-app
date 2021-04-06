@@ -22,7 +22,7 @@
     </ion-grid>
   </section>
   <div style="padding: 0em 0.5em; border-bottom: 1px solid gray; text-align: center;">
-    <h2> {{ accion.titulo }} </h2>
+    <h2> {{ accion.titulo }} <span *ngIf="accion.imagen">{{ accion.imagen }}</span> </h2>
   </div>
 
   <ion-item *ngIf="asistente.inicial">
@@ -53,6 +53,9 @@
 </ion-content>
 
 <ion-content *ngIf="modoAccion == 2 || modoAccion == 3"> <!-- editar o crear -->
+  <section style="text-align: center; border-bottom: 1px solid lightgray;">
+    <ion-input [(ngModel)]="accion.imagen" placeholder="Emoji"></ion-input>
+  </section>
   <section style="text-align: center; border-bottom: 1px solid lightgray;">
     <ion-input [(ngModel)]="accion.titulo" placeholder="Nueva acción"></ion-input>
   </section>

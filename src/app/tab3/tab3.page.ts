@@ -82,6 +82,7 @@ export class Tab3Page {
       if(!this.platform.is('desktop') && accionSeleccionada){
         const popover = await this.popover.create({
         component:AccionPopoverPage,
+        cssClass: 'accionPopover',
         componentProps: {
           accion: accionSeleccionada,
           modoAccion: ModoAccion.ver

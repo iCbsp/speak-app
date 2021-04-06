@@ -29,7 +29,7 @@ import { FilaAccion, SugerenciaFila } from 'src/app/structures';
 export class AccionPopoverPage implements OnInit {
   
   modoAccion = ModoAccion.ver;
-  accion = { id: 0, titulo: "Error en la acción" };
+  accion = { id: 0, titulo: "Error en la acción", imagen: "" };
   filas = new Array<FilaAccion>();
   filaId = 0;
   asistente = { inicial: "", final: ""};
@@ -89,6 +89,7 @@ export class AccionPopoverPage implements OnInit {
           });
         } else if(this.modoAccion == ModoAccion.crear){
           this.accion.titulo = "";
+          this.accion.imagen = "😃";
           this.filaId = 0;
           this.filas = new Array();
           this.filas.push(new FilaAccion(this.filaId++, "", TiposFilas.fija));
@@ -215,7 +216,7 @@ export class AccionPopoverPage implements OnInit {
 
   creaAccion(){
     if(this.filas && this.filas.length){
-      this.databaseService.publicaAccion(TiposAcciones.personalizadas, this.accion.titulo, undefined, this.filas).then(() => {
+      this.databaseService.publicaAccion(TiposAcciones.personalizadas, this.accion.titulo, this.accion.imagen, undefined, this.filas).then(() => {
         this.closePopover();
       });
     } else alert("Para crear una acción es necesario que haya al menos una fila");
@@ -238,7 +239,7 @@ export class AccionPopoverPage implements OnInit {
 
   editaAccion(){
     if(this.filas && this.filas.length){
-      this.databaseService.editaAccion(this.accion.id, this.filas, this.accion.titulo, "").then(() => {
+      this.databaseService.editaAccion(this.accion.id, this.filas, this.accion.titulo, this.accion.imagen).then(() => {
         // this.closePopover();
         this.modoAccion = ModoAccion.ver;
         this.ngOnInit();
