@@ -80,6 +80,9 @@ export class DatabaseService {
     }
 
     private creaTablas() {
+
+        this.database.executeSql("PRAGMA foreign_keys = ON");
+
         // Usuario
         this.database.executeSql(
         `CREATE TABLE IF NOT EXISTS usuario (
@@ -89,21 +92,7 @@ export class DatabaseService {
             fecha_ultimo_inicio TEXT
         );`, [])
         .then(() => this.messages.push("Tabla de usuario creada"))
-        .catch((err) => alert("Error creando la tabla -> " + JSON.stringify(err)));
-
-        // Configuracion
-        this.database.executeSql(
-        `CREATE TABLE IF NOT EXISTS configuracion (
-            id INTEGER primary key,
-            usuario INTEGER,
-            asistente INTEGER,
-            modo_simple INTEGER,
-            respuesta INTEGER,
-            FOREIGN KEY(usuario) REFERENCES usuario(id),
-            FOREIGN KEY(asistente) REFERENCES asistente(id)
-        );`, [])
-        .then(() => this.messages.push("Tabla de configuracion creada"))
-        .catch((err) => alert("Error creando la tabla -> " + JSON.stringify(err)));
+        .catch((err) => alert("Error creando la tabla usuario -> " + JSON.stringify(err)));
         
         // Asistente
         this.database.executeSql(
@@ -113,8 +102,37 @@ export class DatabaseService {
             final TEXT
         );`, [])
         .then(() => this.messages.push("Tabla de asistente creada"))
-        .catch((err) => alert("Error creando la tabla -> " + JSON.stringify(err)));
+        .catch((err) => alert("Error creando la tabla asistente -> " + JSON.stringify(err)));
 
+        // Configuracion
+        this.database.executeSql(
+            `CREATE TABLE IF NOT EXISTS configuracion (
+                id INTEGER primary key,
+                usuario INTEGER,
+                asistente INTEGER,
+                modo_simple INTEGER,
+                respuesta INTEGER,
+                FOREIGN KEY(usuario) REFERENCES usuario(id) ON DELETE CASCADE
+                );`, [])
+                .then(() => this.messages.push("Tabla de configuracion creada"))
+                .catch((err) => alert("Error creando la tabla configuracion -> " + JSON.stringify(err)));
+        //FOREIGN KEY(asistente) REFERENCES asistente(id)
+                
+
+        // Accion
+        this.database.executeSql(
+            `CREATE TABLE IF NOT EXISTS accion (
+                id INTEGER primary key,
+                usuario INTEGER,
+                tipo INTEGER,
+                titulo TEXT,
+                imagen TEXT,
+                orden_filas TEXT,
+                ultimo_uso TEXT,
+                FOREIGN KEY(usuario) REFERENCES usuario(id) ON DELETE CASCADE
+            );`, [])
+            .then(() => this.messages.push("Tabla de accion creada"))
+            .catch((err) => alert("Error creando la tabla accion -> " + JSON.stringify(err)));
 
         // Fila
         this.database.executeSql(
@@ -123,10 +141,10 @@ export class DatabaseService {
             accion INTEGER,
             tipo INTEGER,
             texto TEXT,
-            FOREIGN KEY(accion) REFERENCES accion(id)
+            FOREIGN KEY(accion) REFERENCES accion(id) ON DELETE CASCADE
         );`, [])
         .then(() => this.messages.push("Tabla de fila creada"))
-        .catch((err) => alert("Error creando la tabla -> " + JSON.stringify(err)));
+        .catch((err) => alert("Error creando la tabla fila -> " + JSON.stringify(err)));
 
 
         // Sugerencia
@@ -136,26 +154,10 @@ export class DatabaseService {
             fila INTEGER,
             texto TEXT,
             fecha_ultimo_uso TEXT,
-            FOREIGN KEY(fila) REFERENCES fila(id)
+            FOREIGN KEY(fila) REFERENCES fila(id) ON DELETE CASCADE
         );`, [])
         .then(() => this.messages.push("Tabla de sugerencia creada"))
-        .catch((err) => alert("Error creando la tabla -> " + JSON.stringify(err)));
-
-
-        // Accion
-        this.database.executeSql(
-        `CREATE TABLE IF NOT EXISTS accion (
-            id INTEGER primary key,
-            usuario INTEGER,
-            tipo INTEGER,
-            titulo TEXT,
-            imagen TEXT,
-            orden_filas TEXT,
-            ultimo_uso TEXT,
-            FOREIGN KEY(usuario) REFERENCES usuario(id)
-        );`, [])
-        .then(() => this.messages.push("Tabla de accion creada"))
-        .catch((err) => alert("Error creando la tabla -> " + JSON.stringify(err)));
+        .catch((err) => alert("Error creando la tabla sugerencia -> " + JSON.stringify(err)));
 
     }
         
@@ -497,22 +499,41 @@ export class DatabaseService {
     }
 
     public borraUsuario(usuario : number){
+        // if(usuario){
+        //     return this.database.executeSql(
+        //         `DELETE FROM configuracion WHERE usuario = ${usuario}`, [])
+        //         .then(() => {
+        //             return this.database.executeSql(
+        //                 `DELETE FROM usuario WHERE id = ${usuario}`, [])
+        //                 .then(() => {
+        //                     this.obtenUsuariosSesion().then(usuariosBDD => {
+        //                         this.usuarioActual = usuariosBDD.rows.item(0).id;
+        //                         this.cambio.next(!this.cambio.value);
+        //                     });
+        //                 })
+        //                 .catch((err) => alert("Error borrando usuario -> " + JSON.stringify(err)));
+        //         })
+        //         .catch((err) => alert("Error borrando configuracion -> " + JSON.stringify(err)));
+        // } else alert("borraUsuario: Usuario no valido");
         if(usuario){
             return this.database.executeSql(
-                `DELETE FROM configuracion WHERE usuario = ${usuario}`, [])
-                .then(() => {
-                    return this.database.executeSql(
-                        `DELETE FROM usuario WHERE id = ${usuario}`, [])
-                        .then(() => {
-                            this.obtenUsuariosSesion().then(usuariosBDD => {
-                                this.usuarioActual = usuariosBDD.rows.item(0).id;
-                                this.cambio.next(!this.cambio.value);
-                            });
-                        })
-                        .catch((err) => alert("Error borrando usuario -> " + JSON.stringify(err)));
-                })
-                .catch((err) => alert("Error borrando configuracion -> " + JSON.stringify(err)));
-        } else alert("borraUsuario: Usuario no valido");
+                `DELETE FROM usuario WHERE id = ${usuario}`, [])
+            .then(() => {
+                this.obtenUsuariosSesion().then(usuariosBDD => {
+                    if(usuariosBDD.rows.length){
+                        this.usuarioActual = usuariosBDD.rows.item(0).id;
+                        this.cambio.next(!this.cambio.value);
+                    } else {
+                        alert("Error: no hay usuarios, creando uno temporal");
+                        this.publicaUsuario("Usuario", "#32a852").then(() => {
+                            this.lista.next(true);
+                            this.cambio.next(!this.cambio.value);
+                        });
+                    }
+                });
+            })
+            .catch((err) => alert("Error borrando usuario -> " + JSON.stringify(err)));
+        } else alert("El valor del usuario no es adecuado");
     }
     
     public borraAsistente(asistenteID : number){
@@ -530,23 +551,37 @@ export class DatabaseService {
     }
 
     public borraAcciones(idAcciones : number[]){
+        // let devuelve : Promise<any>;
+          
+        // if(idAcciones.length){
+        //     for(let indiceIdAcciones = 0; indiceIdAcciones < idAcciones.length; indiceIdAcciones++){
+        //         devuelve = this.borraFilasDeAccion(idAcciones[indiceIdAcciones])
+        //             .finally(() => {
+        //                 devuelve = this.database.executeSql(
+        //                     `DELETE FROM accion WHERE id = ${idAcciones[indiceIdAcciones]};`, [])
+        //                     .then(() => this.cambio.next(!this.cambio.value))
+        //                     .catch((err) => alert("Error borrando accion -> " + JSON.stringify(err)));
+        //             })
+        //     }
+        // } else {
+        //     alert("borraAcciones: No se han pasado acciones");
+        //     devuelve = new Promise(() => {});
+        // }
+
+        // return devuelve;
         let devuelve : Promise<any>;
           
         if(idAcciones.length){
             for(let indiceIdAcciones = 0; indiceIdAcciones < idAcciones.length; indiceIdAcciones++){
-                devuelve = this.borraFilasDeAccion(idAcciones[indiceIdAcciones])
-                    .finally(() => {
-                        devuelve = this.database.executeSql(
-                            `DELETE FROM accion WHERE id = ${idAcciones[indiceIdAcciones]};`, [])
-                            .then(() => this.cambio.next(!this.cambio.value))
-                            .catch((err) => alert("Error borrando accion -> " + JSON.stringify(err)));
-                    })
+                devuelve = this.database.executeSql(
+                    `DELETE FROM accion WHERE id = ${idAcciones[indiceIdAcciones]};`, [])
+                .then(() => this.cambio.next(!this.cambio.value))
+                .catch((err) => alert("Error borrando accion -> " + JSON.stringify(err)));
             }
         } else {
             alert("borraAcciones: No se han pasado acciones");
             devuelve = new Promise(() => {});
         }
-
         return devuelve;
     }
 
@@ -564,31 +599,13 @@ export class DatabaseService {
         let filasQueBorrar = "";
         if(cantidad != undefined) filasQueBorrar = "id IN (SELECT id FROM sugerencia WHERE fila = " + fila + " ORDER BY fecha_ultimo_uso ASC LIMIT " + cantidad + ")";
         else filasQueBorrar = "fila = " + fila;
-        alert(`DELETE FROM sugerencia WHERE ${filasQueBorrar};`);
+
         return this.database.executeSql(
             `DELETE FROM sugerencia WHERE ${filasQueBorrar};`, [])
         .then(() => {
             this.cambio.next(!this.cambio.value);
         })
         .catch((err) => alert("Error borrando sugerencias -> " + JSON.stringify(err)));
-    }
-
-    private borraTablas() {
-        // Usuario
-        this.database.executeSql(
-        `DROP TABLE IF EXISTS usuario;`, [])
-        .then((data)=>{
-            this.messages.push("Se han eliminado " + data.rows.length + " tablas");
-        })
-        .catch((err) => alert("Error borrando tabla usuario -> " + JSON.stringify(err)));
-        
-        // Configuracion
-        this.database.executeSql(
-        `DROP TABLE IF EXISTS usuario;`, [])
-        .then((data)=>{
-            this.messages.push("Se han eliminado " + data.rows.length + " tablas");
-        })
-        .catch((err) => alert("Error borrando tabla usuario -> " + JSON.stringify(err)));
     }
 
     private insertaAccionesBasicas(usuario: number){
