@@ -29,7 +29,7 @@ import { FilaAccion, SugerenciaFila } from 'src/app/structures';
 export class AccionPopoverPage implements OnInit {
   
   modoAccion = ModoAccion.ver;
-  accion = { id: 0, titulo: "Error en la acción", imagen: "" };
+  accion = { id: 0, titulo: "Error en la acción", imagen: "", tipo: 1 };
   filas = new Array<FilaAccion>();
   filaId = 0;
   asistente = { inicial: "", final: ""};
@@ -226,7 +226,7 @@ export class AccionPopoverPage implements OnInit {
 
   creaAccion(){
     if(this.filas && this.filas.length){
-      this.databaseService.publicaAccion(TiposAcciones.tab3, this.accion.titulo, this.accion.imagen, undefined, this.filas).then(() => {
+      this.databaseService.publicaAccion(this.accion.tipo, this.accion.titulo, this.accion.imagen, undefined, this.filas).then(() => {
         this.closePopover();
       });
     } else alert("Para crear una acción es necesario que haya al menos una fila");

@@ -428,9 +428,17 @@ export class DatabaseService {
         let texto = "";
         if(textoTemp) texto = textoTemp;
 
-            return this.database.executeSql(
-                `INSERT INTO fila(accion, tipo, texto) VALUES (${accion}, ${tipo}, '${texto}');`, [])
-                .catch((err) => alert("Error insertando fila -> " + JSON.stringify(err)));
+        return this.database.executeSql(
+            `INSERT INTO fila(accion, tipo, texto) VALUES (${accion}, ${tipo}, '${texto}');`, [])
+        .catch((err) => alert("Error insertando fila -> " + JSON.stringify(err)));
+    }
+    
+    private insertaObjetoFila(idAccion: number, fila: FilaAccion){
+        this.insertaFila(idAccion, fila.tipo, fila.texto).then((filaInsertada) => {
+            fila.sugerencias.forEach((sugerencia) => {
+                this.insertaSugerencia(filaInsertada.insertId, sugerencia.texto);
+            });
+        });
     }
 
     private insertaSugerencia(fila : number, texto: string){
@@ -470,7 +478,7 @@ export class DatabaseService {
             .then(() => {
                 return this.borraFilasDeAccion(id).then(() => {
                     if(filas && filas != undefined) filas.map(fila => {
-                        this.insertaFila(id, fila.tipo, fila.texto);
+                        this.insertaObjetoFila(id, fila);
                     });
                     this.cambio.next(!this.cambio.value);
                 });

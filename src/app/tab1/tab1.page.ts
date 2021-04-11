@@ -68,7 +68,8 @@ export class Tab1Page {
       this.popover.create({
       component:AccionPopoverPage,
       componentProps: {
-        modoAccion: ModoAccion.crear
+        modoAccion: ModoAccion.crear,
+        accion: { tipo: 1 }
       },
       showBackdrop: true
       }).then((popoverElement)=>{
