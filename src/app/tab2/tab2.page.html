@@ -1,20 +1,37 @@
-  <ion-content>
-    <div style="margin-top: 130px;"></div>
-    <ion-grid>
-      <ion-row>
-        <ion-col size="4" *ngFor="let accion of acciones">
-          <div style="text-align: center; background-color:steelblue; padding: 3px 0px;" (click)="createPopover(accion)">
-            <!-- <ion-icon style="font-size: 80px" name="cloud-outline"></ion-icon> -->
-            <p style="font-size: 50px; padding: 0; margin: 20px 0;">{{ accion.imagen }}</p>
-            <p>{{ accion.titulo }}</p>
-          </div>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col *ngIf="!(acciones.length)">
-          <ion-title text-center>No hay acciones</ion-title>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-  </ion-content>
-  
+<ion-content>
+  <div style="margin-top: 130px;"></div>
+  <ion-grid>
+    <ion-row>
+      <ion-col *ngIf="!modoGrupo" size="4">
+        <ion-button expand="block" (click)="conmutarModoGrupo()">Agrupar</ion-button>
+      </ion-col>
+      <ion-col *ngIf="modoGrupo" size="4">
+        <ion-button expand="block" (click)="conmutarModoGrupo()">Volver</ion-button>
+      </ion-col>
+      <ion-col *ngIf="!modoGrupo" size="8">
+        <ion-button expand="block" (click)="crearAccionPopover()">Añadir acción</ion-button>
+      </ion-col>
+      <ion-col *ngIf="modoGrupo" size="4">
+        <ion-button expand="block" (click)="reproducirAccionesSeleccionadas()">Reproducir</ion-button>
+      </ion-col>
+      <ion-col *ngIf="modoGrupo" size="4">
+        <ion-button expand="block" (click)="borrarAccionesSeleccionadas()" color="danger">Eliminar</ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="4" *ngFor="let accion of acciones">
+        <div style="text-align: center; background-color:steelblue; padding: 3px 0px;" (click)="abrirAccionPopover(accion)">
+          <p *ngIf="modoGrupo" style="text-align: center; border-bottom: 1px solid black;">{{ obtenIndiceSeleccionada(accion) ? obtenIndiceSeleccionada(accion) : "-" }}</p>
+          <!-- <ion-icon style="font-size: 80px" name="cloud-outline"></ion-icon> -->
+          <p style="font-size: 50px; padding: 0; margin: 20px 0;">{{ accion.imagen }}</p>
+          <p>{{ accion.titulo }}</p>
+        </div>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col *ngIf="!(acciones.length)">
+        <ion-title text-center>No hay acciones</ion-title>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

@@ -7,13 +7,13 @@
     <ion-grid>
       <ion-row>
         <ion-col size="6">
-          <ion-button *ngIf="accion.tipo == 3" (click)="cambiaAModoEditar()">
+          <ion-button (click)="cambiaAModoEditar()">
             Editar
             <ion-icon slot="end" name="create-outline"></ion-icon>
           </ion-button>
         </ion-col>
         <ion-col size="6">
-          <ion-button color="danger" *ngIf="accion.tipo == 3" (click)="ventanaBorrarAccion()">
+          <ion-button color="danger" (click)="ventanaBorrarAccion()">
             Borrar
             <ion-icon slot="end" name="trash-outline"></ion-icon>
           </ion-button>
