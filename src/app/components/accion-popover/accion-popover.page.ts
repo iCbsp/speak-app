@@ -226,7 +226,7 @@ export class AccionPopoverPage implements OnInit {
 
   creaAccion(){
     if(this.filas && this.filas.length){
-      this.databaseService.publicaAccion(TiposAcciones.personalizadas, this.accion.titulo, this.accion.imagen, undefined, this.filas).then(() => {
+      this.databaseService.publicaAccion(TiposAcciones.tab3, this.accion.titulo, this.accion.imagen, undefined, this.filas).then(() => {
         this.closePopover();
       });
     } else alert("Para crear una acción es necesario que haya al menos una fila");

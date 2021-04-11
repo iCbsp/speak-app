@@ -49,7 +49,7 @@ export class Tab1Page {
   }
   
   consigueAcciones(){
-    this.databaseService.obtenAcciones(TiposAcciones.basicas).then((accionesBDD) => {
+    this.databaseService.obtenAcciones(TiposAcciones.tab1).then((accionesBDD) => {
       this.acciones = [];
       if(accionesBDD) {
         for(let i = 0; i < accionesBDD.length; i++)

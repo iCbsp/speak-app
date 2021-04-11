@@ -53,7 +53,7 @@ export class Tab3Page {
   }
   
   consigueAcciones(){
-    this.databaseService.obtenAcciones(TiposAcciones.personalizadas).then((accionesBDD) => {
+    this.databaseService.obtenAcciones(TiposAcciones.tab3).then((accionesBDD) => {
       this.acciones = [];
       if(accionesBDD) {
         for(let i = 0; i < accionesBDD.length; i++)

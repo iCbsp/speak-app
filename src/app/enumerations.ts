@@ -1,7 +1,7 @@
 export enum TiposAcciones{
-    basicas = 1,
-    aplicaciones = 2,
-    personalizadas = 3
+    tab1 = 1,
+    tab2 = 2,
+    tab3 = 3
 }
 
 export enum TiposFilas{

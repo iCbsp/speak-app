@@ -49,7 +49,7 @@ export class Tab2Page {
   }
   
   consigueAcciones(){
-    this.databaseService.obtenAcciones(TiposAcciones.aplicaciones).then((accionesBDD) => {
+    this.databaseService.obtenAcciones(TiposAcciones.tab2).then((accionesBDD) => {
       this.acciones = [];
       if(accionesBDD) {
         for(let i = 0; i < accionesBDD.length; i++)
