@@ -34,6 +34,7 @@ export class AccionPopoverPage implements OnInit {
   filaId = 0;
   asistente = { inicial: "", final: ""};
   configuracion = { modo_simple: 1, respuesta: 1 };
+  cargando = false;
   
   constructor(
     private changeDetector: ChangeDetectorRef,
@@ -48,6 +49,7 @@ export class AccionPopoverPage implements OnInit {
     ngOnInit() {
       if(!this.platform.is('desktop')){
         if(this.modoAccion == ModoAccion.ver || this.modoAccion == ModoAccion.editar){
+          this.cargando = true;
           this.databaseService.lista.subscribe((ready)=>{
             if(ready){
               if(!this.accion.id) alert("No se ha recibido el id de la accion");
@@ -84,10 +86,10 @@ export class AccionPopoverPage implements OnInit {
                       if(asistenteBDD != null){
                         this.asistente = asistenteBDD;
                       }
-                      this.consigueConfiguracion();
+                      this.consigueConfiguracion().then(() => this.cargando = false);
                       this.changeDetector.detectChanges();
                     });
-                  }
+                  } else this.cargando = false;
                 }
               });
             }
@@ -118,13 +120,15 @@ export class AccionPopoverPage implements OnInit {
   }
 
   consigueConfiguracion(){
+    let promesa = new Promise<any>(() => {});
     this.databaseService.lista.subscribe((ready)=>{
       if(ready){
-        this.databaseService.obtenConfiguracion().then((configuracionBDD)=>{
+        promesa = this.databaseService.obtenConfiguracion().then((configuracionBDD)=>{
           this.configuracion = configuracionBDD;
         });
       }
     });
+    return promesa;
   }
 
   reproducirTexto(){

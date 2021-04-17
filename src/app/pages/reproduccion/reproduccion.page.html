@@ -3,42 +3,43 @@
     <ion-buttons (click)="pararTTS()" slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
-    <ion-title>SpeechApp</ion-title>
+    <ion-title>SpeakApp</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content style="text-align: center;">
 
-  <ion-title style="margin: 20px;" *ngIf="estaReproduciendo()">Reproduciendo</ion-title>
-  <ion-title style="margin: 20px;" *ngIf="estaGrabando()">Escuchando</ion-title>
-  <ion-title style="margin: 20px;" *ngIf="!estaGrabando() && !estaReproduciendo()">Resultado</ion-title>
+  <ion-title style="margin: 20px;" *ngIf="estaReproduciendo()">Reproduciendo 📢</ion-title>
+  <ion-title style="margin: 20px;" *ngIf="estaGrabando()">Escuchando 🎙</ion-title>
+  <ion-title style="margin: 20px;" *ngIf="!estaGrabando() && !estaReproduciendo()">Resultado ✨</ion-title>
 
   <ion-title size="small">{{ textoAReproducir }}</ion-title>
 
-  <ion-spinner style="width: 80px; height: 80px; margin: 20px;" *ngIf="estaReproduciendo() || estaGrabando()" name="crescent"></ion-spinner>
-  <ion-icon style="width: 80px; height: 80px; margin: 20px;" *ngIf="iconoResultado() == 'bien'" name="checkmark-circle-outline" color="success"></ion-icon>
-  <ion-icon style="width: 80px; height: 80px; margin: 20px;" *ngIf="iconoResultado() == 'mal'" name="close-circle-outline" color="danger"></ion-icon>
-  <ion-card *ngIf="!estaGrabando() && !estaReproduciendo()">
-    <ion-card-header>Respuesta</ion-card-header>
+  <ion-spinner style="width: 80px; height: 80px; margin: 10px;" *ngIf="estaReproduciendo() || estaGrabando()" name="crescent"></ion-spinner>
+  <ion-icon style="width: 80px; height: 80px; margin: 10px;" *ngIf="iconoResultado() == 'bien'" name="checkmark-circle-outline" color="success"></ion-icon>
+  <ion-icon style="width: 80px; height: 80px; margin: 10px;" *ngIf="iconoResultado() == 'mal'" name="close-circle-outline" color="danger"></ion-icon>
+  <ion-card *ngIf="!estaGrabando() && !estaReproduciendo() && configuracion.respuesta == 1">
+    <ion-title>Respuesta</ion-title>
     <ion-card-content>
-      <ion-list>
-        <!-- <ion-item *ngFor="let coincidencia of coincidencias">
-          {{ coincidencia }}
-        </ion-item> -->
-        <ion-item>
           {{ primeraCoincidencia }}
-        </ion-item>
-      </ion-list>
     </ion-card-content>
   </ion-card>
 
   <section *ngIf="!estaGrabando() && !estaReproduciendo()">
-  <!-- <section> -->
-    <ion-button size="small" color="secondary" (click)="reiniciaAccion()">Repetir</ion-button>
-    <ion-button size="small" color="primary" [routerLink]="['/tabs']">Aceptar</ion-button>
+    <ion-grid>
+      <ion-row>
+        <ion-col size="6">
+          <ion-button expand="block" color="secondary" (click)="reiniciaAccion()">Repetir</ion-button>
+        </ion-col>
+        <ion-col size="6">
+          <ion-button expand="block" color="primary" [routerLink]="['/tabs']">Aceptar</ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
   </section>
+
   <section *ngIf="!estaGrabando() && !estaReproduciendo()" style="margin: 20px 5px;">
-    <header>Acciones predictivas</header>
+    <ion-title><strike>Acciones predictivas</strike> (🚧)</ion-title>
     <ion-row>
       <ion-col size="4">
         <div style="text-align: center; background-color:steelblue; padding: 3px 0px;">

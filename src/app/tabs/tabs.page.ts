@@ -39,7 +39,6 @@ export class TabsPage {
   preguntadoUsoDeDatos = true;
 
   // Var STT
-  coincidencias: String[];
   estaGrabando = false;
   permisoSTT = false;
 
@@ -149,8 +148,14 @@ export class TabsPage {
       // language: 'en-US'
       language: 'es-ES'
     }
+    let respuesta = "";
     this.speechRecognition.startListening().subscribe(coincidencias => {
-      this.coincidencias = coincidencias;
+      if(coincidencias && coincidencias.length) respuesta = coincidencias[0];
+      this.ventanaRespuesta(respuesta);
+      this.changeDetector.detectChanges(); // Para actualizar la vista
+    }, (err) => {
+      console.log(err);
+      this.ventanaRespuesta(respuesta);
       this.changeDetector.detectChanges(); // Para actualizar la vista
     });
     this.estaGrabando = true;
@@ -244,7 +249,39 @@ export class TabsPage {
           role: 'enviar',
           handler: data => {
             console.log('Confirm Ok');
-            this.router.navigate(['reproduccion', {textoAReproducir: data.asistenteInicial + data.texto + data.asistenteFinal}]);
+            let texto = "";
+            if(data.asistenteInicial != undefined) texto += data.asistenteInicial;
+            texto += data.texto;
+            if(data.asistenteFinal != undefined) texto += data.asistenteFinal;
+            this.router.navigate(['reproduccion', {textoAReproducir: texto}]);
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
+  async ventanaRespuesta(respuesta){
+    
+    let subHeader = "";
+    let message = "";
+
+    if(respuesta != null && respuesta.length){
+      subHeader = "Esto es lo que el dispositivo ha escuchado:";
+      message = respuesta;
+    } else subHeader = "El dispositivo no ha escuchado nada";
+
+    const alert = await this.alertController.create({
+      cssClass: 'ventanaTextoManual',
+      subHeader: subHeader,
+      message: message,
+      buttons: [
+        {
+          text: 'Aceptar',
+          role: 'aceptar',
+          handler: () => {
+            console.log('Confirm Ok');
           }
         }
       ]

@@ -67,6 +67,7 @@ export class Tab2Page {
     if(!this.platform.is('desktop')){
       this.popover.create({
       component:AccionPopoverPage,
+      cssClass: 'accionPopover',
       componentProps: {
         modoAccion: ModoAccion.crear,
         accion: { tipo: 2 }

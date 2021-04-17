@@ -67,7 +67,8 @@ export class Tab3Page {
     if(!this.platform.is('desktop')){
       this.popover.create({
       component:AccionPopoverPage,
-      componentProps: {
+        cssClass: 'accionPopover',
+        componentProps: {
         modoAccion: ModoAccion.crear,
         accion: { tipo: 3 }
       },

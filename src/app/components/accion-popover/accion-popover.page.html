@@ -1,19 +1,19 @@
-<ion-content *ngIf="modoAccion == 1"
+<ion-content *ngIf="modoAccion == 1 && !cargando"
   [scrollEvents]="true"
   (ionScrollStart)="logScrollStart()"
   (ionScroll)="logScrolling($event)"
   (ionScrollEnd)="logScrollEnd()"> <!-- ver -->
-  <section style="text-align: right;">
+  <section>
     <ion-grid>
       <ion-row>
         <ion-col size="6">
-          <ion-button (click)="cambiaAModoEditar()">
+          <ion-button expand="block" (click)="cambiaAModoEditar()">
             Editar
             <ion-icon slot="end" name="create-outline"></ion-icon>
           </ion-button>
         </ion-col>
         <ion-col size="6">
-          <ion-button color="danger" (click)="ventanaBorrarAccion()">
+          <ion-button expand="block" color="danger" (click)="ventanaBorrarAccion()">
             Borrar
             <ion-icon slot="end" name="trash-outline"></ion-icon>
           </ion-button>
@@ -52,7 +52,7 @@
   </section>
 </ion-content>
 
-<ion-content *ngIf="modoAccion == 2 || modoAccion == 3"> <!-- editar o crear -->
+<ion-content *ngIf="(modoAccion == 2 || modoAccion == 3) && !cargando"> <!-- editar o crear -->
   <section style="text-align: center; border-bottom: 1px solid lightgray;">
     <ion-input [(ngModel)]="accion.imagen" placeholder="Emoji"></ion-input>
   </section>
@@ -90,4 +90,10 @@
     <ion-button *ngIf="modoAccion == 2" (click)="editaAccion()">Guardar</ion-button>
     <ion-button *ngIf="modoAccion == 3" (click)="creaAccion()">Crear</ion-button>
   </section>
+</ion-content>
+
+<ion-content *ngIf="cargando">
+  <div style="text-align: center;">
+    <ion-spinner style="width: 100px; height: 100px; margin: 10px;" name="crescent"></ion-spinner>
+  </div>
 </ion-content>

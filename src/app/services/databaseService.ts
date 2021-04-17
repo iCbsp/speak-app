@@ -164,9 +164,9 @@ export class DatabaseService {
     private insercionesIniciales() {
         // Igual esto deberia de ser una transaccion (??????)
         
-        this.insertaAsistente("Alexa", "");
-        this.insertaAsistente("Ok Google", "");
-        this.insertaAsistente("Siri", "");
+        this.insertaAsistente("Alexa 🌀", "");
+        this.insertaAsistente("Ok Google 🎨", "");
+        this.insertaAsistente("Siri 🔮", "");
         
         this.publicaUsuario("Usuario", "#32a852").then(() => {
             this.lista.next(true);
