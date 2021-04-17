@@ -29,7 +29,7 @@ import { FilaAccion, SugerenciaFila } from 'src/app/structures';
 export class AccionPopoverPage implements OnInit {
   
   modoAccion = ModoAccion.ver;
-  accion = { id: 0, titulo: "Error en la acción" };
+  accion = { id: 0, titulo: "Error en la acción", imagen: "", tipo: 1 };
   filas = new Array<FilaAccion>();
   filaId = 0;
   asistente = { inicial: "", final: ""};
@@ -52,6 +52,11 @@ export class AccionPopoverPage implements OnInit {
             if(ready){
               if(!this.accion.id) alert("No se ha recibido el id de la accion");
   
+              // Accion
+              this.databaseService.obtenInfoAccion(this.accion.id).then((accionBDD) => {
+                if(accionBDD) this.accion = accionBDD;
+              });
+
               // Filas
               this.databaseService.obtenFilas(this.accion.id).then((filasBDD) => {
                 this.filas = [];
@@ -89,6 +94,7 @@ export class AccionPopoverPage implements OnInit {
           });
         } else if(this.modoAccion == ModoAccion.crear){
           this.accion.titulo = "";
+          this.accion.imagen = "😃";
           this.filaId = 0;
           this.filas = new Array();
           this.filas.push(new FilaAccion(this.filaId++, "", TiposFilas.fija));
@@ -101,6 +107,11 @@ export class AccionPopoverPage implements OnInit {
     this.popover.dismiss();
   }
     
+  cambiaAModoVer(){
+    this.modoAccion = ModoAccion.ver;
+    this.ngOnInit();
+  }
+
   deTipoFilaABoolean(tipo : number){
     if(tipo == 1) return true;
     else return false;
@@ -215,7 +226,7 @@ export class AccionPopoverPage implements OnInit {
 
   creaAccion(){
     if(this.filas && this.filas.length){
-      this.databaseService.publicaAccion(TiposAcciones.personalizadas, this.accion.titulo, undefined, this.filas).then(() => {
+      this.databaseService.publicaAccion(this.accion.tipo, this.accion.titulo, this.accion.imagen, undefined, this.filas).then(() => {
         this.closePopover();
       });
     } else alert("Para crear una acción es necesario que haya al menos una fila");
@@ -238,7 +249,7 @@ export class AccionPopoverPage implements OnInit {
 
   editaAccion(){
     if(this.filas && this.filas.length){
-      this.databaseService.editaAccion(this.accion.id, this.filas, this.accion.titulo, "").then(() => {
+      this.databaseService.editaAccion(this.accion.id, this.filas, this.accion.titulo, this.accion.imagen).then(() => {
         // this.closePopover();
         this.modoAccion = ModoAccion.ver;
         this.ngOnInit();

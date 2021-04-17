@@ -53,7 +53,7 @@ export class Tab3Page {
   }
   
   consigueAcciones(){
-    this.databaseService.obtenAcciones(TiposAcciones.personalizadas).then((accionesBDD) => {
+    this.databaseService.obtenAcciones(TiposAcciones.tab3).then((accionesBDD) => {
       this.acciones = [];
       if(accionesBDD) {
         for(let i = 0; i < accionesBDD.length; i++)
@@ -68,7 +68,8 @@ export class Tab3Page {
       this.popover.create({
       component:AccionPopoverPage,
       componentProps: {
-        modoAccion: ModoAccion.crear
+        modoAccion: ModoAccion.crear,
+        accion: { tipo: 3 }
       },
       showBackdrop: true
       }).then((popoverElement)=>{
@@ -82,6 +83,7 @@ export class Tab3Page {
       if(!this.platform.is('desktop') && accionSeleccionada){
         const popover = await this.popover.create({
         component:AccionPopoverPage,
+        cssClass: 'accionPopover',
         componentProps: {
           accion: accionSeleccionada,
           modoAccion: ModoAccion.ver

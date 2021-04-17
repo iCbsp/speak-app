@@ -7,13 +7,13 @@
     <ion-grid>
       <ion-row>
         <ion-col size="6">
-          <ion-button *ngIf="accion.tipo == 3" (click)="cambiaAModoEditar()">
+          <ion-button (click)="cambiaAModoEditar()">
             Editar
             <ion-icon slot="end" name="create-outline"></ion-icon>
           </ion-button>
         </ion-col>
         <ion-col size="6">
-          <ion-button color="danger" *ngIf="accion.tipo == 3" (click)="ventanaBorrarAccion()">
+          <ion-button color="danger" (click)="ventanaBorrarAccion()">
             Borrar
             <ion-icon slot="end" name="trash-outline"></ion-icon>
           </ion-button>
@@ -22,7 +22,7 @@
     </ion-grid>
   </section>
   <div style="padding: 0em 0.5em; border-bottom: 1px solid gray; text-align: center;">
-    <h2> {{ accion.titulo }} </h2>
+    <h2> {{ accion.titulo }} <span *ngIf="accion.imagen">{{ accion.imagen }}</span> </h2>
   </div>
 
   <ion-item *ngIf="asistente.inicial">
@@ -54,6 +54,9 @@
 
 <ion-content *ngIf="modoAccion == 2 || modoAccion == 3"> <!-- editar o crear -->
   <section style="text-align: center; border-bottom: 1px solid lightgray;">
+    <ion-input [(ngModel)]="accion.imagen" placeholder="Emoji"></ion-input>
+  </section>
+  <section style="text-align: center; border-bottom: 1px solid lightgray;">
     <ion-input [(ngModel)]="accion.titulo" placeholder="Nueva acción"></ion-input>
   </section>
   <section style="text-align: center;">
@@ -82,7 +85,8 @@
     </ion-button>
   </section>
   <section style="text-align: center;">
-    <ion-button (click)="closePopover()">Cancelar</ion-button>
+    <ion-button *ngIf="modoAccion == 2" (click)="cambiaAModoVer()">Cancelar</ion-button>
+    <ion-button *ngIf="modoAccion == 3" (click)="closePopover()">Cancelar</ion-button>
     <ion-button *ngIf="modoAccion == 2" (click)="editaAccion()">Guardar</ion-button>
     <ion-button *ngIf="modoAccion == 3" (click)="creaAccion()">Crear</ion-button>
   </section>
