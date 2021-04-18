@@ -29,7 +29,7 @@ import { FilaAccion, SugerenciaFila } from 'src/app/structures';
 export class AccionPopoverPage implements OnInit {
   
   modoAccion = ModoAccion.ver;
-  accion = { id: 0, titulo: "Error en la acción", imagen: "", tipo: 1 };
+  accion = { id: 0, titulo: "Error en la acción", imagen: "", tipo: TiposAcciones.tab1 };
   filas = new Array<FilaAccion>();
   filaId = 0;
   asistente = { inicial: "", final: ""};
