@@ -164,4 +164,8 @@ export class Tab3Page {
     this.idAccionesSeleccionadas = new Array();
   }
 
+  reproducirAccionesSeleccionadas(){
+    alert("Función en desarrollo 🚧. Servirá para reproducir varias acciones en cadena");
+  }
+
 }

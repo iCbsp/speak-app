@@ -2,30 +2,30 @@
   <div style="margin-top: 130px;"></div>
   <ion-grid>
     <ion-row>
-      <ion-col *ngIf="!modoGrupo" size="5">
+      <ion-col *ngIf="!modoGrupo && configuracion.modo_simple == 0" size="5">
         <ion-button expand="block" (click)="conmutarModoGrupo()">
           Agrupar 
           <ion-icon style="min-width: 24px;" name="copy-outline"></ion-icon>
         </ion-button>
       </ion-col>
-      <ion-col *ngIf="modoGrupo" size="2">
+      <ion-col *ngIf="modoGrupo && configuracion.modo_simple == 0" size="2">
         <ion-button expand="block" (click)="conmutarModoGrupo()">
           <ion-icon style="min-width: 24px;" name="arrow-back-outline"></ion-icon>
         </ion-button>
       </ion-col>
-      <ion-col *ngIf="!modoGrupo" size="7">
+      <ion-col *ngIf="!modoGrupo && configuracion.modo_simple == 0" size="7">
         <ion-button expand="block" (click)="crearAccionPopover()">
           Añadir acción 
           <ion-icon style="min-width: 24px;" name="add-outline"></ion-icon>
         </ion-button>
       </ion-col>
-      <ion-col *ngIf="modoGrupo" size="6">
+      <ion-col *ngIf="modoGrupo && configuracion.modo_simple == 0" size="6">
         <ion-button expand="block" (click)="reproducirAccionesSeleccionadas()">
           Reproducir 
           <ion-icon style="min-width: 24px;" name="play-outline"></ion-icon>
         </ion-button>
       </ion-col>
-      <ion-col *ngIf="modoGrupo" size="4">
+      <ion-col *ngIf="modoGrupo && configuracion.modo_simple == 0" size="4">
         <ion-button expand="block" (click)="borrarAccionesSeleccionadas()" color="danger">
           Borrar 
           <ion-icon style="min-width: 24px;" name="trash-outline"></ion-icon>

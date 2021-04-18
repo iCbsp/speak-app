@@ -28,6 +28,7 @@ export class Tab1Page {
   acciones = [];
   idAccionesSeleccionadas = [];
   modoGrupo = false;
+  configuracion = { modo_simple: 1, respuesta: 1 };
 
   constructor(
     public alertController: AlertController, // Alertas - Prompt
@@ -43,10 +44,12 @@ export class Tab1Page {
       this.databaseService.lista.subscribe((ready)=>{
         if(ready){
           this.consigueAcciones();
+          this.consigueConfiguracion();
         }
       });
       this.databaseService.cambio.subscribe(()=>{
         this.consigueAcciones();
+        this.consigueConfiguracion();
         // alert("Cambio en la base de datos");
       });
     }
@@ -61,6 +64,18 @@ export class Tab1Page {
       }
       this.changeDetector.detectChanges();
     });
+  }
+
+  consigueConfiguracion(){
+    let promesa = new Promise<any>(() => {});
+    this.databaseService.lista.subscribe((ready)=>{
+      if(ready){
+        promesa = this.databaseService.obtenConfiguracion().then((configuracionBDD)=>{
+          this.configuracion = configuracionBDD;
+        });
+      }
+    });
+    return promesa;
   }
   
   crearAccionPopover(){
@@ -162,6 +177,10 @@ export class Tab1Page {
   conmutarModoGrupo(){
     this.modoGrupo = !this.modoGrupo;
     this.idAccionesSeleccionadas = new Array();
+  }
+
+  reproducirAccionesSeleccionadas(){
+    alert("Función en desarrollo 🚧. Servirá para reproducir varias acciones en cadena");
   }
 
 }
