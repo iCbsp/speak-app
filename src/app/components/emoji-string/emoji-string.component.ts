@@ -33,4 +33,14 @@ export class EmojiStringComponent implements OnInit {
     return string.match(regex);
   }
 
+  emojisOrText(string){
+    let emojis = this.getEmojis(string);
+    if(emojis != null && emojis.length) {
+      let stringReturned = "";
+      emojis.forEach(emoji => stringReturned += emoji);
+      return stringReturned;
+    }
+    else return string;
+  }
+
 }

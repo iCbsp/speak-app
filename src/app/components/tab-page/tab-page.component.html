@@ -37,7 +37,7 @@
         <p *ngIf="modoGrupo" style="text-align: center; border-bottom: 1px solid black;">{{ obtenIndiceSeleccionada(accion) ? obtenIndiceSeleccionada(accion) : "-" }}</p>
         <!-- <ion-icon style="font-size: 80px" name="cloud-outline"></ion-icon> -->
         <p style="font-size: 50px; padding: 0; margin: 20px 0;">{{ accion.imagen }}</p>
-        <p>{{ accion.titulo }}</p>
+        <p *ngIf="configuracion.modo_simple == 0">{{ accion.titulo }}</p>
       </div>
     </ion-col>
   </ion-row>

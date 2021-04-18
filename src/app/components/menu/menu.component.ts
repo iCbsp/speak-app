@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { SQLiteObject } from '@ionic-native/sqlite/ngx';
 
 // Para conocer el dispositivo
-import { Platform } from '@ionic/angular';
+import { MenuController, Platform } from '@ionic/angular';
 
 // Base de datos
 import { DatabaseService } from 'src/app/services/databaseService';
@@ -19,7 +19,8 @@ export class MenuComponent implements OnInit {
   
   constructor(
     private plt: Platform,
-    private databaseService:DatabaseService
+    private databaseService:DatabaseService,
+    private menuController: MenuController
   ) {}
 
   ngOnInit() {
@@ -49,6 +50,7 @@ export class MenuComponent implements OnInit {
   cambiaModoSimple(){
     this.modoSimpleActivado = !this.modoSimpleActivado;
     this.databaseService.cambiaModoSimple(this.modoSimpleActivado);
+    if(this.modoSimpleActivado) this.menuController.close();
   }
 
   

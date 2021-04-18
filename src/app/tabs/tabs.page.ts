@@ -26,6 +26,10 @@ import { Location } from '@angular/common';
 import { PopoverController } from '@ionic/angular';
 import { UsuarioPopoverPage } from 'src/app/components/usuario-popover/usuario-popover.page';
 
+// Emojis
+import { EmojiStringComponent } from '../components/emoji-string/emoji-string.component';
+
+
 @Component({
   selector: 'app-tabs',
   templateUrl: 'tabs.page.html',
@@ -34,6 +38,8 @@ import { UsuarioPopoverPage } from 'src/app/components/usuario-popover/usuario-p
 export class TabsPage {
 
   asistente = "Alexa";
+
+  configuracion = { modo_simple: 1, respuesta: 1 };
 
   preguntadaAccesibilidad = true;
   preguntadoUsoDeDatos = true;
@@ -56,7 +62,8 @@ export class TabsPage {
     private changeDetector: ChangeDetectorRef,
     private databaseService:DatabaseService,
     private location: Location,
-    private popover:PopoverController
+    private popover:PopoverController,
+    private emojiString: EmojiStringComponent
   ){}
 
   ngOnInit() {
@@ -69,11 +76,13 @@ export class TabsPage {
         if(ready){
           this.consigueUsuarios();
           this.consigueAsistentes();
+          this.consigueConfiguracion();
           
           this.databaseService.cambio.subscribe(()=>{
             this.consigueUsuarios();
             this.consigueAsistentes();
             this.actualizaPermisoSTT();
+            this.consigueConfiguracion();
           });
         }
       });
@@ -89,6 +98,18 @@ export class TabsPage {
         popoverElement.present();
       })
     }
+  }
+
+  consigueConfiguracion(){
+    let promesa = new Promise<any>(() => {});
+    this.databaseService.lista.subscribe((ready)=>{
+      if(ready){
+        promesa = this.databaseService.obtenConfiguracion().then((configuracionBDD)=>{
+          this.configuracion = configuracionBDD;
+        });
+      }
+    });
+    return promesa;
   }
 
   consigueUsuarios(){

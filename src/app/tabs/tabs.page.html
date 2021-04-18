@@ -14,26 +14,32 @@
       <ion-row>
         <ion-col size="5">
           <ion-select [interfaceOptions]="customPopoverOptions" [(ngModel)]="asistenteSeleccionado" (ngModelChange)="cambiaAsistente()" interface="popover">
-            <ion-select-option value="0">(Ninguno)</ion-select-option>
-            <ion-select-option *ngFor="let asistente of asistentes" [value]="asistente.id"> {{ asistente.inicial }} | {{ asistente.final }} </ion-select-option>
+            <span *ngIf="configuracion.modo_simple == 0">
+              <ion-select-option value="0">(Ninguno)</ion-select-option>
+              <ion-select-option *ngFor="let asistente of asistentes" [value]="asistente.id"> {{ asistente.inicial }} | {{ asistente.final }} </ion-select-option>
+            </span>
+            <span *ngIf="configuracion.modo_simple == 1">
+              <ion-select-option value="0">(❌)</ion-select-option>
+              <ion-select-option *ngFor="let asistente of asistentes" [value]="asistente.id"> {{ emojiString.emojisOrText(asistente.inicial) }} | {{ emojiString.emojisOrText(asistente.final) }} </ion-select-option>
+            </span>
           </ion-select>
         </ion-col>
 
         <ion-col size="3">
           <ion-tab-button (click)="ventanaTextoManual()">
             <ion-icon name="chatbox-ellipses-outline"></ion-icon>
-            <ion-label>Manual</ion-label>
+            <ion-label *ngIf="configuracion.modo_simple == 0">Manual</ion-label>
           </ion-tab-button>
         </ion-col>
 
         <ion-col size="4">
           <ion-tab-button (click)="iniciaSTT()" *ngIf="tienePermisoSTT()" style="padding: 0px;">
             <ion-icon name="mic-outline"></ion-icon>
-            <ion-label>Escuchar</ion-label>
+            <ion-label *ngIf="configuracion.modo_simple == 0">Escuchar</ion-label>
           </ion-tab-button>
           <ion-tab-button (click)="pidePermisoSTT()" *ngIf="!tienePermisoSTT()" style="padding: 0px;">
             <ion-icon name="mic-off-outline"></ion-icon>
-            <ion-label>Escuchar</ion-label>
+            <ion-label *ngIf="configuracion.modo_simple == 0">Escuchar</ion-label>
           </ion-tab-button>
         </ion-col>
 
@@ -44,8 +50,8 @@
 </ion-header>
 
 <ion-tabs>
-  <ion-button (click)="databaseService.alertDatabaseInfo()">Info BDD</ion-button>
-  <ion-button (click)="databaseService.borraBDD()">Borrar BDD</ion-button>
+  <ion-button *ngIf="usuarioSeleccionado.nombre == 'debug'" (click)="databaseService.alertDatabaseInfo()">Info BDD</ion-button>
+  <ion-button *ngIf="usuarioSeleccionado.nombre == 'debug'" (click)="databaseService.borraBDD()">Borrar BDD</ion-button>
 
   <ion-tab-bar slot="bottom">
     <ion-tab-button tab="tab1">
