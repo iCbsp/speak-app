@@ -83,6 +83,7 @@ export class TabsPage {
             this.consigueAsistentes();
             this.actualizaPermisoSTT();
             this.consigueConfiguracion();
+            this.changeDetector.detectChanges();
           });
         }
       });
@@ -93,6 +94,7 @@ export class TabsPage {
     if(!this.platform.is('desktop')){
       this.popover.create({
       component:UsuarioPopoverPage,
+      cssClass: 'accionPopover',
       showBackdrop: true
       }).then((popoverElement)=>{
         popoverElement.present();

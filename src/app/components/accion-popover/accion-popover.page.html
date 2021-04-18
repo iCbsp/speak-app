@@ -3,7 +3,7 @@
   (ionScrollStart)="logScrollStart()"
   (ionScroll)="logScrolling($event)"
   (ionScrollEnd)="logScrollEnd()"> <!-- ver -->
-  <section>
+  <section *ngIf="configuracion.modo_simple == 0">
     <ion-grid>
       <ion-row>
         <ion-col size="6">
@@ -47,8 +47,14 @@
   </ion-item>
 
   <section style="text-align: center;">
-    <ion-button (click)="closePopover()">Cancelar</ion-button>
-    <ion-button (click)="reproducirTexto()">Reproducir</ion-button>
+    <ion-button (click)="closePopover()">
+      Cancelar
+      <ion-icon slot="end" name="close-outline"></ion-icon>
+    </ion-button>
+    <ion-button (click)="reproducirTexto()">
+      Reproducir
+      <ion-icon slot="end" name="play-outline"></ion-icon>
+    </ion-button>
   </section>
 </ion-content>
 
@@ -76,19 +82,31 @@
   </section>
   <section style="text-align: center;">
     <ion-button (click)="creaFila('f')">
-      <ion-icon slot="start" name="add-outline"></ion-icon>
       Fija
+      <ion-icon slot="end" name="add-outline"></ion-icon>
     </ion-button>
     <ion-button (click)="creaFila('t')">
-      <ion-icon slot="start" name="add-outline"></ion-icon>
       Temporal
+      <ion-icon slot="end" name="add-outline"></ion-icon>
     </ion-button>
   </section>
   <section style="text-align: center;">
-    <ion-button *ngIf="modoAccion == 2" (click)="cambiaAModoVer()">Cancelar</ion-button>
-    <ion-button *ngIf="modoAccion == 3" (click)="closePopover()">Cancelar</ion-button>
-    <ion-button *ngIf="modoAccion == 2" (click)="editaAccion()">Guardar</ion-button>
-    <ion-button *ngIf="modoAccion == 3" (click)="creaAccion()">Crear</ion-button>
+    <ion-button *ngIf="modoAccion == 2" (click)="cambiaAModoVer()">
+      Cancelar
+      <ion-icon slot="end" name="close-outline"></ion-icon>
+    </ion-button>
+    <ion-button *ngIf="modoAccion == 3" (click)="closePopover()">
+      Cancelar
+      <ion-icon slot="end" name="close-outline"></ion-icon>
+    </ion-button>
+    <ion-button *ngIf="modoAccion == 2" (click)="editaAccion()">
+      Guardar
+      <ion-icon slot="end" name="save-outline"></ion-icon>
+    </ion-button>
+    <ion-button *ngIf="modoAccion == 3" (click)="creaAccion()">
+      Crear
+      <ion-icon slot="end" name="add-outline"></ion-icon>
+    </ion-button>
   </section>
 </ion-content>
 
