@@ -13,18 +13,16 @@
     <ion-grid>
       <ion-row>
         <ion-col size="5">
-          <ion-select [interfaceOptions]="customPopoverOptions" [(ngModel)]="asistenteSeleccionado" (ngModelChange)="cambiaAsistente()" interface="popover">
-            <span *ngIf="configuracion.modo_simple == 0">
-              <ion-select-option value="0">(Ninguno)</ion-select-option>
-              <ion-select-option *ngFor="let asistente of asistentes" [value]="asistente.id"> {{ asistente.inicial }} | {{ asistente.final }} </ion-select-option>
-            </span>
-            <span *ngIf="configuracion.modo_simple == 1">
-              <ion-select-option value="0">(❌)</ion-select-option>
-              <ion-select-option *ngFor="let asistente of asistentes" [value]="asistente.id"> {{ emojiString.emojisOrText(asistente.inicial) }} | {{ emojiString.emojisOrText(asistente.final) }} </ion-select-option>
-            </span>
+          <ion-select *ngIf="configuracion.modo_simple == 0" [interfaceOptions]="customPopoverOptions" [(ngModel)]="asistenteSeleccionado" [(value)]="asistenteSeleccionado" (ngModelChange)="cambiaAsistente()" interface="popover">
+            <ion-select-option value="0">(Ninguno)</ion-select-option>
+            <ion-select-option *ngFor="let asistente of asistentes" [value]="asistente.id"> {{ asistente.inicial }} | {{ asistente.final }} </ion-select-option>
+          </ion-select>
+          <ion-select *ngIf="configuracion.modo_simple == 1" [interfaceOptions]="customPopoverOptions" [(ngModel)]="asistenteSeleccionado" [(value)]="asistenteSeleccionado" (ngModelChange)="cambiaAsistente()" interface="popover">
+            <ion-select-option value="0">(❌)</ion-select-option>
+            <ion-select-option *ngFor="let asistente of asistentes" [value]="asistente.id"> {{ emojiString.emojisOrText(asistente.inicial) }} | {{ emojiString.emojisOrText(asistente.final) }} </ion-select-option>
           </ion-select>
         </ion-col>
-
+        
         <ion-col size="3">
           <ion-tab-button (click)="ventanaTextoManual()">
             <ion-icon name="chatbox-ellipses-outline"></ion-icon>
