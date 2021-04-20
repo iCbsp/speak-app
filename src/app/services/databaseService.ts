@@ -112,6 +112,8 @@ export class DatabaseService {
                 asistente INTEGER,
                 modo_simple INTEGER,
                 respuesta INTEGER,
+                criterio_acciones TEXT,
+                orden_acciones TEXT,
                 FOREIGN KEY(usuario) REFERENCES usuario(id) ON DELETE CASCADE
                 );`, [])
                 .then(() => this.messages.push("Tabla de configuracion creada"))
@@ -282,11 +284,26 @@ export class DatabaseService {
         return accion;
     }
 
-    public async obtenAcciones(tipo : TiposAcciones, usuario? : number){
+    public async obtenAcciones(tipo : TiposAcciones, usuario? : number, criterio? : string, orden? : string){
         let acciones = null;
+        let orderBy = "";
         if(usuario == undefined) usuario = this.usuarioActual;
-            
-        await this.database.executeSql(`SELECT * FROM accion WHERE tipo = ${tipo} AND usuario = ${usuario};`, [])
+        switch(criterio){
+            case "alfabetico":
+                orderBy = " ORDER BY titulo";
+            break;
+            case "recientes":
+                orderBy = " ORDER BY ultimo_uso";
+            break;
+            default: // creacion
+                orderBy = "";
+            break;
+        }
+        if(orderBy != "" && orden != undefined) {
+            if(orden == "ascendente") orderBy += " ASC"
+            else if(orden == "descendente") orderBy += " DESC"
+        }
+        await this.database.executeSql(`SELECT * FROM accion WHERE tipo = ${tipo} AND usuario = ${usuario}${orderBy};`, [])
         .then((accionesBDD)=>{
             acciones = accionesBDD.rows;
         })
@@ -337,6 +354,24 @@ export class DatabaseService {
         .then(() => this.cambio.next(!this.cambio.value))
         .catch((err) => {
             alert("Error actualizando respuesta -> " + JSON.stringify(err));
+        });
+    }
+
+    public cambiaCriterioAcciones(criterioAcciones: string){
+        return this.database.executeSql(
+            `UPDATE configuracion SET criterio_acciones = '${criterioAcciones}' WHERE usuario = ${this.usuarioActual} `, [])
+        .then(() => this.cambio.next(!this.cambio.value))
+        .catch((err) => {
+            alert("Error actualizando criterio_acciones -> " + JSON.stringify(err));
+        });
+    }
+
+    public cambiaOrdenAcciones(ordenAcciones: string){
+        return this.database.executeSql(
+            `UPDATE configuracion SET orden_acciones = '${ordenAcciones}' WHERE usuario = ${this.usuarioActual} `, [])
+        .then(() => this.cambio.next(!this.cambio.value))
+        .catch((err) => {
+            alert("Error actualizando orden_acciones -> " + JSON.stringify(err));
         });
     }
 
@@ -412,7 +447,7 @@ export class DatabaseService {
 
     private insertaConfiguracion(usuario : number){
         return this.database.executeSql(
-            `INSERT INTO configuracion(usuario, asistente, modo_simple, respuesta) VALUES (${usuario}, 0, 0, 0);`, [])
+            `INSERT INTO configuracion(usuario, asistente, modo_simple, respuesta, criterio_acciones, orden_acciones) VALUES (${usuario}, 0, 0, 0, 'recientes', 'descendente');`, [])
             .catch((err) => alert("Error insertando configuracion -> " + JSON.stringify(err)));
     }
     

@@ -4,6 +4,12 @@
       <ion-back-button></ion-back-button>
     </ion-buttons>
     <ion-title>Gestión de acciones</ion-title>
+    <ion-button *ngIf="!guardado" slot="end" (click)="guardar()" color="danger">
+      <ion-icon name="save"></ion-icon>
+    </ion-button>
+    <ion-button *ngIf="guardado" slot="end" (click)="guardar()">
+      <ion-icon name="save"></ion-icon>
+    </ion-button>
   </ion-toolbar>
 </ion-header>
 
@@ -11,21 +17,42 @@
   <br>
 
   <ion-item>
-    <ion-title size="small">
-      Orden de las acciones
+    <ion-title>
+      Criterio de ordenación de las acciones
     </ion-title>
   </ion-item>
   <ion-item>
-    <ion-segment color="secondary" value="alfabetico">
+    <ion-segment color="secondary" [(ngModel)]="configuracion.criterio_acciones" (ngModelChange)="noGuardado()">
       <ion-segment-button value="alfabetico">
         <ion-label>Alfabético</ion-label>
         <ion-icon name="text"></ion-icon>
       </ion-segment-button>
       <ion-segment-button value="recientes">
         <ion-label>Recientes</ion-label>
+        <ion-icon name="hourglass"></ion-icon>
+      </ion-segment-button>
+      <ion-segment-button value="creacion">
+        <ion-label>Creación</ion-label>
         <ion-icon name="calendar"></ion-icon>
       </ion-segment-button>
+    </ion-segment>
+  </ion-item>
 
+  <ion-item>
+    <ion-title>
+      Orden de las acciones
+    </ion-title>
+  </ion-item>
+  <ion-item>
+    <ion-segment color="secondary" [(ngModel)]="configuracion.orden_acciones" (ngModelChange)="noGuardado()">
+      <ion-segment-button value="ascendente">
+        <ion-label>Ascendente</ion-label>
+        <ion-icon name="arrow-up"></ion-icon>
+      </ion-segment-button>
+      <ion-segment-button value="descendente">
+        <ion-label>Descendente</ion-label>
+        <ion-icon name="arrow-down"></ion-icon>
+      </ion-segment-button>
     </ion-segment>
   </ion-item>
   

@@ -30,7 +30,7 @@ export class TabPageComponent implements OnInit {
   acciones = [];
   idAccionesSeleccionadas = [];
   modoGrupo = false;
-  configuracion = { modo_simple: 1, respuesta: 1 };
+  configuracion = { modo_simple: 1, respuesta: 1, criterio_acciones: 'alfabetico', orden_acciones: 'descendiente' };
 
   constructor(
     public alertController: AlertController, // Alertas - Prompt
@@ -58,7 +58,7 @@ export class TabPageComponent implements OnInit {
   }
   
   consigueAcciones(){
-    this.databaseService.obtenAcciones(this.tab).then((accionesBDD) => {
+    this.databaseService.obtenAcciones(this.tab, undefined, this.configuracion.criterio_acciones, this.configuracion.orden_acciones).then((accionesBDD) => {
       this.acciones = [];
       if(accionesBDD) {
         for(let i = 0; i < accionesBDD.length; i++)

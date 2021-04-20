@@ -12,4 +12,8 @@ export class ConfiguracionPage implements OnInit {
   ngOnInit() {
   }
 
+  enDesarrollo(){
+    alert('Función en desarrollo 🚧');
+  }
+
 }
