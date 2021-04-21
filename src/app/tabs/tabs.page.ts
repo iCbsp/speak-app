@@ -39,10 +39,7 @@ export class TabsPage {
 
   asistente = "Alexa";
 
-  configuracion = { modo_simple: 1, respuesta: 1 };
-
-  preguntadaAccesibilidad = true;
-  preguntadoUsoDeDatos = true;
+  configuracion = { modo_simple: 1, respuesta: 1, ventana_politicas: 1, ventana_accesibilidad: 1 };
 
   // Var STT
   estaGrabando = false;
@@ -67,8 +64,6 @@ export class TabsPage {
   ){}
 
   ngOnInit() {
-    if(!this.preguntadoUsoDeDatos) this.ventanaPoliticas();
-    if(!this.preguntadaAccesibilidad) this.ventanaAccesibilidad();
     this.actualizaPermisoSTT();
 
     if(!this.platform.is('desktop')){
@@ -76,13 +71,13 @@ export class TabsPage {
         if(ready){
           this.consigueUsuarios();
           this.consigueAsistentes();
-          this.consigueConfiguracion();
+          this.consigueConfiguracion().then(() => this.comprobacionesVentanas());
           
           this.databaseService.cambio.subscribe(()=>{
             this.consigueUsuarios();
             this.consigueAsistentes();
             this.actualizaPermisoSTT();
-            this.consigueConfiguracion();
+            this.consigueConfiguracion().then(() => this.comprobacionesVentanas());
             this.changeDetector.detectChanges();
           });
         }
@@ -100,6 +95,11 @@ export class TabsPage {
         popoverElement.present();
       })
     }
+  }
+
+  comprobacionesVentanas(){
+    if(!this.configuracion.ventana_politicas) this.ventanaPoliticas();
+    if(!this.configuracion.ventana_accesibilidad) this.ventanaAccesibilidad();
   }
 
   consigueConfiguracion(){
@@ -347,7 +347,6 @@ export class TabsPage {
           role: 'aceptar',
           handler: () => {
             console.log('Confirm Ok');
-            this.preguntadaAccesibilidad = true;
           }
         }
       ]
@@ -358,8 +357,8 @@ export class TabsPage {
   async ventanaPoliticas() {
     const alert = await this.alertController.create({
       cssClass: 'ventanaPoliticas',
-      header: 'Uso de los datos',
-      message: 'Los datos se guardan de forma local. Para más información acceda a nuestra <a href="https://carlosbsp.com/Action-Speech/">página web</a>.',
+      header: 'Políticas y uso de los datos',
+      message: 'Esta aplicación guarda los datos de forma local. Herramientas de su dispositivo como el "Speech to Text" podrían recoger datos durante su uso. Para más información acceda a nuestra <a href="https://carlosbsp.com/politica-de-privacidad-speak-app/">página web</a>.',
       backdropDismiss: false,
       // inputs: [
       //   {
@@ -383,7 +382,7 @@ export class TabsPage {
           role: 'aceptar',
           handler: () => {
             console.log('Confirm Ok');
-            this.preguntadoUsoDeDatos = true;
+            this.databaseService.cambiaVentanaPoliticas(true);
           }
         }
       ]

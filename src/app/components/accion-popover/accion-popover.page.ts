@@ -148,6 +148,8 @@ export class AccionPopoverPage implements OnInit {
       }
     });
 
+    this.databaseService.actualizaFechaUltimoUsoAccion(this.accion.id);
+
     this.closePopover();
       
     let texto = "";

@@ -114,6 +114,8 @@ export class DatabaseService {
                 respuesta INTEGER,
                 criterio_acciones TEXT,
                 orden_acciones TEXT,
+                ventana_politicas INTEGER,
+                ventana_accesibilidad INTEGER,
                 FOREIGN KEY(usuario) REFERENCES usuario(id) ON DELETE CASCADE
                 );`, [])
                 .then(() => this.messages.push("Tabla de configuracion creada"))
@@ -185,7 +187,7 @@ export class DatabaseService {
         `SELECT * FROM usuario ORDER BY fecha_ultimo_inicio DESC;`, [])
         .then((usuarios)=>{
             if(!usuarios.rows.length){
-                alert("Base de datos vacía, insertando datos iniciales");
+                // alert("Base de datos vacía, insertando datos iniciales");
                 this.insercionesIniciales();
             } else {
                 //alert("Hay base de datos, iniciada la sesion del usuario " + usuarios.rows.item(0).id);
@@ -375,6 +377,17 @@ export class DatabaseService {
         });
     }
 
+    public cambiaVentanaPoliticas(ventanaPoliticasBool: boolean){
+        let ventanaPoliticas = 0;
+        if(ventanaPoliticasBool) ventanaPoliticas = 1;
+        return this.database.executeSql(
+            `UPDATE configuracion SET ventana_politicas = '${ventanaPoliticas}' WHERE usuario = ${this.usuarioActual} `, [])
+        .then(() => this.cambio.next(!this.cambio.value))
+        .catch((err) => {
+            alert("Error actualizando ventana_politicas -> " + JSON.stringify(err));
+        });
+    }
+
     public cambiaUsuarioActual(nuevoUsuario : number){
         // Se deberian de hacer comprobaciones antes?
         this.usuarioActual = nuevoUsuario;
@@ -447,7 +460,8 @@ export class DatabaseService {
 
     private insertaConfiguracion(usuario : number){
         return this.database.executeSql(
-            `INSERT INTO configuracion(usuario, asistente, modo_simple, respuesta, criterio_acciones, orden_acciones) VALUES (${usuario}, 0, 0, 0, 'recientes', 'descendente');`, [])
+            `INSERT INTO configuracion  (usuario,       asistente,  modo_simple,    respuesta,  criterio_acciones,  orden_acciones, ventana_politicas,  ventana_accesibilidad) 
+                                VALUES  (${usuario},    0,          0,              0,          'recientes',        'descendente',  0,                  1);`, [])
             .catch((err) => alert("Error insertando configuracion -> " + JSON.stringify(err)));
     }
     
@@ -509,16 +523,24 @@ export class DatabaseService {
     public editaAccion(id: number, filas: FilaAccion[], titulo: string, imagen: string){
         let ordenFilas = "";
         return this.database.executeSql(
-            `UPDATE accion SET titulo = '${titulo}', imagen = '${imagen}', orden_filas = '${ordenFilas}' WHERE id = ${id}`, [])
-            .then(() => {
-                return this.borraFilasDeAccion(id).then(() => {
-                    if(filas && filas != undefined) filas.map(fila => {
-                        this.insertaObjetoFila(id, fila);
-                    });
-                    this.cambio.next(!this.cambio.value);
+        `UPDATE accion SET titulo = '${titulo}', imagen = '${imagen}', orden_filas = '${ordenFilas}' WHERE id = ${id}`, [])
+        .then(() => {
+            return this.borraFilasDeAccion(id).then(() => {
+                if(filas && filas != undefined) filas.map(fila => {
+                    this.insertaObjetoFila(id, fila);
                 });
+                this.cambio.next(!this.cambio.value);
             });
-        }
+        });
+    }
+
+    public actualizaFechaUltimoUsoAccion(accion: number){
+        return this.database.executeSql(
+            `UPDATE accion SET ultimo_uso = datetime('now') WHERE id = ${accion};`, [])
+        .then(() => {
+            this.cambio.next(!this.cambio.value);
+        });
+    }
         
     public actualizaFechaUltimoUsoSugerenciaId(sugerencia: number){
         return this.database.executeSql(
@@ -558,8 +580,8 @@ export class DatabaseService {
                 `DELETE FROM usuario WHERE id = ${usuario}`, [])
             .then(() => {
                 this.obtenUsuariosSesion().then(usuariosBDD => {
-                    if(usuariosBDD.rows.length){
-                        this.usuarioActual = usuariosBDD.rows.item(0).id;
+                    if(usuariosBDD.length > 0){
+                        this.usuarioActual = usuariosBDD.item(0).id;
                         this.cambio.next(!this.cambio.value);
                     } else {
                         alert("Error: no hay usuarios, creando uno temporal");
@@ -650,29 +672,29 @@ export class DatabaseService {
         this.insertaAccion(usuario, TiposAcciones.tab1, "Alarma", "⏰", "").then((accion) => {
             this.insertaFila(accion.insertId, TiposFilas.fija, "pon una alarma");
             this.insertaFila(accion.insertId, TiposFilas.temporal, "").then((fila) => {
-                this.insertaSugerencia(fila.insertId, "hoy");
-                this.insertaSugerencia(fila.insertId, "mañana");
-                this.insertaSugerencia(fila.insertId, "pasado mañana");
+                this.insertaSugerencia(fila.insertId, "hoy 📅");
+                this.insertaSugerencia(fila.insertId, "mañana 📅1️⃣");
+                this.insertaSugerencia(fila.insertId, "pasado mañana 📅2️⃣");
             });
             this.insertaFila(accion.insertId, TiposFilas.fija, "a las");
             this.insertaFila(accion.insertId, TiposFilas.temporal, "").then((fila) => {
-                this.insertaSugerencia(fila.insertId, "8:00");
-                this.insertaSugerencia(fila.insertId, "14:00");
-                this.insertaSugerencia(fila.insertId, "22:00");
+                this.insertaSugerencia(fila.insertId, "8:00 🌅");
+                this.insertaSugerencia(fila.insertId, "14:00 ☀");
+                this.insertaSugerencia(fila.insertId, "22:00 🌙");
             });
         });
 
         this.insertaAccion(usuario, TiposAcciones.tab1, "El tiempo", "⛅", "").then((accion) => {
             this.insertaFila(accion.insertId, TiposFilas.fija, "¿qué tiempo hará");
             this.insertaFila(accion.insertId, TiposFilas.temporal, "").then((fila) => {
-                this.insertaSugerencia(fila.insertId, "hoy");
-                this.insertaSugerencia(fila.insertId, "mañana");
-                this.insertaSugerencia(fila.insertId, "pasado mañana");
+                this.insertaSugerencia(fila.insertId, "hoy 📅");
+                this.insertaSugerencia(fila.insertId, "mañana 📅1️⃣");
+                this.insertaSugerencia(fila.insertId, "pasado mañana 📅2️⃣");
             });
             this.insertaFila(accion.insertId, TiposFilas.temporal, "").then((fila) => {
-                this.insertaSugerencia(fila.insertId, "en Madrid");
-                this.insertaSugerencia(fila.insertId, "en Alicante");
-                this.insertaSugerencia(fila.insertId, "en Pontevedra");
+                this.insertaSugerencia(fila.insertId, "en Madrid 🏙");
+                this.insertaSugerencia(fila.insertId, "en Alicante 🏖");
+                this.insertaSugerencia(fila.insertId, "en Pontevedra 🏞");
             });
             this.insertaFila(accion.insertId, TiposFilas.fija, "?");
         });
@@ -682,15 +704,15 @@ export class DatabaseService {
         this.insertaAccion(usuario, TiposAcciones.tab2, "Spotify", "💚", "").then((accion) => {
             this.insertaFila(accion.insertId, TiposFilas.fija, "pon");
             this.insertaFila(accion.insertId, TiposFilas.temporal, "").then((fila) => {
-                this.insertaSugerencia(fila.insertId, "Imagine");
-                this.insertaSugerencia(fila.insertId, "Für Elise");
-                this.insertaSugerencia(fila.insertId, "16 añitos");
+                this.insertaSugerencia(fila.insertId, "Imagine 🧑‍🤝‍🧑");
+                this.insertaSugerencia(fila.insertId, "Für Elise 🎹");
+                this.insertaSugerencia(fila.insertId, "16 añitos 🧒");
             });
             this.insertaFila(accion.insertId, TiposFilas.fija, "de");
             this.insertaFila(accion.insertId, TiposFilas.temporal, "").then((fila) => {
-                this.insertaSugerencia(fila.insertId, "John Lennon");
-                this.insertaSugerencia(fila.insertId, "Beethoven");
-                this.insertaSugerencia(fila.insertId, "Dani Martín");
+                this.insertaSugerencia(fila.insertId, "John Lennon 👩");
+                this.insertaSugerencia(fila.insertId, "Beethoven 🧓");
+                this.insertaSugerencia(fila.insertId, "Dani Martín 👨‍🦱");
             });
             this.insertaFila(accion.insertId, TiposFilas.fija, "en Spotify");
         });

@@ -45,14 +45,11 @@ export class TabPageComponent implements OnInit {
     if(!this.platform.is('desktop')){
       this.databaseService.lista.subscribe((ready)=>{
         if(ready){
-          this.consigueAcciones();
-          this.consigueConfiguracion();
+          this.consigueConfiguracion().then(() => this.consigueAcciones());
         }
       });
       this.databaseService.cambio.subscribe(()=>{
-        this.consigueAcciones();
-        this.consigueConfiguracion();
-        // alert("Cambio en la base de datos");
+        this.consigueConfiguracion().then(() => this.consigueAcciones());
       });
     }
   }
