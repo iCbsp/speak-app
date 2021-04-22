@@ -20,6 +20,7 @@ import { Router } from '@angular/router';
 
 import { ModoAccion, TiposAcciones, TiposFilas } from 'src/app/enumerations';
 import { FilaAccion, SugerenciaFila } from 'src/app/structures';
+import { EmojiStringComponent } from '../emoji-string/emoji-string.component';
 
 @Component({
   selector: 'app-accion-popover',
@@ -42,7 +43,8 @@ export class AccionPopoverPage implements OnInit {
     private router: Router, // Para pasar parametros
     private platform: Platform,
     public alertController: AlertController, // Alertas - Prompt
-    private databaseService:DatabaseService
+    private databaseService:DatabaseService,
+    private emojiString: EmojiStringComponent
     ) {
     }
   

@@ -46,7 +46,7 @@ export class TabsPage {
   permisoSTT = false;
 
   usuarios = [];
-  usuarioSeleccionado = { id: 0, nombre: "", color: "#FFFFFF" };
+  usuarioSeleccionado = { id: 0, nombre: "Usuario", color: "#FFFFFF" };
   asistentes = [];
   asistenteSeleccionado = "0";
 

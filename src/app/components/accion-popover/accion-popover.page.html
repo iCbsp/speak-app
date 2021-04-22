@@ -22,38 +22,62 @@
     </ion-grid>
   </section>
   <div style="padding: 0em 0.5em; border-bottom: 1px solid gray; text-align: center;">
-    <h2> {{ accion.titulo }} <span *ngIf="accion.imagen">{{ accion.imagen }}</span> </h2>
+    <h2 *ngIf="configuracion.modo_simple == 0"> {{ accion.titulo }} <span *ngIf="accion.imagen">{{ accion.imagen }}</span> </h2>
+    <p *ngIf="configuracion.modo_simple == 1 && accion.imagen" style="font-size: 32px;">{{ accion.imagen }}</p>
   </div>
 
-  <ion-item *ngIf="asistente.inicial">
+  <ion-item *ngIf="configuracion.modo_simple == 0 && asistente.inicial">
     <ion-input disabled [value]="asistente.inicial + ','"></ion-input>
     <ion-button slot="end" (click)="asistente.inicial = ''"><ion-icon name="close-outline"></ion-icon></ion-button>
   </ion-item>
+  <ion-item *ngIf="configuracion.modo_simple == 1 && asistente.inicial">
+    <div>{{emojiString.emojisOrText(asistente.inicial)}}</div>
+    <ion-button slot="end" (click)="asistente.inicial = ''"><ion-icon name="close-outline"></ion-icon></ion-button>
+  </ion-item>
+
   <div *ngFor="let fila of filas; let i = index" style="padding: 0.5em 0em; border-bottom: 1px solid lightgray;">
-    <ion-item no-lines lines="none">
+    <ion-item *ngIf="configuracion.modo_simple == 0" no-lines lines="none">
       <ion-input *ngIf="fila.tipo == 1" placeholder="Fila fija" [disabled]="deTipoFilaABoolean(fila.tipo)" [(ngModel)]="fila.texto"></ion-input>
-      <ion-input *ngIf="fila.tipo == 2" placeholder="Fila temporal" [disabled]="deTipoFilaABoolean(fila.tipo)" [(ngModel)]="fila.texto"></ion-input>
+      <ion-input *ngIf="fila.tipo == 2" placeholder="Fila editable" [disabled]="deTipoFilaABoolean(fila.tipo)" [(ngModel)]="fila.texto"></ion-input>
+      <ion-button *ngIf="fila.tipo == 1" slot="end" (click)="filas.splice(i, 1)"><ion-icon name="close-outline"></ion-icon></ion-button>
+      <ion-button *ngIf="fila.tipo == 2" slot="end" (click)="fila.texto=''"><ion-icon name="close-outline"></ion-icon></ion-button>
+    </ion-item>
+    <ion-item *ngIf="configuracion.modo_simple == 1" no-lines lines="none">
+      <div>{{ emojiString.emojisOrText(fila.texto) }}</div>
       <ion-button *ngIf="fila.tipo == 1" slot="end" (click)="filas.splice(i, 1)"><ion-icon name="close-outline"></ion-icon></ion-button>
       <ion-button *ngIf="fila.tipo == 2" slot="end" (click)="fila.texto=''"><ion-icon name="close-outline"></ion-icon></ion-button>
     </ion-item>
     
     <ion-chip *ngFor="let sugerencia of fila.sugerencias" (click)="fila.texto = sugerencia.texto">
-      <ion-label>{{ sugerencia.texto }}</ion-label>
+      <ion-label *ngIf="configuracion.modo_simple == 0">{{ sugerencia.texto }}</ion-label>
+      <ion-label *ngIf="configuracion.modo_simple == 1">{{ emojiString.emojisOrText(sugerencia.texto) }}</ion-label>
     </ion-chip>
   </div>
-  <ion-item *ngIf="asistente.final">
+
+  <ion-item *ngIf="configuracion.modo_simple == 1 && asistente.final">
     <ion-input disabled [value]="asistente.final"></ion-input>
+    <ion-button slot="end" (click)="asistente.final = ''"><ion-icon name="close-outline"></ion-icon></ion-button>
+  </ion-item>
+  <ion-item *ngIf="configuracion.modo_simple == 1 && asistente.final">
+    <div>{{emojiString.emojisOrText(asistente.final)}}</div>
     <ion-button slot="end" (click)="asistente.final = ''"><ion-icon name="close-outline"></ion-icon></ion-button>
   </ion-item>
 
   <section style="text-align: center;">
-    <ion-button (click)="closePopover()">
+    <ion-button *ngIf="configuracion.modo_simple == 0" (click)="closePopover()">
       Cancelar
       <ion-icon slot="end" name="close-outline"></ion-icon>
     </ion-button>
-    <ion-button (click)="reproducirTexto()">
+    <ion-button *ngIf="configuracion.modo_simple == 1" (click)="closePopover()">
+      <ion-icon name="close-outline"></ion-icon>
+    </ion-button>
+
+    <ion-button *ngIf="configuracion.modo_simple == 0" (click)="reproducirTexto()">
       Reproducir
       <ion-icon slot="end" name="play-outline"></ion-icon>
+    </ion-button>
+    <ion-button *ngIf="configuracion.modo_simple == 1" (click)="reproducirTexto()">
+      <ion-icon name="play-outline"></ion-icon>
     </ion-button>
   </section>
 </ion-content>
@@ -74,7 +98,7 @@
         <ion-icon name="arrow-down"></ion-icon>
       </ion-button>
       <ion-input *ngIf="fila.tipo == 1" placeholder="Fila fija" [(ngModel)]="fila.texto" [ngStyle]="{ 'color': colorDependiendoDelTipo(fila.tipo) }"></ion-input>
-      <ion-input *ngIf="fila.tipo == 2" disabled placeholder="Fila temporal" [(ngModel)]="fila.texto" [ngStyle]="{ 'color': colorDependiendoDelTipo(fila.tipo) }"></ion-input>
+      <ion-input *ngIf="fila.tipo == 2" disabled placeholder="Fila editable" [(ngModel)]="fila.texto" [ngStyle]="{ 'color': colorDependiendoDelTipo(fila.tipo) }"></ion-input>
       <ion-button size="small" (click)="borraFila(fila.id)">
         <ion-icon name="close-outline"></ion-icon>
       </ion-button>
@@ -84,13 +108,15 @@
     <ion-button (click)="creaFila('f')">
       Fija
       <ion-icon slot="end" name="add-outline"></ion-icon>
+      <ion-icon slot="end" name="lock-closed-outline"></ion-icon>
     </ion-button>
     <ion-button (click)="creaFila('t')">
-      Temporal
+      Editable
       <ion-icon slot="end" name="add-outline"></ion-icon>
+      <ion-icon slot="end" name="lock-open-outline"></ion-icon>
     </ion-button>
   </section>
-  <section style="text-align: center;">
+  <section style="text-align: center; margin-top: 1em;">
     <ion-button *ngIf="modoAccion == 2" (click)="cambiaAModoVer()">
       Cancelar
       <ion-icon slot="end" name="close-outline"></ion-icon>
@@ -105,7 +131,7 @@
     </ion-button>
     <ion-button *ngIf="modoAccion == 3" (click)="creaAccion()">
       Crear
-      <ion-icon slot="end" name="add-outline"></ion-icon>
+      <ion-icon slot="end" name="checkmark-outline"></ion-icon>
     </ion-button>
   </section>
 </ion-content>

@@ -14,7 +14,7 @@
       <ion-row>
         <ion-col size="5">
           <ion-select *ngIf="configuracion.modo_simple == 0" [interfaceOptions]="customPopoverOptions" [(ngModel)]="asistenteSeleccionado" [(value)]="asistenteSeleccionado" (ngModelChange)="cambiaAsistente()" interface="popover">
-            <ion-select-option value="0">(Ninguno)</ion-select-option>
+            <ion-select-option value="0">(Ninguno ❌)</ion-select-option>
             <ion-select-option *ngFor="let asistente of asistentes" [value]="asistente.id"> {{ asistente.inicial }} | {{ asistente.final }} </ion-select-option>
           </ion-select>
           <ion-select *ngIf="configuracion.modo_simple == 1" [interfaceOptions]="customPopoverOptions" [(ngModel)]="asistenteSeleccionado" [(value)]="asistenteSeleccionado" (ngModelChange)="cambiaAsistente()" interface="popover">
