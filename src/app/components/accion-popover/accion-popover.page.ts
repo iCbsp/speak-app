@@ -21,6 +21,7 @@ import { Router } from '@angular/router';
 import { ModoAccion, TiposAcciones, TiposFilas } from 'src/app/enumerations';
 import { FilaAccion, SugerenciaFila } from 'src/app/structures';
 import { EmojiStringComponent } from '../emoji-string/emoji-string.component';
+import { TextToSpeech } from '@ionic-native/text-to-speech/ngx';
 
 @Component({
   selector: 'app-accion-popover',
@@ -44,7 +45,8 @@ export class AccionPopoverPage implements OnInit {
     private platform: Platform,
     public alertController: AlertController, // Alertas - Prompt
     private databaseService:DatabaseService,
-    private emojiString: EmojiStringComponent
+    private emojiString: EmojiStringComponent,
+    private tts: TextToSpeech, // TTS
     ) {
     }
   
@@ -108,6 +110,7 @@ export class AccionPopoverPage implements OnInit {
     }
     
   closePopover(){
+    // this.pararTTS();
     this.popover.dismiss();
   }
     
@@ -263,5 +266,31 @@ export class AccionPopoverPage implements OnInit {
         this.ngOnInit();
       });
     } else alert("Para guardar una acción es necesario que haya al menos una fila");
+  }
+
+  
+  // Metodos TTS
+  async diTTS(texto: string):Promise<any>{
+    var textoSinEmoticonos = this.emojiString.removeEmojis(texto);
+    try{
+      await this.tts.speak({
+        text: textoSinEmoticonos,
+        locale: 'es-ES',
+        rate: 0.8
+      });
+    }
+    catch(e){
+      if(e == "cordova_not_available") console.log(e);
+    }
+  }
+
+  async pararTTS(){
+    try{
+      await this.tts.speak("");
+    }
+    catch(e){
+      if(e == "cordova_not_available") console.log(e);
+      else alert("pararTTS: Ha surgido un error relacionado con el Text To Speech");
+    }
   }
 }

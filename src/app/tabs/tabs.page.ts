@@ -28,6 +28,7 @@ import { UsuarioPopoverPage } from 'src/app/components/usuario-popover/usuario-p
 
 // Emojis
 import { EmojiStringComponent } from '../components/emoji-string/emoji-string.component';
+import { TextToSpeech } from '@ionic-native/text-to-speech/ngx';
 
 
 @Component({
@@ -50,12 +51,16 @@ export class TabsPage {
   asistentes = [];
   asistenteSeleccionado = "0";
 
+  ventanaPoliticasAbierta = false;
+  ventanaAccesibilidadAbierta = false;
+
   constructor(  
     private menu: MenuController, // Menu desplegable
     private router: Router, // Para pasar parametros
     public alertController: AlertController, // Alertas - Prompt
     private platform: Platform,
     private speechRecognition: SpeechRecognition, 
+    private tts: TextToSpeech,
     private changeDetector: ChangeDetectorRef,
     private databaseService:DatabaseService,
     private location: Location,
@@ -98,8 +103,8 @@ export class TabsPage {
   }
 
   comprobacionesVentanas(){
-    if(!this.configuracion.ventana_politicas) this.ventanaPoliticas();
-    if(!this.configuracion.ventana_accesibilidad) this.ventanaAccesibilidad();
+    if(!this.ventanaPoliticasAbierta && !this.configuracion.ventana_politicas) this.ventanaPoliticas();
+    if(!this.ventanaAccesibilidadAbierta && !this.configuracion.ventana_accesibilidad) this.ventanaAccesibilidad();
   }
 
   consigueConfiguracion(){
@@ -150,6 +155,13 @@ export class TabsPage {
       }
     });
   }
+  // diNombreAsistente(){ // Eventos: (ionSelect) y (click)
+  //   if(this.asistenteSeleccionado == "0") this.diTTS('Ninguno');
+  //   else {
+  //     let asistente = this.asistentes.filter(asistente => asistente.id == this.asistenteSeleccionado);
+  //     if(asistente[0] != undefined) this.diTTS(asistente[0].inicial + asistente[0].final);
+  //   }
+  // }
 
   cambiaAsistente(){
     this.databaseService.cambiaAsistente(parseInt(this.asistenteSeleccionado));
@@ -291,9 +303,9 @@ export class TabsPage {
     let message = "";
 
     if(respuesta != null && respuesta.length){
-      subHeader = "Esto es lo que el dispositivo ha escuchado:";
+      subHeader = "Esto es lo que el dispositivo ha escuchado (✔):";
       message = respuesta;
-    } else subHeader = "El dispositivo no ha escuchado nada";
+    } else subHeader = "El dispositivo no ha escuchado nada (❌)";
 
     const alert = await this.alertController.create({
       cssClass: 'ventanaTextoManual',
@@ -314,6 +326,7 @@ export class TabsPage {
   }
 
   async ventanaAccesibilidad() {
+    this.ventanaAccesibilidadAbierta = true;
     const alert = await this.alertController.create({
       cssClass: 'ventanaAccesibilidad',
       header: 'Accesibilidad',
@@ -346,6 +359,7 @@ export class TabsPage {
           text: 'Aceptar',
           role: 'aceptar',
           handler: () => {
+            this.ventanaAccesibilidadAbierta = false;
             console.log('Confirm Ok');
           }
         }
@@ -355,6 +369,7 @@ export class TabsPage {
     await alert.present();
   }
   async ventanaPoliticas() {
+    this.ventanaPoliticasAbierta = true;
     const alert = await this.alertController.create({
       cssClass: 'ventanaPoliticas',
       header: 'Políticas y uso de los datos',
@@ -383,12 +398,38 @@ export class TabsPage {
           handler: () => {
             console.log('Confirm Ok');
             this.databaseService.cambiaVentanaPoliticas(true);
+            this.ventanaPoliticasAbierta = false;
           }
         }
       ]
     });
 
     await alert.present();
+  }
+
+  // Metodos TTS
+  async diTTS(texto: string):Promise<any>{
+    var textoSinEmoticonos = this.emojiString.removeEmojis(texto);
+    try{
+      await this.tts.speak({
+        text: textoSinEmoticonos,
+        locale: 'es-ES',
+        rate: 0.8
+      });
+    }
+    catch(e){
+      if(e == "cordova_not_available") console.log(e);
+    }
+  }
+
+  async pararTTS(){
+    try{
+      await this.tts.speak("");
+    }
+    catch(e){
+      if(e == "cordova_not_available") console.log(e);
+      else alert("pararTTS: Ha surgido un error relacionado con el Text To Speech");
+    }
   }
 
   customPopoverOptions: any = {

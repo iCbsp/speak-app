@@ -7,7 +7,7 @@
 <ion-content>
   <!-- <ion-title>Cambio de usuario</ion-title> -->
   <ion-grid>
-    <ion-row>
+    <ion-row *ngIf="configuracion.modo_simple == 0">
       <ion-col size="2">
         <ion-button expand="block" (click)="closePopover()">
           <ion-icon style="min-width: 24px;" name="arrow-back-outline"></ion-icon>
@@ -26,11 +26,24 @@
         </ion-button>
       </ion-col>
     </ion-row>
+    <ion-row *ngIf="configuracion.modo_simple == 1">
+      <ion-col size="12">
+        <ion-button expand="block" (click)="closePopover(); diTTS('Volver');">
+          <ion-icon style="min-width: 24px;" name="arrow-back-outline"></ion-icon>
+        </ion-button>
+      </ion-col>
+    </ion-row>
   </ion-grid>
   <ion-card *ngFor="let usuario of usuarios">
-    <ion-item class="ion-activated" (click)="cambiaUsuario(usuario.id)">
+    <ion-item *ngIf="configuracion.modo_simple == 0" class="ion-activated">
       <ion-icon name="person-outline" slot="start" style="border-radius: 50%; display: inline-block; border: 1px solid black; padding: 0.2em;" [ngStyle]="{ 'background-color': usuario.color }"></ion-icon>
       <ion-label> {{ usuario.nombre }} </ion-label>
+      <ion-button slot="end" size="default" (click)="cambiaUsuario(usuario.id)"><ion-icon size="large" name="log-in-outline"></ion-icon></ion-button>
+    </ion-item>
+    <ion-item *ngIf="configuracion.modo_simple == 1" class="ion-activated" (click)="diTTS(usuario.nombre)">
+      <ion-icon name="person-outline" slot="start" style="border-radius: 50%; display: inline-block; border: 1px solid black; padding: 0.2em;" [ngStyle]="{ 'background-color': usuario.color }"></ion-icon>
+      <ion-label> {{ usuario.nombre }} </ion-label>
+      <ion-button slot="end" size="default" (click)="cambiaUsuario(usuario.id)"><ion-icon size="large" name="log-in-outline"></ion-icon></ion-button>
     </ion-item>
   </ion-card>
 </ion-content>

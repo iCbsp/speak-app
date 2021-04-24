@@ -17,6 +17,8 @@ import { PopoverController } from '@ionic/angular';
 import { AccionPopoverPage } from 'src/app/components/accion-popover/accion-popover.page';
 
 import { ModoAccion, TiposAcciones } from 'src/app/enumerations';
+import { TextToSpeech } from '@ionic-native/text-to-speech/ngx';
+import { EmojiStringComponent } from '../emoji-string/emoji-string.component';
 
 @Component({
   selector: 'app-tab-page',
@@ -37,7 +39,9 @@ export class TabPageComponent implements OnInit {
     private databaseService:DatabaseService,
     private platform: Platform,
     private changeDetector: ChangeDetectorRef,
-    private popover:PopoverController
+    private popover:PopoverController,
+    private tts: TextToSpeech,
+    private emojiString: EmojiStringComponent
   ){}
 
   
@@ -180,6 +184,31 @@ export class TabPageComponent implements OnInit {
 
   reproducirAccionesSeleccionadas(){
     alert("Función en desarrollo 🚧. Servirá para reproducir varias acciones en cadena");
+  }
+
+  // Metodos TTS
+  async diTTS(texto: string):Promise<any>{
+    var textoSinEmoticonos = this.emojiString.removeEmojis(texto);
+    try{
+      await this.tts.speak({
+        text: textoSinEmoticonos,
+        locale: 'es-ES',
+        rate: 0.8
+      });
+    }
+    catch(e){
+      if(e == "cordova_not_available") console.log(e);
+    }
+  }
+
+  async pararTTS(){
+    try{
+      await this.tts.speak("");
+    }
+    catch(e){
+      if(e == "cordova_not_available") console.log(e);
+      else alert("pararTTS: Ha surgido un error relacionado con el Text To Speech");
+    }
   }
 
 }

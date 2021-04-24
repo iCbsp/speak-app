@@ -8,6 +8,8 @@ import { DatabaseService } from 'src/app/services/databaseService';
 
 // Router, para pasar parametros
 import { Router, ActivatedRoute } from '@angular/router';
+import { TextToSpeech } from '@ionic-native/text-to-speech/ngx';
+import { EmojiStringComponent } from '../emoji-string/emoji-string.component';
 
 @Component({
   selector: 'app-usuario-popover',
@@ -17,18 +19,21 @@ import { Router, ActivatedRoute } from '@angular/router';
 export class UsuarioPopoverPage implements OnInit {
 
   usuarios = [];
+  configuracion = { modo_simple: 1 };
 
   constructor(
     private popover:PopoverController,
     private databaseService:DatabaseService,
     private router: Router, // Para pasar parametros
+    private tts: TextToSpeech, // TTS
+    private emojiString: EmojiStringComponent,
     private route: ActivatedRoute
   ) {
+  }
+  
+  ngOnInit() {
     this.consigueUsuarios();
-
-    // this.location.onUrlChange((url) => {
-    //   if(url.toString() == "/configuracion/perfiles") this.consigueUsuarios();
-    // });
+    this.consigueConfiguracion();
   }
 
   consigueUsuarios(){
@@ -44,6 +49,18 @@ export class UsuarioPopoverPage implements OnInit {
     });
   }
   
+  consigueConfiguracion(){
+    let promesa = new Promise<any>(() => {});
+    this.databaseService.lista.subscribe((ready)=>{
+      if(ready){
+        promesa = this.databaseService.obtenConfiguracion().then((configuracionBDD)=>{
+          this.configuracion = configuracionBDD;
+        });
+      }
+    });
+    return promesa;
+  }
+
   cambiaUsuario(usuarioID : number){
     this.databaseService.cambiaUsuarioActual(usuarioID);
     // window.location.reload();
@@ -53,7 +70,29 @@ export class UsuarioPopoverPage implements OnInit {
   closePopover(){
     this.popover.dismiss();
   }
+  
+  // Metodos TTS
+  async diTTS(texto: string):Promise<any>{
+    var textoSinEmoticonos = this.emojiString.removeEmojis(texto);
+    try{
+      await this.tts.speak({
+        text: textoSinEmoticonos,
+        locale: 'es-ES',
+        rate: 0.8
+      });
+    }
+    catch(e){
+      if(e == "cordova_not_available") console.log(e);
+    }
+  }
 
-  ngOnInit() {}
-
+  async pararTTS(){
+    try{
+      await this.tts.speak("");
+    }
+    catch(e){
+      if(e == "cordova_not_available") console.log(e);
+      else alert("pararTTS: Ha surgido un error relacionado con el Text To Speech");
+    }
+  }
 }

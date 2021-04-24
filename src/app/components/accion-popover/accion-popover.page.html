@@ -23,7 +23,7 @@
   </section>
   <div style="padding: 0em 0.5em; border-bottom: 1px solid gray; text-align: center;">
     <h2 *ngIf="configuracion.modo_simple == 0"> {{ accion.titulo }} <span *ngIf="accion.imagen">{{ accion.imagen }}</span> </h2>
-    <p *ngIf="configuracion.modo_simple == 1 && accion.imagen" style="font-size: 32px;">{{ accion.imagen }}</p>
+    <p (click)="diTTS(accion.titulo)" *ngIf="configuracion.modo_simple == 1 && accion.imagen" style="font-size: 32px;">{{ accion.imagen }}</p>
   </div>
 
   <ion-item *ngIf="configuracion.modo_simple == 0 && asistente.inicial">
@@ -31,7 +31,7 @@
     <ion-button slot="end" (click)="asistente.inicial = ''"><ion-icon name="close-outline"></ion-icon></ion-button>
   </ion-item>
   <ion-item *ngIf="configuracion.modo_simple == 1 && asistente.inicial">
-    <div>{{emojiString.emojisOrText(asistente.inicial)}}</div>
+    <div (click)="diTTS(asistente.inicial)">{{emojiString.emojisOrText(asistente.inicial)}}</div>
     <ion-button slot="end" (click)="asistente.inicial = ''"><ion-icon name="close-outline"></ion-icon></ion-button>
   </ion-item>
 
@@ -43,23 +43,23 @@
       <ion-button *ngIf="fila.tipo == 2" slot="end" (click)="fila.texto=''"><ion-icon name="close-outline"></ion-icon></ion-button>
     </ion-item>
     <ion-item *ngIf="configuracion.modo_simple == 1" no-lines lines="none">
-      <div>{{ emojiString.emojisOrText(fila.texto) }}</div>
+      <div (click)="diTTS(fila.texto)">{{ emojiString.emojisOrText(fila.texto) }}</div>
       <ion-button *ngIf="fila.tipo == 1" slot="end" (click)="filas.splice(i, 1)"><ion-icon name="close-outline"></ion-icon></ion-button>
       <ion-button *ngIf="fila.tipo == 2" slot="end" (click)="fila.texto=''"><ion-icon name="close-outline"></ion-icon></ion-button>
     </ion-item>
     
     <ion-chip *ngFor="let sugerencia of fila.sugerencias" (click)="fila.texto = sugerencia.texto">
       <ion-label *ngIf="configuracion.modo_simple == 0">{{ sugerencia.texto }}</ion-label>
-      <ion-label *ngIf="configuracion.modo_simple == 1">{{ emojiString.emojisOrText(sugerencia.texto) }}</ion-label>
+      <ion-label (click)="diTTS(sugerencia.texto)" *ngIf="configuracion.modo_simple == 1">{{ emojiString.emojisOrText(sugerencia.texto) }}</ion-label>
     </ion-chip>
   </div>
 
-  <ion-item *ngIf="configuracion.modo_simple == 1 && asistente.final">
+  <ion-item *ngIf="configuracion.modo_simple == 0 && asistente.final">
     <ion-input disabled [value]="asistente.final"></ion-input>
     <ion-button slot="end" (click)="asistente.final = ''"><ion-icon name="close-outline"></ion-icon></ion-button>
   </ion-item>
   <ion-item *ngIf="configuracion.modo_simple == 1 && asistente.final">
-    <div>{{emojiString.emojisOrText(asistente.final)}}</div>
+    <div (click)="diTTS(asistente.final)">{{emojiString.emojisOrText(asistente.final)}}</div>
     <ion-button slot="end" (click)="asistente.final = ''"><ion-icon name="close-outline"></ion-icon></ion-button>
   </ion-item>
 
@@ -68,7 +68,7 @@
       Cancelar
       <ion-icon slot="end" name="close-outline"></ion-icon>
     </ion-button>
-    <ion-button *ngIf="configuracion.modo_simple == 1" (click)="closePopover()">
+    <ion-button *ngIf="configuracion.modo_simple == 1" (click)="diTTS('Cancelar'); closePopover();">
       <ion-icon name="close-outline"></ion-icon>
     </ion-button>
 

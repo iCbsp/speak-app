@@ -170,7 +170,7 @@ export class DatabaseService {
         
         this.insertaAsistente("Alexa 🌀", "");
         this.insertaAsistente("Ok Google 🎨", "");
-        this.insertaAsistente("Siri 🔮", "");
+        this.insertaAsistente("Oye Siri 🔮", "");
         
         this.publicaUsuario("Usuario", "#32a852").then(() => {
             this.lista.next(true);
