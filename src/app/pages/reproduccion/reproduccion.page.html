@@ -18,12 +18,8 @@
   <ion-spinner style="width: 80px; height: 80px; margin: 10px;" *ngIf="estaReproduciendo() || estaGrabando()" name="crescent"></ion-spinner>
   <ion-icon style="width: 80px; height: 80px; margin: 10px;" *ngIf="iconoResultado() == 'bien'" name="checkmark-circle-outline" color="success"></ion-icon>
   <ion-icon style="width: 80px; height: 80px; margin: 10px;" *ngIf="iconoResultado() == 'mal'" name="close-circle-outline" color="danger"></ion-icon>
-  <ion-card *ngIf="!estaGrabando() && !estaReproduciendo() && configuracion.respuesta == 1">
-    <ion-title>Respuesta</ion-title>
-    <ion-card-content>
-          {{ primeraCoincidencia }}
-    </ion-card-content>
-  </ion-card>
+  <!-- <app-text-interpreter *ngIf="!estaGrabando() && !estaReproduciendo() && configuracion.respuesta == 1"></app-text-interpreter> -->
+  <app-text-interpreter [textoGetter]="primeraCoincidencia"></app-text-interpreter>
 
   <section *ngIf="!estaGrabando() && !estaReproduciendo()">
     <ion-grid>

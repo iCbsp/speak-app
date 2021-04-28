@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { ReproduccionPageRoutingModule } from './reproduccion-routing.module';
 
 import { ReproduccionPage } from './reproduccion.page';
+import { TextInterpreterComponent } from 'src/app/components/text-interpreter/text-interpreter.component';
 
 @NgModule({
   imports: [
@@ -15,6 +16,6 @@ import { ReproduccionPage } from './reproduccion.page';
     IonicModule,
     ReproduccionPageRoutingModule
   ],
-  declarations: [ReproduccionPage]
+  declarations: [ReproduccionPage, TextInterpreterComponent]
 })
 export class ReproduccionPageModule {}

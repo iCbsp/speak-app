@@ -92,6 +92,8 @@ export class TabsPage {
 
   createPopover(){
     if(!this.platform.is('desktop')){
+      if(this.configuracion.modo_simple == 1) this.diTTS('Perfiles');
+
       this.popover.create({
       component:UsuarioPopoverPage,
       cssClass: 'accionPopover',
