@@ -13,13 +13,13 @@
   <ion-title style="margin: 20px;" *ngIf="estaGrabando()">Escuchando 🎙</ion-title>
   <ion-title style="margin: 20px;" *ngIf="!estaGrabando() && !estaReproduciendo()">Resultado ✨</ion-title>
 
-  <ion-title size="small">{{ textoAReproducir }}</ion-title>
+  <ion-title size="small" *ngIf="configuracion.modo_simple == 0">{{ textoAReproducir }}</ion-title>
+  <ion-title size="small" *ngIf="configuracion.modo_simple == 1" (click)="diTTS(textoAReproducir)">{{ textoAReproducir }}</ion-title>
 
   <ion-spinner style="width: 80px; height: 80px; margin: 10px;" *ngIf="estaReproduciendo() || estaGrabando()" name="crescent"></ion-spinner>
   <ion-icon style="width: 80px; height: 80px; margin: 10px;" *ngIf="iconoResultado() == 'bien'" name="checkmark-circle-outline" color="success"></ion-icon>
   <ion-icon style="width: 80px; height: 80px; margin: 10px;" *ngIf="iconoResultado() == 'mal'" name="close-circle-outline" color="danger"></ion-icon>
-  <!-- <app-text-interpreter *ngIf="!estaGrabando() && !estaReproduciendo() && configuracion.respuesta == 1"></app-text-interpreter> -->
-  <app-text-interpreter [textoGetter]="primeraCoincidencia"></app-text-interpreter>
+  <app-text-interpreter *ngIf="!estaGrabando() && !estaReproduciendo() && configuracion.respuesta == 1" [textoGetter]="primeraCoincidencia"></app-text-interpreter>
 
   <section *ngIf="!estaGrabando() && !estaReproduciendo()">
     <ion-grid>

@@ -1,6 +1,29 @@
 <ion-card>
-  <ion-title>Respuesta</ion-title>
-  <ion-card-content>
-    {{ texto }}
+  <ion-title style="margin: 1rem 0rem">Respuesta</ion-title>
+   <ion-segment color="primary" [(ngModel)]="modoTexto" (ngModelChange)="onModoTextoChange()">
+    <ion-segment-button value="texto" layout="icon-bottom">
+      <ion-icon name="text-outline"></ion-icon>
+      <ion-label>Texto</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="ambos" layout="icon-bottom">
+      <div style="margin-bottom: 10px;">
+        <ion-icon name="text-outline" style="font-size: 24px;"></ion-icon>
+        <ion-icon name="add-outline" style="font-size: 20px;"></ion-icon>
+        <ion-icon name="happy-outline" style="font-size: 24px;"></ion-icon>
+      </div>
+      <ion-label>Ambos</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="iconos" layout="icon-bottom">
+      <ion-icon name="happy-outline"></ion-icon>
+      <ion-label>Iconos</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+  <ion-card-content style="margin: 1rem 0rem">
+    <ion-text><h2>
+      <span *ngFor="let palabra of palabras; index as emoji" (click)="diTTS(palabra)">
+        <span *ngIf="modoTexto == 'ambos' || modoTexto == 'texto'"> {{ palabra }}</span>
+        <span *ngIf="modoTexto == 'ambos' || modoTexto == 'iconos'"> {{ emojis[emoji] }}</span>
+      </span>
+    </h2></ion-text>
   </ion-card-content>
 </ion-card>

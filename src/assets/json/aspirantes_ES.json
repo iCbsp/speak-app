@@ -1,3 +1,18 @@
 {
-    "key": "value"
+    "aspirantes": 
+    [
+        {
+            "texto": "lloverá",
+            "emoji": "🌧"
+        },
+        {
+            "texto": "lloverá",
+            "emoji": "🌧"
+        },
+        {
+            "texto": "soleado",
+            "emoji": "☀"
+        }
+    ]
+
 }

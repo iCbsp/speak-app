@@ -26,7 +26,7 @@ import { EmojiStringComponent } from 'src/app/components/emoji-string/emoji-stri
   styleUrls: ['./reproduccion.page.scss'],
 })
 export class ReproduccionPage implements OnInit {
-  
+
   // Variables TTS
   textoAReproducir = "";
   reproduciendo = true;
@@ -63,12 +63,12 @@ export class ReproduccionPage implements OnInit {
         if(this.configuracion.respuesta == 1 && !this.permisoSTT){
           // while(this.configuracion.respuesta == 1 && !this.permisoSTT){
             this.ventanaNoTienePermisoSTT().then(() => {
-              this.diTTS();
+              this.diTextoAReproducir();
   
             });
   
           // }
-        } else this.diTTS();
+        } else this.diTextoAReproducir();
       });
 
       console.log(params['textoAReproducir']);
@@ -87,12 +87,26 @@ export class ReproduccionPage implements OnInit {
 
   // diElTextoTrasEsperar(){
   //   setTimeout(() => {
-  //     this.diTTS()
+  //     this.diTextoAReproducir()
   //   }, 1000);
   // }
 
   // Metodos TTS
-  async diTTS():Promise<any>{
+  async diTTS(texto: string):Promise<any>{
+    var textoSinEmoticonos = this.emojiString.removeEmojis(texto);
+    try{
+      await this.tts.speak({
+        text: textoSinEmoticonos,
+        locale: 'es-ES',
+        rate: 0.8
+      });
+    }
+    catch(e){
+      if(e == "cordova_not_available") console.log(e);
+    }
+  }
+
+  async diTextoAReproducir():Promise<any>{
     var textoSinEmoticonos = this.emojiString.removeEmojis(this.textoAReproducir);
     try{
       await this.tts.speak({
@@ -107,7 +121,7 @@ export class ReproduccionPage implements OnInit {
     }
     catch(e){
       if(e == "cordova_not_available") console.log(e);
-      //else alert("diTTS: Ha surgido un error relacionado con el Text To Speech");
+      //else alert("diTextoAReproducir: Ha surgido un error relacionado con el Text To Speech");
     }
   }
 
@@ -151,7 +165,7 @@ export class ReproduccionPage implements OnInit {
       this.coincidencias = coincidenciasTemp;
 
       if(this.coincidencias.length > 0 && this.coincidencias[0] != "") this.primeraCoincidencia = this.coincidencias[0];
-      else this.primeraCoincidencia = "(No ha habido respuesta)";
+      else this.primeraCoincidencia = "(No ha habido respuesta ❌)";
 
       this.grabando = false;
       this.resultado = 'bien';
@@ -160,7 +174,7 @@ export class ReproduccionPage implements OnInit {
     }, (error) => {
       this.grabando = false;
       this.resultado = 'mal';
-      this.primeraCoincidencia = "(No ha habido respuesta)";
+      this.primeraCoincidencia = "(No ha habido respuesta ❌)";
       this.changeDetector.detectChanges(); // Para actualizar la vista
     }
     );
@@ -209,7 +223,7 @@ export class ReproduccionPage implements OnInit {
     this.resultado = '';
 
     // Lo mismo que al iniciar la pagina
-    this.diTTS();
+    this.diTextoAReproducir();
   }
 
   async ventanaNoTienePermisoSTT() {
