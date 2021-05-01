@@ -9,23 +9,23 @@
 
 <ion-content style="text-align: center;">
 
-  <ion-title style="margin: 20px;" *ngIf="estaReproduciendo()">Reproduciendo 📢</ion-title>
-  <ion-title style="margin: 20px;" *ngIf="estaGrabando()">Escuchando 🎙</ion-title>
-  <ion-title style="margin: 20px;" *ngIf="!estaGrabando() && !estaReproduciendo()">Resultado ✨</ion-title>
+  <ion-title style="margin: 20px;" *ngIf="reproduciendo">Reproduciendo 📢</ion-title>
+  <ion-title style="margin: 20px;" *ngIf="grabando">Escuchando 🎙</ion-title>
+  <ion-title style="margin: 20px;" *ngIf="!grabando && !reproduciendo">Resultado ✨</ion-title>
 
   <ion-title size="small" *ngIf="configuracion.modo_simple == 0">{{ textoAReproducir }}</ion-title>
   <ion-title size="small" *ngIf="configuracion.modo_simple == 1" (click)="diTTS(textoAReproducir)">{{ textoAReproducir }}</ion-title>
 
-  <ion-spinner style="width: 80px; height: 80px; margin: 10px;" *ngIf="estaReproduciendo() || estaGrabando()" name="crescent"></ion-spinner>
+  <ion-spinner style="width: 80px; height: 80px; margin: 10px;" *ngIf="reproduciendo || grabando" name="crescent"></ion-spinner>
   <ion-icon style="width: 80px; height: 80px; margin: 10px;" *ngIf="iconoResultado() == 'bien'" name="checkmark-circle-outline" color="success"></ion-icon>
   <ion-icon style="width: 80px; height: 80px; margin: 10px;" *ngIf="iconoResultado() == 'mal'" name="close-circle-outline" color="danger"></ion-icon>
-  <app-text-interpreter *ngIf="!estaGrabando() && !estaReproduciendo() && configuracion.respuesta == 1" [textoGetter]="primeraCoincidencia"></app-text-interpreter>
+  <app-text-interpreter *ngIf="!grabando && !reproduciendo && configuracion.respuesta == 1" [textoGetter]="primeraCoincidencia"></app-text-interpreter>
 
-  <section *ngIf="!estaGrabando() && !estaReproduciendo()">
+  <section *ngIf="!grabando && !reproduciendo">
     <ion-grid>
       <ion-row>
         <ion-col size="6">
-          <ion-button expand="block" color="secondary" (click)="reiniciaAccion()">Repetir</ion-button>
+          <ion-button expand="block" color="primary" (click)="reiniciaAccion()">Repetir</ion-button>
         </ion-col>
         <ion-col size="6">
           <ion-button expand="block" color="primary" [routerLink]="['/tabs']">Aceptar</ion-button>
@@ -34,7 +34,7 @@
     </ion-grid>
   </section>
 
-  <section *ngIf="!estaGrabando() && !estaReproduciendo()" style="margin: 20px 5px;">
+  <section *ngIf="!grabando && !reproduciendo" style="margin: 20px 5px;">
     <ion-title><strike>Acciones predictivas</strike> 🚧</ion-title>
     <ion-row>
       <ion-col size="4">

@@ -27,6 +27,8 @@ import { UsuarioPopoverPageModule } from 'src/app/components/usuario-popover/usu
 import { AccionPopoverPageModule } from 'src/app/components/accion-popover/accion-popover.module';
 import { EmojiStringComponent } from './components/emoji-string/emoji-string.component';
 
+import { Clipboard } from '@ionic-native/clipboard/ngx';
+
 @NgModule({
   declarations: [AppComponent, MenuComponent, EmojiStringComponent],
   entryComponents: [],
@@ -39,6 +41,7 @@ import { EmojiStringComponent } from './components/emoji-string/emoji-string.com
     SpeechRecognition, TextToSpeech, // TTS y SST
     DatabaseService, // SQLite
     SQLite, //SQLiteObject,
+    Clipboard,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

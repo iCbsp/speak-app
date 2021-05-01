@@ -1,6 +1,9 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { TextToSpeech } from '@ionic-native/text-to-speech/ngx';
-import * as data from '../../../assets/json/aspirantes_ES.json'
+import * as data from '../../../assets/json/aspirantes_ES.json';
+
+// Portapapeles
+import { Clipboard } from '@ionic-native/clipboard/ngx';
 
 @Component({
   selector: 'app-text-interpreter',
@@ -23,6 +26,7 @@ export class TextInterpreterComponent implements OnInit {
   constructor(
     private tts: TextToSpeech,
     private changeDetector: ChangeDetectorRef,
+    private clipboard: Clipboard,
   ) { }
 
   ngOnInit() {}
@@ -42,6 +46,10 @@ export class TextInterpreterComponent implements OnInit {
         }
       }
     }
+  }
+
+  respuestaAPortapapeles(){
+    this.clipboard.copy(this.textoATratar);
   }
 
   onModoTextoChange(){

@@ -157,6 +157,7 @@ export class ReproduccionPage implements OnInit {
 
   iniciaSTT(){
     this.grabando = true;
+    this.changeDetector.detectChanges(); // Para actualizar la vista
     let options = {
       // language: 'en-US'
       language: 'es-ES'
@@ -198,14 +199,6 @@ export class ReproduccionPage implements OnInit {
   }
 
   // Interfaz
-  estaGrabando(){
-    return this.grabando;
-  }
-
-  estaReproduciendo(){
-    return this.reproduciendo;
-  }
-
   iconoResultado(){
     if(!this.reproduciendo && !this.grabando) return this.resultado;
   }
@@ -218,12 +211,14 @@ export class ReproduccionPage implements OnInit {
     this.coincidencias = [];
     this.primeraCoincidencia = new String("");
     this.grabando = false;
-    this.permisoSTT = false;
+    // this.permisoSTT = false;
     this.STTCancelado = false;
     this.resultado = '';
 
     // Lo mismo que al iniciar la pagina
     this.diTextoAReproducir();
+
+    this.changeDetector.detectChanges();
   }
 
   async ventanaNoTienePermisoSTT() {
