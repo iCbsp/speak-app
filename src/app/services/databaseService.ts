@@ -412,8 +412,9 @@ export class DatabaseService {
         return this.insertaUsuario(nombre, color).then((usuario) => {
             return this.insertaConfiguracion(usuario.insertId).then(() => {
                 this.usuarioActual = usuario.insertId;
-                this.insertaAccionesBasicas(usuario.insertId);
-                this.insertaAccionesAplicaciones(usuario.insertId);
+                this.insertaAccionesInformacion(usuario.insertId);
+                this.insertaAccionesOrganizacion(usuario.insertId);
+                this.insertaAccionesEntretenimiento(usuario.insertId);
                 this.cambio.next(!this.cambio.value);
             });
         });
@@ -668,22 +669,9 @@ export class DatabaseService {
         .catch((err) => alert("Error borrando sugerencias -> " + JSON.stringify(err)));
     }
 
-    private insertaAccionesBasicas(usuario: number){
-        this.insertaAccion(usuario, TiposAcciones.tab1, "Alarma", "⏰", "").then((accion) => {
-            this.insertaFila(accion.insertId, TiposFilas.fija, "pon una alarma");
-            this.insertaFila(accion.insertId, TiposFilas.temporal, "").then((fila) => {
-                this.insertaSugerencia(fila.insertId, "hoy 📅");
-                this.insertaSugerencia(fila.insertId, "mañana 📅1️⃣");
-                this.insertaSugerencia(fila.insertId, "pasado mañana 📅2️⃣");
-            });
-            this.insertaFila(accion.insertId, TiposFilas.fija, "a las");
-            this.insertaFila(accion.insertId, TiposFilas.temporal, "").then((fila) => {
-                this.insertaSugerencia(fila.insertId, "8:00 🌅");
-                this.insertaSugerencia(fila.insertId, "14:00 ☀");
-                this.insertaSugerencia(fila.insertId, "22:00 🌙");
-            });
-        });
+    private insertaAccionesInformacion(usuario: number){
 
+        // Tiempo
         this.insertaAccion(usuario, TiposAcciones.tab1, "El tiempo", "⛅", "").then((accion) => {
             this.insertaFila(accion.insertId, TiposFilas.fija, "¿qué tiempo hará");
             this.insertaFila(accion.insertId, TiposFilas.temporal, "").then((fila) => {
@@ -698,10 +686,98 @@ export class DatabaseService {
             });
             this.insertaFila(accion.insertId, TiposFilas.fija, "?");
         });
+
+        // Preguntas
+        this.insertaAccion(usuario, TiposAcciones.tab1, "Curiosidad", "🧠", "").then((accion) => {
+            this.insertaFila(accion.insertId, TiposFilas.fija, "dime un dato curioso");
+            this.insertaFila(accion.insertId, TiposFilas.temporal, "").then((fila) => {
+                this.insertaSugerencia(fila.insertId, "sobre animales 🐯");
+                this.insertaSugerencia(fila.insertId, "sobre plantas 🌿");
+            });
+        });
+        this.insertaAccion(usuario, TiposAcciones.tab1, "Saber sobre", "ℹ", "").then((accion) => {
+            this.insertaFila(accion.insertId, TiposFilas.fija, "háblame sobre");
+            this.insertaFila(accion.insertId, TiposFilas.temporal, "").then((fila) => {
+                this.insertaSugerencia(fila.insertId, "Alan Turing 🧑");
+                this.insertaSugerencia(fila.insertId, "la revolución industrial 🏭");
+                this.insertaSugerencia(fila.insertId, "Nueva York 🗽");
+            });
+        });
+        
+        
+        // Comida
+        this.insertaAccion(usuario, TiposAcciones.tab1, "Receta", "👨‍🍳", "").then((accion) => {
+            this.insertaFila(accion.insertId, TiposFilas.fija, "dime una receta de");
+            this.insertaFila(accion.insertId, TiposFilas.temporal, "").then((fila) => {
+                this.insertaSugerencia(fila.insertId, "falafel 🧆");
+                this.insertaSugerencia(fila.insertId, "paella 🥘");
+                this.insertaSugerencia(fila.insertId, "berenjena rellena 🍆");
+            });
+        });
+        this.insertaAccion(usuario, TiposAcciones.tab1, "Qué comer", "🍽", "").then((accion) => {
+            this.insertaFila(accion.insertId, TiposFilas.fija, "¿qué podría comer?");
+        });
+
+
+        // Fechas
+        this.insertaAccion(usuario, TiposAcciones.tab1, "Cuánto falta", "📅", "").then((accion) => {
+            this.insertaFila(accion.insertId, TiposFilas.fija, "¿cuánto falta para");
+            this.insertaFila(accion.insertId, TiposFilas.temporal, "").then((fila) => {
+                this.insertaSugerencia(fila.insertId, "el 30 de junio 📅");
+                this.insertaSugerencia(fila.insertId, "Navidad 🎅");
+                this.insertaSugerencia(fila.insertId, "Pascua 🥚");
+            });
+            this.insertaFila(accion.insertId, TiposFilas.fija, "?");
+        });
+
     }
 
-    private insertaAccionesAplicaciones(usuario: number){
-        this.insertaAccion(usuario, TiposAcciones.tab2, "Spotify", "💚", "").then((accion) => {
+    private insertaAccionesOrganizacion(usuario: number){
+
+        // Alarmas/Temporizadores
+        this.insertaAccion(usuario, TiposAcciones.tab2, "Alarma", "⏰", "").then((accion) => {
+            this.insertaFila(accion.insertId, TiposFilas.fija, "pon una alarma");
+            this.insertaFila(accion.insertId, TiposFilas.temporal, "").then((fila) => {
+                this.insertaSugerencia(fila.insertId, "hoy 📅");
+                this.insertaSugerencia(fila.insertId, "mañana 📅1️⃣");
+                this.insertaSugerencia(fila.insertId, "pasado mañana 📅2️⃣");
+            });
+            this.insertaFila(accion.insertId, TiposFilas.fija, "a las");
+            this.insertaFila(accion.insertId, TiposFilas.temporal, "").then((fila) => {
+                this.insertaSugerencia(fila.insertId, "8:00 🌅");
+                this.insertaSugerencia(fila.insertId, "14:00 ☀");
+                this.insertaSugerencia(fila.insertId, "22:00 🌙");
+            });
+        });
+        this.insertaAccion(usuario, TiposAcciones.tab2, "Temporizador", "⏱", "").then((accion) => {
+            this.insertaFila(accion.insertId, TiposFilas.fija, "pon un temporizador de");
+            this.insertaFila(accion.insertId, TiposFilas.temporal, "").then((fila) => {
+                this.insertaSugerencia(fila.insertId, "30 minutos");
+                this.insertaSugerencia(fila.insertId, "1 hora");
+                this.insertaSugerencia(fila.insertId, "2 horas");
+            });
+        });
+        this.insertaAccion(usuario, TiposAcciones.tab2, "Recordatorio", "📝", "").then((accion) => {
+            this.insertaFila(accion.insertId, TiposFilas.fija, "recuérdame que");
+            this.insertaFila(accion.insertId, TiposFilas.temporal, "").then((fila) => {
+                this.insertaSugerencia(fila.insertId, "lave la ropa 🧼");
+                this.insertaSugerencia(fila.insertId, "vaya a comprar 🛍️");
+                this.insertaSugerencia(fila.insertId, "que realice la llamada 📞");
+            });
+            this.insertaFila(accion.insertId, TiposFilas.fija, "a las");
+            this.insertaFila(accion.insertId, TiposFilas.temporal, "").then((fila) => {
+                this.insertaSugerencia(fila.insertId, "8:00 🌅");
+                this.insertaSugerencia(fila.insertId, "14:00 ☀");
+                this.insertaSugerencia(fila.insertId, "22:00 🌙");
+            });
+        });
+
+    }
+
+    private insertaAccionesEntretenimiento(usuario: number){
+
+        // Música
+        this.insertaAccion(usuario, TiposAcciones.tab3, "Música", "🎶", "").then((accion) => {
             this.insertaFila(accion.insertId, TiposFilas.fija, "pon");
             this.insertaFila(accion.insertId, TiposFilas.temporal, "").then((fila) => {
                 this.insertaSugerencia(fila.insertId, "Imagine 🧑‍🤝‍🧑");
@@ -714,7 +790,26 @@ export class DatabaseService {
                 this.insertaSugerencia(fila.insertId, "Beethoven 🧓");
                 this.insertaSugerencia(fila.insertId, "Dani Martín 👨‍🦱");
             });
-            this.insertaFila(accion.insertId, TiposFilas.fija, "en Spotify");
+            this.insertaFila(accion.insertId, TiposFilas.fija, "en");
+            this.insertaFila(accion.insertId, TiposFilas.temporal, "").then((fila) => {
+                this.insertaSugerencia(fila.insertId, "Spotify 💚");
+                this.insertaSugerencia(fila.insertId, "Apple Music 🍎");
+                this.insertaSugerencia(fila.insertId, "Prime Music 🔵");
+            });
+        });
+
+
+        this.insertaAccion(usuario, TiposAcciones.tab3, "Cara o cruz", "🪙", "").then((accion) => {
+            this.insertaFila(accion.insertId, TiposFilas.fija, "cara o cruz");
+        });
+        this.insertaAccion(usuario, TiposAcciones.tab3, "Piedra, papel", "✂", "").then((accion) => {
+            this.insertaFila(accion.insertId, TiposFilas.fija, "piedra, papel o tijera");
+        });
+        this.insertaAccion(usuario, TiposAcciones.tab3, "Acertijo", "❓", "").then((accion) => {
+            this.insertaFila(accion.insertId, TiposFilas.fija, "acertijo");
+        });
+        this.insertaAccion(usuario, TiposAcciones.tab3, "Chistes", "🤣", "").then((accion) => {
+            this.insertaFila(accion.insertId, TiposFilas.fija, "cuéntame un chiste");
         });
     }
 }
