@@ -16,6 +16,7 @@
   <ion-item>
     <ion-title size="small">Asistentes de voz</ion-title>
   </ion-item> -->
+  <ion-button expand="block" (click)="ventanaCrearAsistente()">Añadir asistente</ion-button>
   <ion-item *ngFor="let asistente of asistentes">
     <ion-item (click)="ventanaEditarAsistente(asistente)">
       <ion-input position="fixed" placeholder="(Frase inicial)" disabled [value]="asistente.inicial"></ion-input>
@@ -24,6 +25,5 @@
     <!-- <ion-button style="margin-right: 20px;"><ion-icon name="close-outline"></ion-icon></ion-button> -->
     <ion-button slot="end" (click)="borraAsistente(asistente.id)"><ion-icon name="trash-outline"></ion-icon></ion-button>
   </ion-item>
-  <ion-button expand="block" (click)="ventanaCrearAsistente()">Añadir asistente</ion-button>
 
 </ion-content>

@@ -4,7 +4,8 @@
           <ion-menu-button *ngIf="configuracion.modo_simple == 0" color="primary" menu="menuPrincipal"></ion-menu-button>
           <ion-menu-button *ngIf="configuracion.modo_simple == 1" color="primary" menu="menuPrincipal" (click)="diTTS('Menú')"></ion-menu-button>
         </ion-buttons>
-        <ion-title>SpeakApp</ion-title>
+        <ion-title *ngIf="configuracion.modo_simple == 0">SpeakApp</ion-title>
+        <ion-title *ngIf="configuracion.modo_simple == 1" (click)="diTTS('speak app')">SpeakApp</ion-title>
         <ion-button slot="end" (click)="createPopover();" style="max-width: 30%;">
           <ion-icon name="person-outline" slot="start" style="border-radius: 50%; display: inline-block; border: 1px solid black; padding: 0.2em;" [ngStyle]="{ 'background-color': usuarioSeleccionado.color }"></ion-icon>
           <ion-label style="max-width: 70%;"> {{ usuarioSeleccionado.nombre }} </ion-label>

@@ -57,6 +57,9 @@ export class MenuComponent implements OnInit {
     if(this.modoSimpleActivado) {
       this.diTTS('Modo simple activado');
       this.menuController.close();
+    } else {
+      this.diTTS('Modo simple desactivado');
+      this.menuController.close();
     }
   }
 
