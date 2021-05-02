@@ -66,8 +66,10 @@ export class MenuComponent implements OnInit {
   
   cambiaRespuesta(){
     this.respuestaActivada = !this.respuestaActivada;
-    if(this.respuestaActivada) this.diTTS('Respuesta activada');
-    else this.diTTS('Respuesta desactivada');
+    if(this.modoSimpleActivado){
+      if(this.respuestaActivada) this.diTTS('Respuesta activada');
+      else this.diTTS('Respuesta desactivada');
+    }
     this.databaseService.cambiaRespuesta(this.respuestaActivada);
   }
 

@@ -6,12 +6,106 @@
             "emoji": "🌧"
         },
         {
-            "texto": "lloverá",
+            "texto": "lluvia",
             "emoji": "🌧"
+        },
+        {
+            "texto": "lluvias",
+            "emoji": "🌧"
+        },
+        {
+            "texto": "nublado",
+            "emoji": "☁"
         },
         {
             "texto": "soleado",
             "emoji": "☀"
+        },
+        {
+            "texto": "sol",
+            "emoji": "☀"
+        },
+        {
+            "texto": "tormenta",
+            "emoji": "⛈"
+        },
+        {
+            "texto": "niebla",
+            "emoji": "🌫"
+        },
+        {
+            "texto": "nevada",
+            "emoji": "🌨"
+        },
+        {
+            "texto": "nevar",
+            "emoji": "🌨"
+        },
+        {
+            "texto": "nieve",
+            "emoji": "🌨"
+        },
+        {
+            "texto": "viento",
+            "emoji": "🌬"
+        },
+
+
+
+        {
+            "texto": "temperatura",
+            "emoji": "🌡"
+        },
+        {
+            "texto": "temperaturas",
+            "emoji": "🌡"
+        },
+        {
+            "texto": "altas",
+            "emoji": "⬆"
+        },
+        {
+            "texto": "bajas",
+            "emoji": "⬇"
+        },
+        {
+            "texto": "grados",
+            "emoji": "🌡"
+        },
+        {
+            "texto": "frío",
+            "emoji": "❄"
+        },
+        {
+            "texto": "calor",
+            "emoji": "🔥"
+        },
+
+
+
+        {
+            "texto": "vale",
+            "emoji": "👍"
+        },
+        {
+            "texto": "acuerdo",
+            "emoji": "👍"
+        },
+        {
+            "texto": "sí",
+            "emoji": "👍"
+        },
+        {
+            "texto": "ok",
+            "emoji": "👍"
+        },
+        {
+            "texto": "bien",
+            "emoji": "👍"
+        },
+        {
+            "texto": "siento",
+            "emoji": "👎"
         }
     ]
 

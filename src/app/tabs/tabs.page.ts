@@ -290,7 +290,11 @@ export class TabsPage {
             if(data.asistenteInicial != undefined) texto += data.asistenteInicial;
             texto += data.texto;
             if(data.asistenteFinal != undefined) texto += data.asistenteFinal;
-            this.router.navigate(['reproduccion', {textoAReproducir: texto}]);
+            this.router.navigate(['reproduccion', {
+              textoAReproducir: texto,
+              respuesta: this.configuracion.respuesta,
+              modo_simple: this.configuracion.modo_simple
+            }]);
           }
         }
       ]
