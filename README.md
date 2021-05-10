@@ -1,9 +1,10 @@
-# SpeakApp
+# SpeakApp (Alpha v1.4)
 
 ## About
 
 Android application that solves communication issues between people and voice assistants. Created using Ionic, Angular, Cordova, Capacitor and other technologies.
 
+You can watch the current status of the application on [this video](https://youtu.be/T9wz_-l42aY), it is a tour around the application in spanish.
 
 ## To do
 
