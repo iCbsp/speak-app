@@ -33,7 +33,7 @@
   </ion-row>
   <ion-row>
     <ion-col size="4" *ngFor="let accion of acciones">
-      <div *ngIf="configuracion.modo_simple == 0" style="text-align: center; background-color:var(--ion-color-primary); padding: 3px 0px; color: white;" (click)="abrirAccionPopover(accion)">
+      <!-- <div *ngIf="configuracion.modo_simple == 0" style="text-align: center; background-color:var(--ion-color-primary); padding: 3px 0px; color: white;" (click)="abrirAccionPopover(accion)">
         <p *ngIf="modoGrupo" style="text-align: center; border-bottom: 1px solid black;">{{ obtenIndiceSeleccionada(accion) ? obtenIndiceSeleccionada(accion) : "-" }}</p>
         <p style="font-size: 50px; padding: 0; margin: 20px 0;">{{ accion.imagen }}</p>
         <p>{{ accion.titulo }}</p>
@@ -41,7 +41,7 @@
       <div *ngIf="configuracion.modo_simple == 1" style="text-align: center; background-color:var(--ion-color-primary); padding: 3px 0px; color: white;" (click)="diTTS(accion.titulo);abrirAccionPopover(accion)">
         <p *ngIf="modoGrupo" style="text-align: center; border-bottom: 1px solid black;">{{ obtenIndiceSeleccionada(accion) ? obtenIndiceSeleccionada(accion) : "-" }}</p>
         <p style="font-size: 50px; padding: 0; margin: 20px 0;">{{ accion.imagen }}</p>
-      </div>
+      </div> -->
     </ion-col>
   </ion-row>
   <ion-row>

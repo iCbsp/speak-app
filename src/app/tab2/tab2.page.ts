@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-
-import { TiposAcciones } from 'src/app/enumerations';
+import { TiposAcciones } from 'src/enumerations';
 
 @Component({
   selector: 'app-tab2',
@@ -8,11 +7,10 @@ import { TiposAcciones } from 'src/app/enumerations';
   styleUrls: ['tab2.page.scss']
 })
 export class Tab2Page {
+  
+  constructor() {}
 
-  constructor(
-  ){}
-
-  tab : TiposAcciones = TiposAcciones.tab2;
+  tab : TiposAcciones = TiposAcciones.tab1;
 
   ngOnInit() {
   }

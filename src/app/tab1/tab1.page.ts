@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import { TiposAcciones } from 'src/app/enumerations';
+import { TiposAcciones } from '../../enumerations';
 
 @Component({
   selector: 'app-tab1',
@@ -9,8 +9,7 @@ import { TiposAcciones } from 'src/app/enumerations';
 })
 export class Tab1Page {
 
-  constructor(
-  ){}
+  constructor() {}
 
   tab : TiposAcciones = TiposAcciones.tab1;
 

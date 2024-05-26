@@ -1,5 +1,4 @@
 import { IonicModule } from '@ionic/angular';
-import { RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -7,7 +6,7 @@ import { Tab2Page } from './tab2.page';
 import { ExploreContainerComponentModule } from '../explore-container/explore-container.module';
 
 import { Tab2PageRoutingModule } from './tab2-routing.module';
-import { TabPageComponent } from '../components/tab-page/tab-page.component';
+import { SharedModule } from '../shared.module';
 
 @NgModule({
   imports: [
@@ -15,8 +14,9 @@ import { TabPageComponent } from '../components/tab-page/tab-page.component';
     CommonModule,
     FormsModule,
     ExploreContainerComponentModule,
-    Tab2PageRoutingModule
+    Tab2PageRoutingModule,
+    SharedModule
   ],
-  declarations: [Tab2Page, TabPageComponent]
+  declarations: [Tab2Page]
 })
 export class Tab2PageModule {}
