@@ -1,0 +1,23 @@
+Instead of using the ionic-native plugin like before, we can use the capacitor one like this:
+
+TS
+    import { Clipboard } from '@capacitor/clipboard';
+
+
+    writeToClipboard = async () => {
+    await Clipboard.write({
+        string: "VALUE"
+    });
+    };
+
+    checkClipboard = async () => {
+    const { type, value } = await Clipboard.read();
+
+    console.log(`Got ${type} from clipboard: ${value}`);
+    alert(value);
+    };
+
+
+HTML
+    <ion-button (click)="this.writeToClipboard()">1</ion-button>
+    <ion-button (click)="checkClipboard()">2</ion-button>

@@ -6,6 +6,21 @@ Android application that solves communication issues between people and voice as
 
 You can watch the current status of the application on [this video](https://youtu.be/T9wz_-l42aY), it is a tour around the application in spanish.
 
+## Building on web and android
+### Building
+- Install node (v20.13.1)
+- Download the repository
+- npm install -g @ionic/gli
+- ionic serve
+### Compile and execute Android App
+- Install Android Studio
+- npm install @capacitor/android
+- npm run build
+- (npx cap add android)
+- npx cap sync (or npx cap run android)
+- (you might now encounter problems with gradle version (build.gradle > dependencies > "classpath 'com.android.tools.build:gradle:8.4.0'" and "classpath 'com.google.gms:google-services:4.4.0'"))
+- run it from Android Studio, either in a virtual or a physical device
+
 ## To do
 
 - Finishing the app.
