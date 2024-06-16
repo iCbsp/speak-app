@@ -1,12 +1,12 @@
 No he tenido que meter ningun import a parte del del propio .ts. Comandos:
-necesario: npm install -g cordova
-ni idea: npm install @ionic-native/speech-recognition --legacy-peer-deps
-necesario: npm i cordova-plugin-speechrecognition --legacy-peer-deps
+(npm install -g cordova) // solo para instalar cordova
+npm install @ionic-native/speech-recognition --legacy-peer-deps
+npm i cordova-plugin-speechrecognition --legacy-peer-deps
 https://www.npmjs.com/package/@ionic-native/speech-recognition?activeTab=readme
 https://github.com/pbakondy/cordova-plugin-speechrecognition
 
 
-
+(se usa de forma estatica)
 
 import { SpeechRecognition } from '@ionic-native/speech-recognition';
 

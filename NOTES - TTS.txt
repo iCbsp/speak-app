@@ -1,0 +1,19 @@
+Ver notas de STT:
+npm i cordova-plugin-tts
+
+https://www.npmjs.com/package/@ionic-native/text-to-speech
+https://github.com/vilicvane/cordova-plugin-tts
+
+
+
+(estatica)
+
+import { TextToSpeech } from '@ionic-native/text-to-speech';
+
+  yepo(){
+    TextToSpeech.speak('hello, world!').then(function () {
+        alert('success');
+    }, function (reason) {
+        alert(reason);
+    });
+  }
