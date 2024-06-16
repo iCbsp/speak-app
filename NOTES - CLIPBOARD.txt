@@ -1,4 +1,5 @@
 Instead of using the ionic-native plugin like before, we can use the capacitor one like this:
+https://ionicframework.com/docs/native/clipboard
 
 TS
     import { Clipboard } from '@capacitor/clipboard';

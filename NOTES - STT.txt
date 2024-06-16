@@ -1,0 +1,51 @@
+No he tenido que meter ningun import a parte del del propio .ts. Comandos:
+necesario: npm install -g cordova
+ni idea: npm install @ionic-native/speech-recognition --legacy-peer-deps
+necesario: npm i cordova-plugin-speechrecognition --legacy-peer-deps
+https://www.npmjs.com/package/@ionic-native/speech-recognition?activeTab=readme
+https://github.com/pbakondy/cordova-plugin-speechrecognition
+
+
+
+
+import { SpeechRecognition } from '@ionic-native/speech-recognition';
+
+  yepo(){
+    SpeechRecognition.isRecognitionAvailable()
+    .then((available: boolean) => {
+      console.log(available)
+      if(available) {
+
+        // Check permission
+        SpeechRecognition.hasPermission()
+        .then((hasPermission: boolean) => {
+          console.log(hasPermission)
+          
+          if(!hasPermission){
+            // Request permissions
+            SpeechRecognition.requestPermission()
+            .then(
+              () => console.log('Granted'),
+              () => {
+                console.log('Denied');
+                return;
+              }
+            )
+          }
+  
+          let options = {
+            // String language,
+            // Number matches,
+            // String prompt,      // Android only
+            // Boolean showPopup,  // Android only
+            // Boolean showPartial 
+          }
+          SpeechRecognition.startListening(options)
+          .subscribe(
+            (matches: Array<string>) => console.log(matches),
+            (onerror) => console.log('error:', onerror)
+          )
+        })
+      }
+    });
+  }
