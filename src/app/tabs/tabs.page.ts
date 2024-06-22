@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { MenuController } from '@ionic/angular';
+import { AlertInput, MenuController } from '@ionic/angular';
 
 // Alertas - Prompt
 import { AlertController } from '@ionic/angular';
@@ -30,6 +30,10 @@ import { PopoverController } from '@ionic/angular';
 // import { EmojiStringComponent } from '../components/emoji-string/emoji-string.component';
 // import { TextToSpeech } from '@ionic-native/text-to-speech/ngx';
 
+// borrar y poner en reproduccion
+import { TextToSpeech as talk } from '@ionic-native/text-to-speech';
+
+import { SpeechRecognition as listen } from '@ionic-native/speech-recognition';
 
 @Component({
   selector: 'app-tabs',
@@ -61,7 +65,7 @@ export class TabsPage {
     private platform: Platform,
     // private speechRecognition: SpeechRecognition, 
     // private tts: TextToSpeech,
-    // private changeDetector: ChangeDetectorRef,
+    private changeDetector: ChangeDetectorRef,
     // private databaseService:DatabaseService,
     // private location: Location,
     // private popover:PopoverController,
@@ -69,7 +73,7 @@ export class TabsPage {
   ){}
 
   ngOnInit() {
-    // this.actualizaPermisoSTT();
+    this.actualizaPermisoSTT();
 
     // if(!this.platform.is('desktop')){
     //   this.databaseService.lista.subscribe((ready)=>{
@@ -167,27 +171,29 @@ export class TabsPage {
   }
 
   actualizaPermisoSTT(){
-  //   this.speechRecognition.hasPermission()
-  //   .then((hasPermission: boolean) => {
-  //     this.permisoSTT = hasPermission;
-  //   });
+    listen.hasPermission()
+    .then((hasPermission: boolean) => {
+      this.permisoSTT = hasPermission;
+      this.changeDetector.detectChanges(); // Para actualizar la vista
+    });
   }
 
   iniciaSTT(){
-  //   let options = {
-  //     language: 'es-ES'
-  //   }
-  //   let respuesta = "";
-  //   this.speechRecognition.startListening().subscribe(coincidencias => {
-  //     if(coincidencias && coincidencias.length) respuesta = coincidencias[0];
-  //     this.ventanaRespuesta(respuesta);
-  //     this.changeDetector.detectChanges(); // Para actualizar la vista
-  //   }, (err) => {
-  //     console.log(err);
-  //     this.ventanaRespuesta(respuesta);
-  //     this.changeDetector.detectChanges(); // Para actualizar la vista
-  //   });
-  //   this.estaGrabando = true;
+    let options = {
+      language: 'es-ES'
+    }
+    let respuesta = "";
+    listen.startListening().subscribe(coincidencias => {
+      // a futuro igual mejor poner la lista entera de coincidencias
+      if(coincidencias && coincidencias.length) respuesta = coincidencias[0];
+      this.ventanaRespuesta(respuesta);
+      this.changeDetector.detectChanges(); // Para actualizar la vista
+    }, (err) => {
+      console.log(err);
+      this.ventanaRespuesta(respuesta);
+      this.changeDetector.detectChanges(); // Para actualizar la vista
+    });
+    this.estaGrabando = true;
   }
 
   paraSTT(){
@@ -197,20 +203,20 @@ export class TabsPage {
   }
 
   pidePermisoSTT() {
-    // this.speechRecognition.hasPermission()
-    // .then((hasPermission: boolean) => {
-    //   if(hasPermission){
-    //     this.iniciaSTT();
-    //   } else {
-    //     this.speechRecognition.requestPermission();
-    //   }
-    //   this.permisoSTT = hasPermission;
-    // });
+    listen.hasPermission()
+    .then((hasPermission: boolean) => {
+      if(hasPermission){
+        this.iniciaSTT();
+      } else {
+        listen.requestPermission();
+      }
+      this.permisoSTT = hasPermission;
+    });
   }
 
   async ventanaTextoManual() {
-    // let inicialTexto = "";
-    // let finalTexto = "";
+    let inicialTexto = "cortana";
+    let finalTexto = "gracias";
 
     // if(this.asistenteSeleccionado && this.asistentes.length){
     //   this.asistentes.forEach(asistente => {
@@ -221,92 +227,95 @@ export class TabsPage {
     //   });
     // }
 
-    // let inputs = [];
-    // if(inicialTexto.length) inputs.push(
-    //     {
-    //       name: 'asistenteInicial',
-    //       type: 'text',
-    //       disabled: true,
-    //       value: inicialTexto + ","
-    //     }
-    // );
-    // inputs.push(
-    //     {
-    //       name: 'texto',
-    //       type: 'text',
-    //       placeholder: "Acción a realizar",
-    //       disabled: false
-    //     }
-    // );
-    // if(finalTexto.length) inputs.push(
-    //     {
-    //       name: 'asistenteFinal',
-    //       type: 'text',
-    //       disabled: true,
-    //       value: " " + finalTexto
-    //     }
-    // );
+    let inputs: AlertInput[] = [];
+    if(inicialTexto.length) inputs.push(
+        {
+          name: 'asistenteInicial',
+          type: 'text',
+          disabled: true,
+          value: inicialTexto + ","
+        }
+    );
+    inputs.push(
+        {
+          name: 'texto',
+          type: 'text',
+          placeholder: "Acción a realizar",
+          disabled: false
+        }
+    );
+    if(finalTexto.length) inputs.push(
+        {
+          name: 'asistenteFinal',
+          type: 'text',
+          disabled: true,
+          value: " " + finalTexto
+        }
+    );
 
-    // const alert = await this.alertController.create({
-    //   cssClass: 'ventanaTextoManual',
-    //   header: 'Acción manual',
-    //   inputs: inputs,
-    //   buttons: [
-    //     {
-    //       text: 'Cancelar',
-    //       role: 'cancelar',
-    //       cssClass: 'secondary',
-    //       handler: () => {
-    //         console.log('Confirm Cancel');
-    //       }
-    //     }, {
-    //       text: 'Enviar',
-    //       role: 'enviar',
-    //       handler: data => {
-    //         console.log('Confirm Ok');
-    //         let texto = "";
-    //         if(data.asistenteInicial != undefined) texto += data.asistenteInicial;
-    //         texto += data.texto;
-    //         if(data.asistenteFinal != undefined) texto += data.asistenteFinal;
-    //         this.router.navigate(['reproduccion', {
-    //           textoAReproducir: texto,
-    //           respuesta: this.configuracion.respuesta,
-    //           modo_simple: this.configuracion.modo_simple
-    //         }]);
-    //       }
-    //     }
-    //   ]
-    // });
+    const alert = await this.alertController.create({
+      cssClass: 'ventanaTextoManual',
+      header: 'Acción manual',
+      inputs: inputs,
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancelar',
+          cssClass: 'secondary',
+          handler: () => {
+            console.log('Confirm Cancel');
+          }
+        }, {
+          text: 'Enviar',
+          role: 'enviar',
+          handler: data => {
+            console.log('Confirm Ok');
+            let texto = "";
+            
+            borrarYSustituirPorReproduccion(inicialTexto+data.texto+finalTexto);
+            
+            // if(data.asistenteInicial != undefined) texto += data.asistenteInicial;
+            // texto += data.texto;
+            // if(data.asistenteFinal != undefined) texto += data.asistenteFinal;
+            // this.router.navigate(['reproduccion', {
+            //   textoAReproducir: texto,
+            //   respuesta: this.configuracion.respuesta,
+            //   modo_simple: this.configuracion.modo_simple
+            // }]);
+          }
+        }
+      ]
+    });
 
-    // await alert.present();
+    await alert.present();
   }
 
   async ventanaRespuesta(respuesta: any){
     
-    // let subHeader = "";
-    // let message = "";
+    let subHeader = "";
+    let message = "";
 
-    // if(respuesta != null && respuesta.length){
-    //   subHeader = "Esto es lo que el dispositivo ha escuchado (✔):";
-    //   message = respuesta;
-    // } else subHeader = "El dispositivo no ha escuchado nada (❌)";
+    if(respuesta != null && respuesta.length){
+      subHeader = "Esto es lo que el dispositivo ha escuchado (✔):";
+      message = respuesta;
+    } else subHeader = "El dispositivo no ha escuchado nada (❌)";
 
-    // const alert = await this.alertController.create({
-    //   cssClass: 'ventanaTextoManual',
-    //   subHeader: subHeader,
-    //   message: message,
-    //   buttons: [
-    //     {
-    //       text: 'Aceptar',
-    //       role: 'aceptar',
-    //       handler: () => {
-    //         console.log('Confirm Ok');
-    //       }
-    //     }
-    //   ]
-    // });
+    const alert = await this.alertController.create({
+      cssClass: 'ventanaTextoManual',
+      subHeader: subHeader,
+      message: message,
+      buttons: [
+        {
+          text: 'Aceptar',
+          role: 'aceptar',
+          handler: () => {
+            console.log('Confirm Ok');
+          }
+        }
+      ]
+    });
 
-    // await alert.present();
+    await alert.present();
   }
 
   async ventanaAccesibilidad() {
@@ -402,3 +411,16 @@ export class TabsPage {
   customPopoverOptions: any = {
   };
 }
+
+function borrarYSustituirPorReproduccion(texto: string) {
+  talk.speak({
+    text: texto,
+    locale: 'es-ES',
+    rate: 0.8
+  }).then(function () {
+    // alert('success');
+  }, function (reason) {
+      // alert(reason);
+  });
+}
+

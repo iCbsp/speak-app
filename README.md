@@ -21,8 +21,10 @@ You can watch the current status of the application on [this video](https://yout
 - (you might now encounter problems with gradle version (build.gradle > dependencies > "classpath 'com.android.tools.build:gradle:8.4.0'" and "classpath 'com.google.gms:google-services:4.4.0'"))
 - run it from Android Studio, either in a virtual or a physical device
 ### Once all configured
+#### Web
 - ionic serve
-- npm run build; npx cap sync
+#### Android
+- npm run build; npx cap run android
 
 ## To do
 
