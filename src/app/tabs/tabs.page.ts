@@ -170,6 +170,10 @@ export class TabsPage {
     return this.permisoSTT;
   }
 
+  funcionEnDesarrollo(){
+    alert("Lo siento, función en desarrollo");
+  }
+
   actualizaPermisoSTT(){
     listen.hasPermission()
     .then((hasPermission: boolean) => {

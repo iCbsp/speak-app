@@ -52,6 +52,8 @@ export class MenuComponent implements OnInit {
 //   }
   
   cambiaModoSimple(){
+    this.funcionEnDesarrollo();
+
     // this.modoSimpleActivado = !this.modoSimpleActivado;
     // this.databaseService.cambiaModoSimple(this.modoSimpleActivado);
     // if(this.modoSimpleActivado) {
@@ -65,6 +67,8 @@ export class MenuComponent implements OnInit {
 
   
   cambiaRespuesta(){
+    this.funcionEnDesarrollo();
+
     // this.respuestaActivada = !this.respuestaActivada;
     // if(this.modoSimpleActivado){
     //   if(this.respuestaActivada) this.diTTS('Respuesta activada');
@@ -73,6 +77,9 @@ export class MenuComponent implements OnInit {
     // this.databaseService.cambiaRespuesta(this.respuestaActivada);
   }
 
+  funcionEnDesarrollo(){
+    alert("Lo siento, función en desarrollo");
+  }
 
 // // Metodos TTS
 // async diTTS(texto: string):Promise<any>{
