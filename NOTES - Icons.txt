@@ -1,0 +1,15 @@
+NOTES - Icons
+
+https://capacitorjs.com/docs/guides/splash-screens-and-icons
+https://medium.com/@simonescigliuzzi/how-to-add-icon-and-splash-screen-to-your-ionic-app-ccec37240934
+https://github.com/ionic-team/capacitor-assets/blob/main/README.md
+https://ionic.io/blog/building-and-releasing-your-capacitor-android-app
+
+Para el icono de la aplicacion, crear:
+assets/logo.png (512x512)
+assets/icon.png (el mismo pero con espacio 1024x1024)
+assets/splash.png (el mismo pero con espacio 2372x2372)
+
+(npm install @capacitor/assets --save-dev --legacy-peer-deps)
+npx capacitor-assets generate
+y luego buildear y eso

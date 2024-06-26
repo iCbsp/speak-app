@@ -1,0 +1,18 @@
+Chequear esto
+
+q@1.5.1: You or someone you depend on is using Q, the JavaScript Promise library that gave JavaScript developers strong feelings about promises. They can almost certainly migrate to the native JavaScript promise now. Thank you literally everyone for joining me in this bet against the odds. Be excellent to each other.
+npm WARN deprecated
+npm WARN deprecated (For a CapTP with native promises, see @endo/eventual-send and @endo/captp)
+
+------
+
+Seguramente sean los botones de Grupo 1, 2 y 3
+
+https://support.google.com/googleplay/android-developer/thread/241354940/my-app-got-rejected-due-to-violation-of-broken-functionality-policy?hl=en
+
+El plan:
+- Ocultar todos los apartados del desplegable excepto colaborar y sobre nosotros
+- Cambiar el titulo de SpeakApp 1.4 en el desplegable
+- Poner acciones estaticas, que al clicarles hagan llamen al TTS directamente
+- Ocultar lo de Usuario
+- Opcional: Intentar que funcione el selector de asistente, para no dejar el hueco
