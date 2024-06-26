@@ -8,9 +8,9 @@ You can watch the current status of the application on [this video](https://yout
 
 ## Building on web and android
 ### Building (first time)
-- Install node (v20.13.1)
+- Install node (v20.13.1) (npm v10.5.2) (capacitor v6.0.0)
 - Download the repository
-- npm install -g @ionic/gli
+- npm install -g @ionic/gli (v7.2.0)
 - ionic serve
 ### Compile and execute Android App (First time)
 - Install Android Studio
@@ -18,13 +18,23 @@ You can watch the current status of the application on [this video](https://yout
 - npm run build
 - (npx cap add android)
 - npx cap sync (or npx cap run android)
-- (you might now encounter problems with gradle version (build.gradle > dependencies > "classpath 'com.android.tools.build:gradle:8.4.0'" and "classpath 'com.google.gms:google-services:4.4.0'"))
+- You might now encounter problems with gradle version, this might help:
+  - Also install and select GradleJDK: jbr-17 (JetBrains Runtime version 17.0.10)
+  - build.gradle > dependencies > "classpath 'com.android.tools.build:gradle:8.X.0'" (8.4.0 or 8.2.1) and "classpath 'com.google.gms:google-services:4.4.0'"
 - run it from Android Studio, either in a virtual or a physical device
 ### Once all configured
 #### Web
 - ionic serve
 #### Android
 - npm run build; npx cap run android
+## Publishing on Google Play
+### Google Play Console
+Create the app in https://play.google.com/console/
+### Creating a signed bundle
+- ionic build --prod --platform=android; (npx cap sync)
+- Android Studio > Build Variants (left panel) > set the ":app" module to release
+- Android Studio > Build (top) > Generate Signed App Bundle
+
 
 ## To do
 
