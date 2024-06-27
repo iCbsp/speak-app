@@ -1,7 +1,13 @@
 <div style="margin-top: 120px;"></div>
 <ion-grid>
   <ion-row>
-    <ion-col *ngIf="!modoGrupo && configuracion.modo_simple == 0" size="5">
+
+    <!-- borrar -->
+    <ion-item>
+      <ion-input label="Asistente:" [(ngModel)]="asistenteBorrar"></ion-input>
+    </ion-item>
+
+    <!-- <ion-col *ngIf="!modoGrupo && configuracion.modo_simple == 0" size="5">
       <ion-button expand="block" (click)="conmutarModoGrupo()">
         Agrupar 
         <ion-icon slot="end" style="min-width: 24px;" name="copy-outline"></ion-icon>
@@ -29,10 +35,20 @@
         Borrar 
         <ion-icon slot="end" style="min-width: 24px;" name="trash-outline"></ion-icon>
       </ion-button>
-    </ion-col>
+    </ion-col> -->
   </ion-row>
-  <ion-row>
-    <ion-col size="4" *ngFor="let accion of acciones">
+  
+  <!-- <ion-row> -->
+  <ion-row *ngIf="tab == 1">
+    <!-- <ion-col size="4" *ngFor="let accion of acciones"> -->
+    <ion-col size="4" *ngFor="let accion of uno">
+
+      <!-- borrar y sustituir por lo de abajo -->
+      <div style="text-align: center; background-color:var(--ion-color-primary); padding: 3px 0px; color: white;" (click)="borrarYSustituirPorReproduccion(accion.orden_filas)">
+        <p style="font-size: 50px; padding: 0; margin: 20px 0;">{{ accion.imagen }}</p>
+        <p>{{ accion.titulo }}</p>
+      </div>
+
       <!-- <div *ngIf="configuracion.modo_simple == 0" style="text-align: center; background-color:var(--ion-color-primary); padding: 3px 0px; color: white;" (click)="abrirAccionPopover(accion)">
         <p *ngIf="modoGrupo" style="text-align: center; border-bottom: 1px solid black;">{{ obtenIndiceSeleccionada(accion) ? obtenIndiceSeleccionada(accion) : "-" }}</p>
         <p style="font-size: 50px; padding: 0; margin: 20px 0;">{{ accion.imagen }}</p>
@@ -44,9 +60,34 @@
       </div> -->
     </ion-col>
   </ion-row>
-  <ion-row>
+
+  <!-- borrar -->
+  <ion-row *ngIf="tab == 2">
+    <ion-col size="4" *ngFor="let accion of dos">
+
+      <!-- borrar y sustituir por lo de abajo -->
+      <div style="text-align: center; background-color:var(--ion-color-primary); padding: 3px 0px; color: white;" (click)="borrarYSustituirPorReproduccion(accion.orden_filas)">
+        <p style="font-size: 50px; padding: 0; margin: 20px 0;">{{ accion.imagen }}</p>
+        <p>{{ accion.titulo }}</p>
+      </div>
+    </ion-col>
+  </ion-row>
+
+  <!-- borrar -->
+  <ion-row *ngIf="tab == 3">
+    <ion-col size="4" *ngFor="let accion of tres">
+
+      <!-- borrar y sustituir por lo de abajo -->
+      <div style="text-align: center; background-color:var(--ion-color-primary); padding: 3px 0px; color: white;" (click)="borrarYSustituirPorReproduccion(accion.orden_filas)">
+        <p style="font-size: 50px; padding: 0; margin: 20px 0;">{{ accion.imagen }}</p>
+        <p>{{ accion.titulo }}</p>
+      </div>
+    </ion-col>
+  </ion-row>
+  
+  <!-- <ion-row>
     <ion-col *ngIf="!(acciones.length)">
       <ion-title text-center>No hay acciones</ion-title>
     </ion-col>
-  </ion-row>
+  </ion-row> -->
 </ion-grid>

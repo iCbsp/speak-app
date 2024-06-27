@@ -219,8 +219,8 @@ export class TabsPage {
   }
 
   async ventanaTextoManual() {
-    let inicialTexto = "cortana";
-    let finalTexto = "gracias";
+    // let inicialTexto = "cortana";
+    // let finalTexto = "gracias";
 
     // if(this.asistenteSeleccionado && this.asistentes.length){
     //   this.asistentes.forEach(asistente => {
@@ -232,12 +232,12 @@ export class TabsPage {
     // }
 
     let inputs: AlertInput[] = [];
-    if(inicialTexto.length) inputs.push(
+    inputs.push(
         {
-          name: 'asistenteInicial',
+          name: 'asistente',
           type: 'text',
-          disabled: true,
-          value: inicialTexto + ","
+          placeholder: "Asistente",
+          disabled: false,
         }
     );
     inputs.push(
@@ -248,14 +248,14 @@ export class TabsPage {
           disabled: false
         }
     );
-    if(finalTexto.length) inputs.push(
-        {
-          name: 'asistenteFinal',
-          type: 'text',
-          disabled: true,
-          value: " " + finalTexto
-        }
-    );
+    // if(finalTexto.length) inputs.push(
+    //     {
+    //       name: 'asistenteFinal',
+    //       type: 'text',
+    //       disabled: true,
+    //       value: " " + finalTexto
+    //     }
+    // );
 
     const alert = await this.alertController.create({
       cssClass: 'ventanaTextoManual',
@@ -276,7 +276,7 @@ export class TabsPage {
             console.log('Confirm Ok');
             let texto = "";
             
-            borrarYSustituirPorReproduccion(inicialTexto+data.texto+finalTexto);
+            borrarYSustituirPorReproduccion(data.asistente + " " + data.texto);
             
             // if(data.asistenteInicial != undefined) texto += data.asistenteInicial;
             // texto += data.texto;

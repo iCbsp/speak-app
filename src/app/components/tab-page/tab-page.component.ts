@@ -20,6 +20,8 @@ import { ModoAccion, TiposAcciones } from '../../../enumerations';
 // import { TextToSpeech } from '@ionic-native/text-to-speech/ngx';
 // import { EmojiStringComponent } from '../emoji-string/emoji-string.component';
 
+import { TextToSpeech as talk } from '@ionic-native/text-to-speech';
+
 @Component({
   selector: 'app-tab-page',
   templateUrl: './tab-page.component.html',
@@ -30,7 +32,56 @@ export class TabPageComponent implements OnInit {
   @Input('tab')
   tab: TiposAcciones = TiposAcciones.tab1;
 
-  acciones = [];
+  // borrar
+  asistenteBorrar = "Ok Google";
+
+  // acciones = []
+
+  uno = [
+    { 
+      id: 1,
+      usuario: "",
+      tipo: 1,
+      titulo: "El tiempo",
+      imagen: "⛅",
+      orden_filas: "¿qué tiempo hará hoy?",
+      ultimo_uso: "",
+    },
+    { 
+      id: 2,
+      usuario: "",
+      tipo: 2,
+      titulo: "Curiosidad",
+      imagen: "🧠",
+      orden_filas: "dime un dato curioso",
+      ultimo_uso: "",
+    },
+  ];
+  
+  dos = [
+    { 
+      id: 1,
+      usuario: "",
+      tipo: 1,
+      titulo: "Fecha",
+      imagen: "📆",
+      orden_filas: "¿qué día es hoy?",
+      ultimo_uso: "",
+    }
+  ];
+
+  tres = [
+    { 
+      id: 1,
+      usuario: "",
+      tipo: 1,
+      titulo: "Receta berenjena",
+      imagen: "🍆",
+      orden_filas: "dime una receta de berenjena",
+      ultimo_uso: "",
+    },
+  ];
+
   idAccionesSeleccionadas = [];
   modoGrupo = false;
   configuracion = { modo_simple: 1, respuesta: 1, criterio_acciones: 'alfabetico', orden_acciones: 'descendiente' };
@@ -186,6 +237,20 @@ export class TabPageComponent implements OnInit {
   reproducirAccionesSeleccionadas(){
   //   alert("Función en desarrollo 🚧. Servirá para reproducir varias acciones en cadena");
   }
+
+  borrarYSustituirPorReproduccion(texto: string) {
+    talk.speak({
+      text: this.asistenteBorrar + texto,
+      locale: 'es-ES',
+      rate: 0.8
+    }).then(function () {
+      // alert('success');
+    }, function (reason) {
+        // alert(reason);
+    });
+    alert(this.asistenteBorrar + " " + texto);
+  }
+
 
   // Metodos TTS
   async diTTS(texto: string):Promise<any>{

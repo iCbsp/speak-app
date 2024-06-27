@@ -5,38 +5,40 @@
       <ion-menu-button *ngIf="configuracion.modo_simple == 1" color="primary" menu="menuPrincipal"
         (click)="diTTS('Menú')"></ion-menu-button>
     </ion-buttons>
-    <ion-title *ngIf="configuracion.modo_simple == 0">SpeakApp0</ion-title>
-    <ion-title *ngIf="configuracion.modo_simple == 1" (click)="diTTS('speak app')">SpeakApp1</ion-title>
+    <ion-title *ngIf="configuracion.modo_simple == 0">SpeakApp</ion-title>
+    <ion-title *ngIf="configuracion.modo_simple == 1" (click)="diTTS('speak app')">SpeakApp</ion-title>
+
     <!-- <ion-button slot="end" (click)="createPopover();" style="max-width: 30%;"> -->
-    <ion-button slot="end" (click)="funcionEnDesarrollo();" style="max-width: 30%;">
+    <!-- <ion-button slot="end" (click)="funcionEnDesarrollo();" style="max-width: 30%;">
       <ion-icon name="person-outline" slot="start"
         style="border-radius: 50%; display: inline-block; border: 1px solid black; padding: 0.2em;"
         [ngStyle]="{ 'background-color': usuarioSeleccionado.color }"></ion-icon>
       <ion-label style="max-width: 70%;"> {{ usuarioSeleccionado.nombre }} </ion-label>
-    </ion-button>
+    </ion-button> -->
   </ion-toolbar>
   <ion-toolbar>
     <ion-grid>
       <ion-row>
-        <ion-col size="5">
-          <!-- <ion-select *ngIf="configuracion.modo_simple == 0" [interfaceOptions]="customPopoverOptions"
+        <!-- <ion-col size="5">
+          <ion-select *ngIf="configuracion.modo_simple == 0" [interfaceOptions]="customPopoverOptions"
             [(ngModel)]="asistenteSeleccionado" [(value)]="asistenteSeleccionado" (ngModelChange)="cambiaAsistente()"
             interface="popover">
             <ion-select-option value="0">(Ninguno ❌)</ion-select-option>
             <ion-select-option *ngFor="let asistente of asistentes" [value]="asistente.id"> {{ asistente.inicial }} | {{
               asistente.final }} </ion-select-option>
-          </ion-select> -->
-          <!-- <ion-select (click)="diTTS('Asistente')" *ngIf="configuracion.modo_simple == 1"
+          </ion-select>
+          <ion-select (click)="diTTS('Asistente')" *ngIf="configuracion.modo_simple == 1"
             [interfaceOptions]="customPopoverOptions" [(ngModel)]="asistenteSeleccionado"
             [(value)]="asistenteSeleccionado" (ngModelChange)="cambiaAsistente()" interface="popover">
             <ion-select-option value="0">(❌)</ion-select-option>
             <ion-select-option *ngFor="let asistente of asistentes" [value]="asistente.id"> {{
               emojiString.emojisOrText(asistente.inicial) }} | {{ emojiString.emojisOrText(asistente.final) }}
             </ion-select-option>
-          </ion-select> -->
-        </ion-col>
+          </ion-select>
+        </ion-col> -->
 
-        <ion-col size="3">
+        <!-- <ion-col size="3"> -->
+        <ion-col size="6">
           <ion-tab-button *ngIf="configuracion.modo_simple == 0" (click)="ventanaTextoManual()">
             <ion-icon name="chatbox-ellipses-outline"></ion-icon>
             <ion-label>Manual</ion-label>
@@ -46,7 +48,8 @@
           </ion-tab-button>
         </ion-col>
 
-        <ion-col size="4">
+        <ion-col size="6">
+        <!-- <ion-col size="4"> -->
           <ion-tab-button (click)="iniciaSTT()" *ngIf="tienePermisoSTT()" style="padding: 0px;">
             <ion-icon name="mic-outline"></ion-icon>
             <ion-label *ngIf="configuracion.modo_simple == 0">Escuchar</ion-label>

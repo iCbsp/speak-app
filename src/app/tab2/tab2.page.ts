@@ -10,7 +10,7 @@ export class Tab2Page {
   
   constructor() {}
 
-  tab : TiposAcciones = TiposAcciones.tab1;
+  tab : TiposAcciones = TiposAcciones.tab2;
 
   ngOnInit() {
   }

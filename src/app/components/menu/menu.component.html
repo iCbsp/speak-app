@@ -7,7 +7,7 @@
             <ion-icon name="arrow-back-outline" style="font-size: 24px;" (click)="menuController.close()"></ion-icon>
           </ion-col>
           <ion-col size="11">
-            <ion-title>SpeakApp (Alpha 1.4)</ion-title>
+            <ion-title>SpeakApp</ion-title>
           </ion-col>
         </ion-row>
       </ion-grid>
@@ -15,7 +15,7 @@
   </ion-header>
   <ion-content>
     <ion-list>
-      <ion-item (click)="cambiaModoSimple()">
+      <!-- <ion-item (click)="cambiaModoSimple()">
         <ion-icon slot="start" name="happy-outline"></ion-icon>
         <ion-label *ngIf="!modoSimpleActivado">Modo simple</ion-label>
         <ion-toggle slot="end" checked={{modoSimpleActivado}}></ion-toggle>
@@ -24,14 +24,15 @@
         <ion-icon slot="start" name="mic-outline"></ion-icon>
         <ion-label *ngIf="!modoSimpleActivado">Respuesta</ion-label>
         <ion-toggle slot="end" checked={{respuestaActivada}}></ion-toggle>
-      </ion-item>
+      </ion-item> -->
+
       <!-- <ion-menu-toggle *ngIf="!modoSimpleActivado"> -->
-      <ion-menu-toggle *ngIf="!modoSimpleActivado" (click)="funcionEnDesarrollo()">
+      <!-- <ion-menu-toggle *ngIf="!modoSimpleActivado" (click)="funcionEnDesarrollo()">
         <ion-item [routerLink]="['/configuracion']">
           <ion-icon slot="start" name="settings-outline"></ion-icon>
           <ion-label>Configuración</ion-label>
         </ion-item>
-      </ion-menu-toggle>
+      </ion-menu-toggle> -->
       <ion-menu-toggle *ngIf="!modoSimpleActivado">
         <ion-item href="https://carlosbsp.com/colaborar/">
           <ion-icon slot="start" name="thumbs-up-outline"></ion-icon>
@@ -40,8 +41,8 @@
         </ion-item>
       </ion-menu-toggle>
       <!-- <ion-menu-toggle *ngIf="!modoSimpleActivado"> -->
-      <ion-menu-toggle *ngIf="!modoSimpleActivado" (click)="funcionEnDesarrollo()">
-        <ion-item [routerLink]="['/nosotros']">
+      <ion-menu-toggle *ngIf="!modoSimpleActivado">
+        <ion-item [routerLink]="['/about']">
           <ion-icon slot="start" name="information-circle-outline"></ion-icon>
           <ion-label>Sobre nosotros</ion-label>
         </ion-item>
