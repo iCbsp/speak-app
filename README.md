@@ -1,4 +1,4 @@
-# SpeakApp (Alpha v1.4)
+# Asistentes sin barreras
 
 ## About
 

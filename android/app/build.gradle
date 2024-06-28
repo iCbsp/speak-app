@@ -1,14 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
-    namespace "com.carlos.speakapp"
+    namespace "com.carlos.asistentes_sin_barreras"
     compileSdk rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "com.carlos.speakapp"
+        applicationId "com.carlos.asistentes_sin_barreras"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 3
-        versionName "1.2"
+        versionCode 1
+        versionName "1.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
@@ -20,7 +20,6 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-          signingConfig signingConfigs.debug
         }
     }
 }

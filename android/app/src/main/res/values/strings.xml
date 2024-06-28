@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Speak App</string>
-    <string name="title_activity_main">Speak App</string>
-    <string name="package_name">com.carlos.speakapp</string>
-    <string name="custom_url_scheme">com.carlos.speakapp</string>
+    <string name="app_name">Asistentes sin barreras</string>
+    <string name="title_activity_main">Asistentes sin barreras</string>
+    <string name="package_name">com.carlos.asistentes_sin_barreras</string>
+    <string name="custom_url_scheme">com.carlos.asistentes_sin_barreras</string>
 </resources>

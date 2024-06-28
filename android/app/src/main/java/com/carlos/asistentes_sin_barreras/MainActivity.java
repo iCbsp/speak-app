@@ -1,4 +1,4 @@
-package com.carlos.speakapp;
+package com.carlos.asistentes_sin_barreras;
 
 import com.getcapacitor.BridgeActivity;
 

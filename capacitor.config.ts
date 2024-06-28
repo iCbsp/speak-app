@@ -1,8 +1,8 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.carlos.speakapp',
-  appName: 'Speak App',
+  appId: 'com.carlos.asistentes_sin_barreras',
+  appName: 'Asistentes sin barreras',
   webDir: 'www'
 };
 
