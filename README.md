@@ -10,14 +10,16 @@ You can watch the current status of the application on [this video](https://yout
 ### Building (first time)
 - Install node (v20.13.1) (npm v10.5.2) (capacitor v6.0.0)
 - Download the repository
-- npm install -g @ionic/gli (v7.2.0)
+- npm install -g @ionic/cli (v7.2.0)
 - ionic serve
+- (npm link @angular/cli --legacy-peer-deps)
 ### Compile and execute Android App (First time)
 - Install Android Studio
 - npm install @capacitor/android
 - npm run build
 - (npx cap add android)
 - npx cap sync (or npx cap run android)
+- Open the "android" folder in Android Studio
 - You might now encounter problems with gradle version, this might help:
   - Also install and select GradleJDK: jbr-17 (JetBrains Runtime version 17.0.10)
   - build.gradle > dependencies > "classpath 'com.android.tools.build:gradle:8.X.0'" (8.4.0 or 8.2.1) and "classpath 'com.google.gms:google-services:4.4.0'"
