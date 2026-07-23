@@ -28,15 +28,16 @@ You can watch the current status of the application on [this video](https://yout
 #### Web
 - ionic serve
 #### Android
+- (Edit system variables and set JAVA_HOME to "C:\Program Files\Android\Android Studio\jbr" and restart the shell)
 - npm run build; npx cap run android
 ## Publishing on Google Play
 ### Google Play Console
 Create the app in https://play.google.com/console/
 ### Creating a signed bundle
 - ionic build --prod --platform=android; (npx cap sync)
+- (If increasing the app version is necessary: check last version in Google Play Console and update build.gradle:app accordingly)
 - Android Studio > Build Variants (left panel) > set the ":app" module to release
 - Android Studio > Build (top) > Generate Signed App Bundle
-
 
 ## To do
 
