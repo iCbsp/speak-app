@@ -43,12 +43,20 @@ Publicada en Google Play bajo la cuenta de desarrollador de Carlos.
 
 ## 3. Ramas y tags (estado a 2026-07-23)
 
-- **`migration`** — rama de trabajo activa. Todo el desarrollo actual ocurre
-  aquí.
-- **`main`** — rama por defecto en GitHub. Fast-forwardeada a la punta de
-  `migration` el 2026-07-23 (no había commits divergentes que fusionar, solo
-  mover el puntero). A partir de ahora, en la práctica `main` y `migration`
-  deberían mantenerse alineadas.
+- **`main`** — rama por defecto en GitHub y base de todo trabajo nuevo.
+  Fast-forwardeada a la punta de `migration` el 2026-07-23 (no había commits
+  divergentes que fusionar, solo mover el puntero).
+- **`migration`** — rama histórica de la reescritura desde cero. Ya fusionada
+  en `main` (mismo commit); no se usa para trabajo nuevo. Se puede borrar en
+  la próxima limpieza de ramas sin perder nada (todo sigue accesible desde
+  `main`).
+- **`play-store-2026-api36`** — rama de trabajo activa a partir de
+  2026-07-23, para el resto del checklist de `PLAY_STORE_ACTION_PLAN.md`
+  (probar en Android Studio, subir a API 36, publicar en producción). Es una
+  rama corta de propósito único: fusionar en `main` y borrar en cuanto la
+  actualización quede publicada. El próximo trabajo de este tipo (nuevo
+  objetivo concreto y acotado) debería seguir el mismo patrón: rama nueva
+  desde `main` con nombre descriptivo, en vez de reutilizar `migration`.
 - **`old-app`** (tag, no rama) — apunta al último commit de la app original,
   justo antes de "First migration draft". Se creó al hacer el fast-forward
   para no perder el acceso a ese código. **No borrar ni mover.** Útil para
