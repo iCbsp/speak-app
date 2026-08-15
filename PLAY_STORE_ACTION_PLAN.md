@@ -1,15 +1,13 @@
 # Plan de acción: mantener la cuenta de Google Play Developer (2026)
 
-Última actualización: 2026-07-23 (rama activa: `play-store-2026-api36`)
+Última actualización: 2026-08-15 (rama activa: `play-store-2026-api36`)
 
 ## Contexto
 - Cuenta de Play Console: Carlos Santiago Portas.
-- Motivo del aviso recibido: **inactividad** de la cuenta (no se ha publicado/mantenido ninguna app), no un tema de política de target API directamente.
-- **Fecha límite 1 — 2 de agosto de 2026:** para evitar el cierre de la cuenta hay que:
-  1. Verificar email y teléfono en Play Console → Detalles de la cuenta.
-  2. Publicar una app nueva o una actualización de una ya existente en Google Play.
-- **Fecha límite 2 — 31 de agosto de 2026 (independiente, política de target API level):** la app debe orientarse a **Android 16 (API level 36)** o superior. A partir de esa fecha, si el target API tiene más de un año de antigüedad respecto a la última versión de Android, **no se podrán publicar más actualizaciones** de la app (distinto del cierre de cuenta, pero bloquea el mantenimiento futuro). El nivel actual (35) deja de cumplir justo ese día.
-- La app **no tiene usuarios reales** todavía. El riesgo no es "romper la experiencia de usuarios", sino que Google Play rechace el build por incumplir alguna política al subir la actualización. Por eso se decidió evitar cambios grandes/arriesgados (ver más abajo).
+- Motivo del aviso original: **inactividad** de la cuenta (no se había publicado/mantenido ninguna app), no un tema de política de target API directamente.
+- **Fecha límite 1 — 2 de agosto de 2026 — ✅ RESUELTA.** Se publicó `versionCode 3` / `versionName "1.3"` (targetSdk 35) en producción antes de la fecha límite. La cuenta ya no está en riesgo de cierre por inactividad.
+- **Foco actual — Fecha límite 2 — 31 de agosto de 2026 (política de target API level, independiente de la anterior):** la app debe orientarse a **Android 16 (API level 36)** o superior. A partir de esa fecha, si el target API tiene más de un año de antigüedad respecto a la última versión de Android, **no se podrán publicar más actualizaciones** de la app (no cierra la cuenta, pero bloquea el mantenimiento futuro). El nivel actual (35) deja de cumplir justo ese día. Play Console permite solicitar una prórroga si hiciera falta más tiempo — no se ha solicitado todavía, se intentará cumplir el plazo original primero.
+- La app **no tenía usuarios reales** en el momento de la crisis original, aunque la versión publicada sí llegó a estar disponible en ~20.000 dispositivos (ver punto 3 del checklist histórico) — no descartar del todo el impacto en usuarios reales al hacer cambios. El riesgo principal sigue siendo que Google Play rechace el build por incumplir alguna política. Por eso se decidió evitar cambios grandes/arriesgados (ver más abajo).
 
 ## Estado actual del código
 Todo lo siguiente ya está commiteado y pusheado (en `main` y en la rama activa `play-store-2026-api36`):
@@ -31,10 +29,17 @@ Quedan 59 vulnerabilidades npm que solo se resuelven con `npm audit fix --force`
 1. [x] Verificar email y teléfono en Play Console → Detalles de la cuenta. *(Confirmado por el usuario el 23 jul 2026: revisado, todo ok.)*
 2. [x] Abrir el proyecto en Android Studio, Gradle Sync, probar la app en un dispositivo/emulador. *(Confirmado por el usuario: la app funciona perfectamente con Capacitor 7 + targetSdk 35.)*
 3. [x] Comprobar en Play Console el último `versionCode`/`versionName` publicado. *(Resultado: la producción actual es `versionCode 2` / `versionName "1.2"`, publicada el 29 jul 2025, `targetSdk 35`, 100% de despliegue, ~20.152 dispositivos. Coincidía exactamente con el `versionCode`/`versionName` del build local — Play Console habría rechazado la subida por no ser estrictamente superior. Se ha subido a `versionCode 3` / `versionName "1.3"` en `android/app/build.gradle`.)*
-4. [ ] Tras el bump de versión: volver a hacer Gradle Sync en Android Studio (para que recoja `versionCode 3`/`"1.3"`) y generar el bundle firmado (Build → Generate Signed App Bundle). Subirlo como nueva release en el canal de **producción** antes del **2 de agosto de 2026**. Dejar margen para la revisión de Google — no esperar al último día, subir en los próximos 2-3 días si es posible. **Importante:** esta release sube de propósito solo lo ya probado (Capacitor 7 + targetSdk 35 + bump de versión) — el salto a API 36 (punto 5) se deja para una release aparte, para no mezclar dos cambios sin testear juntos bajo presión de fecha.
-5. [ ] Antes del **31 de agosto de 2026**: actualizar `targetSdkVersion`/`compileSdkVersion` en `android/variables.gradle` de 35 a 36 (Android 16), comprobar compatibilidad de Capacitor 7.4.2 con API 36 (puede requerir bump de Capacitor/AGP), y publicar otra actualización en producción (se puede probar antes en pruebas internas/cerradas/abiertas).
+4. [x] Generar el bundle firmado y subirlo como nueva release en el canal de **producción**. *(Resuelto: primer intento generó el bundle sin firmar por error en el wizard de Android Studio — hay que marcar "release" en el paso de selección de variante del propio wizard "Generate Signed Bundle", no basta con el panel de Build Variants. Repetido correctamente, enviado a revisión y aprobado antes del 2 de agosto de 2026. Cuenta a salvo de cierre por inactividad.)*
+5. [ ] **← Tarea activa (deadline 31 de agosto de 2026).** Actualizar `targetSdkVersion`/`compileSdkVersion` en `android/variables.gradle` de 35 a 36 (Android 16), comprobar compatibilidad de Capacitor 7.4.2 con API 36 (puede requerir bump de Capacitor/AGP), verificar en Android Studio igual que la vez anterior (Gradle Sync + probar en dispositivo/emulador), y publicar otra actualización en producción (se puede probar antes en pruebas internas/cerradas/abiertas). Recordar: subir `versionCode` de nuevo (el siguiente publicable es `4`), y marcar "release" en el wizard de Generate Signed Bundle. Si se necesita más margen, Play Console permite solicitar una prórroga desde el propio aviso.
 6. [ ] (Opcional, solo si es rápido) Revisar las Dependabot alerts en github.com/iCbsp/speak-app/security/dependabot y contrastarlas con lo visto en `npm audit` — muchas deberían coincidir con las 51-59 restantes.
 7. [x] Commitear y pushear los cambios (fix Capacitor v7 + `npm audit fix` + `AGENTS.md`/`CLAUDE.md`/`docs/MASTER.md`). Hecho el 23 jul 2026.
+
+## Backlog — auditoría de cumplimiento (después de resolver lo urgente)
+Detectado el 23 jul 2026 mientras el usuario hacía un curso oficial de Google Play para otra app: es probable que a speak-app le falten piezas de cumplimiento que Google Play exige para **cualquier app publicada**, tenga o no usuarios activos. No verificado todavía el estado real en Play Console — solo confirmar y actuar cuando ya no haya presión de fecha límite encima:
+- Política de privacidad con URL declarada en Play Console → Contenido de la app.
+- Formulario de seguridad de los datos ("Data safety") completo y actualizado.
+- Declaración/justificación del permiso `RECORD_AUDIO` (usado por `cordova-plugin-speechrecognition`).
+- Si `google-services.json` está en uso (Firebase u otro SDK de terceros): declarar la compartición de datos con terceros correspondiente.
 
 ## Cómo retomar esto en otro dispositivo
 - Este archivo vive en el repo, en `main` y en la rama de trabajo activa `play-store-2026-api36`: `PLAY_STORE_ACTION_PLAN.md`. Ver también `docs/MASTER.md` para el contexto/historia y `AGENTS.md` para las reglas de trabajo en este repo.
