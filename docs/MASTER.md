@@ -13,6 +13,7 @@
 | Versión | Fecha | Descripción |
 |---------|-------|-------------|
 | 1.0 | 2026-07-23 | Versión inicial: historia de la app, estado de ramas/tags tras el fast-forward de `main`, y referencia al plan de acción de Play Store. |
+| 1.1 | 2026-08-18 | §3 actualizada: `play-store-2026-api36` cumplió su propósito (API 36 publicada) y se fusionó en `main`; el patrón de rama corta queda confirmado. |
 
 ---
 
@@ -41,7 +42,7 @@ Publicada en Google Play bajo la cuenta de desarrollador de Carlos.
   inactividad (60 días desde el aviso). Esto reactivó el proyecto — ver
   `PLAY_STORE_ACTION_PLAN.md` para el detalle y las fechas límite activas.
 
-## 3. Ramas y tags (estado a 2026-07-23)
+## 3. Ramas y tags (estado a 2026-08-18)
 
 - **`main`** — rama por defecto en GitHub y base de todo trabajo nuevo.
   Fast-forwardeada a la punta de `migration` el 2026-07-23 (no había commits
@@ -50,13 +51,13 @@ Publicada en Google Play bajo la cuenta de desarrollador de Carlos.
   en `main` (mismo commit); no se usa para trabajo nuevo. Se puede borrar en
   la próxima limpieza de ramas sin perder nada (todo sigue accesible desde
   `main`).
-- **`play-store-2026-api36`** — rama de trabajo activa a partir de
-  2026-07-23, para el resto del checklist de `PLAY_STORE_ACTION_PLAN.md`
-  (probar en Android Studio, subir a API 36, publicar en producción). Es una
-  rama corta de propósito único: fusionar en `main` y borrar en cuanto la
-  actualización quede publicada. El próximo trabajo de este tipo (nuevo
-  objetivo concreto y acotado) debería seguir el mismo patrón: rama nueva
-  desde `main` con nombre descriptivo, en vez de reutilizar `migration`.
+- **`play-store-2026-api36`** — rama corta de propósito único, viva entre
+  2026-07-23 y 2026-08-18. Cumplió su objetivo (subir a API 36 y publicar en
+  producción) y se fusionó en `main` por fast-forward el 2026-08-18. Ya no se
+  usa para trabajo nuevo. El patrón se confirma como el bueno para el próximo
+  trabajo de este tipo (objetivo concreto y acotado): rama nueva desde `main`
+  con nombre descriptivo, fusionar y cerrar, en vez de reutilizar `migration`
+  ni dejarla viva indefinidamente.
 - **`old-app`** (tag, no rama) — apunta al último commit de la app original,
   justo antes de "First migration draft". Se creó al hacer el fast-forward
   para no perder el acceso a ese código. **No borrar ni mover.** Útil para
