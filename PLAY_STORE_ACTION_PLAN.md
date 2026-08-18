@@ -1,6 +1,7 @@
 # Plan de acción: mantener la cuenta de Google Play Developer (2026)
 
-Última actualización: 2026-08-15 (rama activa: `play-store-2026-api36`)
+Última actualización: 2026-08-18 (trabajo integrado en `main`; la rama
+`play-store-2026-api36` cumplió su propósito y se ha cerrado)
 
 ## Contexto
 - Cuenta de Play Console: Carlos Santiago Portas.
@@ -10,7 +11,7 @@
 - La app **no tenía usuarios reales** en el momento de la crisis original, aunque la versión publicada sí llegó a estar disponible en ~20.000 dispositivos (ver punto 3 del checklist histórico) — no descartar del todo el impacto en usuarios reales al hacer cambios. El riesgo principal sigue siendo que Google Play rechace el build por incumplir alguna política. Por eso se decidió evitar cambios grandes/arriesgados (ver más abajo).
 
 ## Estado actual del código
-Todo lo siguiente ya está aplicado en local, en la rama activa `play-store-2026-api36` (pendiente commit/push, ver punto 8 del checklist):
+Todo lo siguiente ya está commiteado en `main`:
 - `targetSdkVersion`/`compileSdkVersion` → 36 (Android 16), subido desde 35 el 15 ago 2026 para cumplir la fecha límite del 31 ago 2026.
 - AGP → 8.11.2, Gradle wrapper → 8.13 (soportan API 36 sin bump adicional).
 - Capacitor completo en la línea 7.x: core/android/clipboard/cli → 7.4.2, app → 7.1.2, haptics → 7.0.5, keyboard → 7.0.6, status-bar → 7.0.6 (el upgrade había quedado a medias — algunos paquetes en v6 rompían `npm install` con ERESOLVE — y se completó).
@@ -33,7 +34,7 @@ Quedan 59 vulnerabilidades npm que solo se resuelven con `npm audit fix --force`
 5. [x] **Deadline 31 de agosto de 2026.** `targetSdkVersion`/`compileSdkVersion` actualizados de 35 a 36 (Android 16) en `android/variables.gradle`. AGP 8.11.2 y Gradle 8.13 ya soportaban API 36 sin necesidad de bump adicional de Capacitor/AGP. `npm run build` y `npx cap sync android` verificados sin errores; Gradle Sync y prueba en dispositivo/emulador en Android Studio confirmados por el usuario el 15 ago 2026. `versionCode`/`versionName` subidos a `4`/`"1.4"` en `android/app/build.gradle`.
 6. [x] Generar el bundle firmado y publicarlo en producción. *(Hecho el 15 ago 2026: `versionCode 4`/`versionName "1.4"`, targetSdk 36, enviado a revisión, superado el examen preliminar de Play Console. Pendiente de que Google confirme que la app ya no está afectada por la política de target API — no requiere más acción por nuestra parte, solo esperar la notificación.)*
 7. [ ] (Opcional, sin urgencia) Revisar las Dependabot alerts en github.com/iCbsp/speak-app/security/dependabot y contrastarlas con lo visto en `npm audit` — muchas deberían coincidir con las 51-59 restantes (nota: tras reinstalar `node_modules` el 15 ago 2026 el recuento subió a 66, ver "Estado actual del código").
-8. [ ] Commitear y pushear los cambios de esta tarea (bump API 36 + `versionCode`/`versionName` 4/"1.4").
+8. [x] Commitear y pushear los cambios de esta tarea (bump API 36 + `versionCode`/`versionName` 4/"1.4"). *(Hecho en el commit `d6587c6`, pusheado. El 18 ago 2026 se comprobó que el punto seguía marcado como pendiente cuando ya estaba resuelto — corregido.)*
 
 ## Backlog — auditoría de cumplimiento (después de resolver lo urgente)
 Detectado el 23 jul 2026 mientras el usuario hacía un curso oficial de Google Play para otra app: es probable que a speak-app le falten piezas de cumplimiento que Google Play exige para **cualquier app publicada**, tenga o no usuarios activos. No verificado todavía el estado real en Play Console — solo confirmar y actuar cuando ya no haya presión de fecha límite encima:
@@ -43,5 +44,5 @@ Detectado el 23 jul 2026 mientras el usuario hacía un curso oficial de Google P
 - Si `google-services.json` está en uso (Firebase u otro SDK de terceros): declarar la compartición de datos con terceros correspondiente.
 
 ## Cómo retomar esto en otro dispositivo
-- Este archivo vive en el repo, en `main` y en la rama de trabajo activa `play-store-2026-api36`: `PLAY_STORE_ACTION_PLAN.md`. Ver también `docs/MASTER.md` para el contexto/historia y `AGENTS.md` para las reglas de trabajo en este repo.
-- Todo el código de esta sesión ya está commiteado y pusheado — no hace falta rehacer nada, solo `git checkout play-store-2026-api36` y `npm install --legacy-peer-deps`.
+- Este archivo vive en el repo, en `main`: `PLAY_STORE_ACTION_PLAN.md`. Ver también `docs/MASTER.md` para el contexto/historia y `AGENTS.md` para las reglas de trabajo en este repo.
+- Todo el código de esta sesión ya está commiteado y pusheado — no hace falta rehacer nada, solo `git checkout main` y `npm install --legacy-peer-deps`.
