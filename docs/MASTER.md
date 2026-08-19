@@ -6,14 +6,8 @@
 > en la raíz del repo — enlazado desde aquí, no duplicado.
 > Reglas de comportamiento de agentes: ver [AGENTS.md](../AGENTS.md).
 
----
-
-## Changelog
-
-| Versión | Fecha | Descripción |
-|---------|-------|-------------|
-| 1.0 | 2026-07-23 | Versión inicial: historia de la app, estado de ramas/tags tras el fast-forward de `main`, y referencia al plan de acción de Play Store. |
-| 1.1 | 2026-08-18 | §3 actualizada: `play-store-2026-api36` cumplió su propósito (API 36 publicada) y se fusionó en `main`; el patrón de rama corta queda confirmado. |
+> Historia de este documento —qué cambió y por qué— en
+> [`MASTER-changelog.md`](MASTER-changelog.md).
 
 ---
 

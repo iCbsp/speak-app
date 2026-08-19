@@ -73,3 +73,10 @@ Thumbs.db
 # My own .gitignore
 /srcNew
 /srcOld
+
+# Area de trabajo local: fuera de git salvo su .gitkeep (ver AGENTS-COMMON.md §6)
+.ignore/*
+!.ignore/.gitkeep
+
+# Worktrees: arboles de trabajo, no contenido del repo (ver AGENTS-COMMON.md §4.4)
+.claude/worktrees/
